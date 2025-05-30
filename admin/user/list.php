@@ -25,10 +25,11 @@
 					<col width="5%">
 					<col width="15%">
 					<col width="15%">
-					<col width="25%">
+					<col width="20%">
 					<col width="15%">
 					<col width="10%">
-					<col width="15%">
+					<col width="10%">
+					<col width="10%">
 				</colgroup>
 				<thead>
 					<tr>
@@ -36,6 +37,7 @@
 						<th>Date Updated</th>
 						<th>Avatar</th>
 						<th>Name</th>
+						<th>Zone/Purok</th>
 						<th>Username</th>
 						<th>Type</th>
 						<th>Action</th>
@@ -44,8 +46,8 @@
 				<tbody>
 					<?php 
 					$i = 1;
-						$qry = $conn->query("SELECT *, concat(firstname,' ', coalesce(concat(middlename,' '), '') , lastname) as `name` from `users` where id != '{$_settings->userdata('id')}' order by concat(firstname,' ', lastname) asc ");
-						while($row = $qry->fetch_assoc()):
+					$qry = $conn->query("SELECT *, concat(firstname,' ', coalesce(concat(middlename,' '), '') , lastname) as `name` from `users` where id != '{$_settings->userdata('id')}' order by concat(firstname,' ', lastname) asc ");
+					while($row = $qry->fetch_assoc()):
 					?>
 						<tr>
 							<td class="text-center"><?php echo $i++; ?></td>
@@ -54,6 +56,7 @@
                                 <img src="<?= validate_image($row['avatar']) ?>" alt="" class="img-thumbnail rounded-circle user-avatar">
                             </td>
 							<td><?php echo $row['name'] ?></td>
+							<td><?php echo isset($row['zone']) ? $row['zone'] : 'N/A'; ?></td>
 							<td><?php echo $row['username'] ?></td>
 							<td class="text-center">
                                 <?php if($row['type'] == 1): ?>
@@ -88,12 +91,11 @@
 			_conf("Are you sure to delete this User permanently?","delete_user",[$(this).attr('data-id')])
 		})
 		$('.table').dataTable({
-	columnDefs: [
-		{ orderable: false, targets: [5] } // Update index if a column is removed
-	],
-	order:[0,'asc']
-});
-
+			columnDefs: [
+				{ orderable: false, targets: [7] } // Adjusted due to added column
+			],
+			order:[0,'asc']
+		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
 	})
 	function delete_user($id){
@@ -121,8 +123,8 @@
 
 <style>
 	/* Hide 6th column (index 5, 0-based) */
-	#list th:nth-child(6),
-	#list td:nth-child(6) {
+	#list th:nth-child(7),
+	#list td:nth-child(7) {
 		display: none;
 	}
 </style>

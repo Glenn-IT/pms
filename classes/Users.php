@@ -14,9 +14,16 @@ Class Users extends DBConnection {
 		if(empty($_POST['password']))
 			unset($_POST['password']);
 		else
-		$_POST['password'] = md5($_POST['password']);
+			$_POST['password'] = md5($_POST['password']);
 		extract($_POST);
 		$data = '';
+	
+		// ✅ Check for duplicate username
+		$check = $this->conn->query("SELECT * FROM users WHERE username = '{$username}' " . (!empty($id) ? "AND id != '{$id}'" : ""));
+		if ($check && $check->num_rows > 0) {
+			return 3; // Username already exists
+		}
+	
 		foreach($_POST as $k => $v){
 			if(!in_array($k,array('id'))){
 				if(!empty($data)) $data .=" , ";
@@ -60,14 +67,13 @@ Class Users extends DBConnection {
 						if($this->settings->userdata('id') == $id)
 						$this->settings->set_userdata('avatar',$fname."?v=".time());
 					}
-
 					imagedestroy($temp);
 				}
 				return 1;
 			}else{
 				return 2;
 			}
-
+	
 		}else{
 			$qry = $this->conn->query("UPDATE users set $data where id = {$id}");
 			if($qry){
@@ -104,17 +110,15 @@ Class Users extends DBConnection {
 						if($this->settings->userdata('id') == $id)
 						$this->settings->set_userdata('avatar',$fname."?v=".time());
 					}
-
 					imagedestroy($temp);
 				}
-
 				return 1;
 			}else{
 				return "UPDATE users set $data where id = {$id}";
 			}
-			
 		}
 	}
+	
 	public function delete_users(){
 		extract($_POST);
 		$qry = $this->conn->query("DELETE FROM users where id = $id");

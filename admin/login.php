@@ -26,7 +26,7 @@
     <!-- /.login-logo -->
     <div class="card card-navy my-2">
       <div class="card-body">
-        <p class="login-box-msg">Please enter your credentials</p>
+        <p class="login-box-msg">Please essnter your credentials</p>
         
         <!-- Message display -->
         <div id="login-message" class="text-center mb-3 text-danger"></div>

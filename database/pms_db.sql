@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2025 at 09:50 AM
+-- Generation Time: May 29, 2025 at 03:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -280,16 +280,23 @@ CREATE TABLE `users` (
   `last_login` datetime DEFAULT NULL,
   `type` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `zone` int(1) NOT NULL,
+  `birthdate` date DEFAULT NULL,
+  `age` int(3) NOT NULL,
+  `sex` enum('Male','Female') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='2';
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`) VALUES
-(1, 'Adminstrator', '', 'Admin', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, '2021-01-20 14:02:37', '2025-05-22 15:48:25'),
-(9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', 'ee11cbb19052e40b07aac0ca060c23ee', 'pet', 'Sample', NULL, NULL, 2, '2025-05-22 14:10:08', '2025-05-22 15:24:42');
+INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
+(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, '2021-01-20 14:02:37', '2025-05-29 19:03:25', 0, NULL, 0, 'Male'),
+(9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', 'ee11cbb19052e40b07aac0ca060c23ee', 'pet', 'Sample', NULL, NULL, 2, '2025-05-22 14:10:08', '2025-05-29 19:30:24', 3, NULL, 0, 'Male'),
+(10, 'test', 'test', 'test', 'test', 'c06db68e819be6ec3d26c6038d8e8d1f', 'pet', 'sample', NULL, NULL, 0, '2025-05-29 19:30:00', '2025-05-29 19:30:12', 6, NULL, 0, 'Male'),
+(11, 'dasdasdasd', 'asdfasd', 'fsafasd', 'asdfsad', 'e5faf3f30cd9acb1b33c2ff66460fb39', 'pet', 'asdasdaw', NULL, NULL, 0, '2025-05-29 20:20:44', '2025-05-29 20:20:51', 2, '2001-01-01', 24, 'Male'),
+(12, 'asdawdw', 'qweqwe', 'asdwca', 'sdfawe', 'd1a93790c073af2c0d399d0fed015396', 'pet', 'qweqwr', NULL, NULL, 0, '2025-05-29 21:05:33', '2025-05-29 21:05:33', 1, '2000-02-02', 25, 'Male');
 
 -- --------------------------------------------------------
 
@@ -448,7 +455,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `visit_list`
