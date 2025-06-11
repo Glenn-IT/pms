@@ -29,7 +29,7 @@
                 <nav class="mt-1">
                    <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-compact nav-flat nav-child-indent nav-collapse-hide-child" data-widget="treeview" role="menu" data-accordion="false">
                     <li class="nav-item dropdown">
-                      <a href="./" class="nav-link ">
+                      <a href="./" class="nav-link nav-home">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                           Home
@@ -37,7 +37,7 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link">
+                      <a href="<?php echo base_url ?>admin/?page=page_underconstruct" class="nav-link nav-page_underconstruct">
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                           Announcement
@@ -46,7 +46,7 @@
                     </li> 
 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link ">
+                      <a href="#" class="nav-link nav-event">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>
                           Event
@@ -55,7 +55,7 @@
                     </li> 
 
                      <li class="nav-item dropdown">
-                      <a href="#" class="nav-link ">
+                      <a href="#" class="nav-link nav-about_us">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>
                           About us
@@ -66,7 +66,7 @@
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link ">
+                      <a href="#" class="nav-link nav-population">
                         <i class="nav-icon fas fa-th-list"></i>
                         <p>
                         Population
@@ -74,7 +74,7 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link ">
+                      <a href="#" class="nav-link nav-active_purok">
                         <i class="nav-icon fas fa-border-all"></i>
                         <p>
                           Active Purok
@@ -82,7 +82,7 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link ">
+                      <a href="#" class="nav-link nav-attended_events">
                         <i class="nav-icon fas fa-list"></i>
                         <p>
                           Attended Events
@@ -90,7 +90,7 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link">
+                      <a href="#" class="nav-link nav-presents">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           List of Presents
