@@ -560,6 +560,21 @@ Class Master extends DBConnection {
 		}
 	}
 	
+	function search_announcements(){
+		extract($_GET); // get `keyword`
+		$announcements = [];
+		$keyword = $this->conn->real_escape_string($keyword);
+		$qry = $this->conn->query("SELECT * FROM `announcement_list` WHERE `description` LIKE '%$keyword%' ORDER BY date_created DESC");
+		if($qry){
+			while($row = $qry->fetch_assoc()){
+				$row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+				$announcements[] = $row;
+			}
+			return json_encode(['status' => 'success', 'data' => $announcements]);
+		} else {
+			return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+		}
+	}
 	
 	
 	
@@ -630,7 +645,10 @@ switch ($action) {
 		case 'get_all_announcements':
 			echo $Master->get_all_announcements();
 			break;
-		
+	case 'search_announcements':
+	echo $Master->search_announcements();
+	break;
+	
 		
 	default:
 		// echo $sysset->index();

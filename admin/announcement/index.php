@@ -25,12 +25,15 @@
 <div class="card card-outline card-primary">
 	<div class="card-header">
 		<h3 class="card-title">Announcement</h3>
+		
 		<?php if($_settings->userdata('type') == 1): ?>
 <div class="card-tools">
+	
     <button class="btn btn-primary btn-sm" type="button" id="add_announcement">
         <i class="fa fa-plus"></i> Add Announcement
     </button>
 </div>
+
 <?php endif; ?>
 
 	</div>
