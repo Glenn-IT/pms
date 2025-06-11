@@ -3,6 +3,9 @@
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
+<script>
+    const adminType = <?php echo json_encode($_settings->userdata('type')); ?>;
+</script>
 
 <style>
     .announcement-img {
@@ -22,11 +25,14 @@
 <div class="card card-outline card-primary">
 	<div class="card-header">
 		<h3 class="card-title">Announcement</h3>
-		<div class="card-tools">
-			<button class="btn btn-primary btn-sm" type="button" id="add_announcement">
-				<i class="fa fa-plus"></i> Add Announcement
-			</button>
-		</div>
+		<?php if($_settings->userdata('type') == 1): ?>
+<div class="card-tools">
+    <button class="btn btn-primary btn-sm" type="button" id="add_announcement">
+        <i class="fa fa-plus"></i> Add Announcement
+    </button>
+</div>
+<?php endif; ?>
+
 	</div>
 	<div class="card-body">
 		<div class="container-fluid">
@@ -98,8 +104,10 @@ function loadAllAnnouncements(){
 								<div class="card-body">
 									<h5 class="card-title">${ann.date}</h5>
 									<p class="card-text">${ann.description}</p>
-									<button class="btn btn-sm btn-primary edit_announcement" data-id="${ann.id}" data-date="${ann.date_created}" data-description="${ann.description}">Edit</button>
-									<button class="btn btn-sm btn-danger delete_announcement" data-id="${ann.id}">Delete</button>
+									${adminType == 1 ? `
+										<button class="btn btn-sm btn-primary edit_announcement" data-id="${ann.id}" data-date="${ann.date_created}" data-description="${ann.description}">Edit</button>
+										<button class="btn btn-sm btn-danger delete_announcement" data-id="${ann.id}">Delete</button>
+									` : ''}
 								</div>
 							</div>
 						</div>
@@ -200,7 +208,19 @@ $(document).on('click', '.edit_announcement', function(){
 	$('#announcement_modal').modal('show');
 });
 
+if(adminType == 0){
+		$(document).on('click', '#announcement_list ul li', function(){
+			const img = $(this).data('image');
+			const date = $(this).data('date');
+			const description = $(this).data('description');
 
+			$('#view_announcement_img').attr('src', img);
+			$('#view_announcement_date').text(date);
+			$('#view_announcement_desc').text(description);
+
+			$('#announcement_view_modal').modal('show');
+		});
+	}
 
 });
 
