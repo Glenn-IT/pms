@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2025 at 05:29 PM
+-- Generation Time: Jun 11, 2025 at 07:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -45,6 +45,28 @@ INSERT INTO `action_list` (`id`, `name`, `status`, `delete_flag`, `date_created`
 (2, 'Infirmary Confinement', 1, 0, '2022-05-31 11:58:03', '2022-05-31 11:58:03'),
 (3, 'Transported for Trial', 1, 0, '2022-05-31 11:59:14', '2022-05-31 11:59:14'),
 (4, 'test - updated', 1, 1, '2022-05-31 11:59:34', '2022-05-31 11:59:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `announcement_list`
+--
+
+CREATE TABLE `announcement_list` (
+  `id` int(11) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `date_created` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `announcement_list`
+--
+
+INSERT INTO `announcement_list` (`id`, `image_path`, `description`, `date_created`) VALUES
+(2, 'uploads/announcements/2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:36'),
+(3, 'uploads/announcements/3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:53'),
+(4, 'uploads/announcements/4.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:53:14');
 
 -- --------------------------------------------------------
 
@@ -294,7 +316,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
 (1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, '2021-01-20 14:02:37', '2025-05-29 19:03:25', 0, NULL, 0, 'Male'),
 (9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', 'ee11cbb19052e40b07aac0ca060c23ee', 'pet', 'Sample', NULL, NULL, 2, '2025-05-22 14:10:08', '2025-05-29 19:30:24', 3, NULL, 0, 'Male'),
-(10, 'test', 'test', 'test', 'test', 'c06db68e819be6ec3d26c6038d8e8d1f', 'pet', 'sample', NULL, NULL, 0, '2025-05-29 19:30:00', '2025-05-29 19:30:12', 6, NULL, 0, 'Male'),
+(10, 'test', 'test', 'test', 'test', 'c06db68e819be6ec3d26c6038d8e8d1f', 'pet', 'sample', NULL, NULL, 0, '2025-05-29 19:30:00', '2025-06-11 12:54:33', 6, '2000-02-02', 25, 'Male'),
 (11, 'dasdasdasd', 'asdfasd', 'fsafasd', 'asdfsad', 'e5faf3f30cd9acb1b33c2ff66460fb39', 'pet', 'asdasdaw', NULL, NULL, 0, '2025-05-29 20:20:44', '2025-05-29 20:20:51', 2, '2001-01-01', 24, 'Male'),
 (12, 'asdawdw', 'qweqwe', 'asdwca', 'sdfawe', 'd1a93790c073af2c0d399d0fed015396', 'pet', 'qweqwr', NULL, NULL, 0, '2025-05-29 21:05:33', '2025-05-29 21:05:33', 1, '2000-02-02', 25, 'Male');
 
@@ -330,6 +352,12 @@ INSERT INTO `visit_list` (`id`, `inmate_id`, `fullname`, `contact`, `relation`, 
 -- Indexes for table `action_list`
 --
 ALTER TABLE `action_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `announcement_list`
+--
+ALTER TABLE `announcement_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -408,6 +436,12 @@ ALTER TABLE `visit_list`
 --
 ALTER TABLE `action_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `announcement_list`
+--
+ALTER TABLE `announcement_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cell_list`
