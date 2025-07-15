@@ -11,12 +11,13 @@ if(isset($_GET['id'])){
 	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <div class="card card-outline rounded-0 card-navy">
 	<div class="card-body">
 		<div class="container-fluid">
 			<div id="msg"></div>
-			<form action="" id="manage-user">	
+			<form action="" id="manage-user" enctype="multipart/form-data">	
 				<input type="hidden" name="id" value="<?= isset($meta['id']) ? $meta['id'] : '' ?>">
 
 				<!-- First Name -->
@@ -37,37 +38,28 @@ if(isset($_GET['id'])){
 					<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
 				</div>
 
-
 				<!-- Sex -->
-<div class="form-group">
-    <label for="sex">Sex</label>
-    <select name="sex" id="sex" class="form-control" required>
-        <option value="" disabled selected>Select Sex</option>
-        <option value="Male" <?php echo isset($meta['sex']) && $meta['sex'] == 'Male' ? 'selected' : '' ?>>Male</option>
-        <option value="Female" <?php echo isset($meta['sex']) && $meta['sex'] == 'Female' ? 'selected' : '' ?>>Female</option>
-       
-    </select>
-</div>
+				<div class="form-group">
+					<label for="sex">Sex</label>
+					<select name="sex" id="sex" class="form-control" required>
+						<option value="" disabled selected>Select Sex</option>
+						<option value="Male" <?php echo isset($meta['sex']) && $meta['sex'] == 'Male' ? 'selected' : '' ?>>Male</option>
+						<option value="Female" <?php echo isset($meta['sex']) && $meta['sex'] == 'Female' ? 'selected' : '' ?>>Female</option>
+					</select>
+				</div>
 
-<!-- Birthdate -->
-<div class="form-group">
-    <label for="birthdate">Birthdate</label>
-    <input type="date" name="birthdate" id="birthdate" class="form-control" value="<?php echo isset($meta['birthdate']) ? $meta['birthdate'] : '' ?>" required>
-</div>
+				<!-- Birthdate -->
+				<div class="form-group">
+					<label for="birthdate">Birthdate</label>
+					<input type="date" name="birthdate" id="birthdate" class="form-control" value="<?php echo isset($meta['birthdate']) ? $meta['birthdate'] : '' ?>" required>
+				</div>
 
-<div class="form-group">
-    <label for="age">Age</label>
-    <input type="number" name="age" id="age" class="form-control" value="<?php echo isset($meta['age']) ? $meta['age'] : '' ?>" readonly required>
-    <div class="invalid-feedback">Age must be between 15 and 21 years old.</div>
-</div>
-
-
-
-
-
-
-
-
+				<!-- Age -->
+				<div class="form-group">
+					<label for="age">Age</label>
+					<input type="number" name="age" id="age" class="form-control" value="<?php echo isset($meta['age']) ? $meta['age'] : '' ?>" readonly required>
+					<div class="invalid-feedback">Age must be between 15 and 30 years old.</div>
+				</div>
 
 				<!-- Username -->
 				<div class="form-group">
@@ -76,13 +68,41 @@ if(isset($_GET['id'])){
 				</div>
 
 				<!-- Password -->
-				<div class="form-group">
-					<label for="password"><?= isset($meta['id']) ? "New" : "" ?> Password</label>
-					<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
-                    <?php if(isset($meta['id'])): ?>
-					<small><i>Leave this blank if you don't want to change the password.</i></small>
-                    <?php endif; ?>
-				</div>
+<div class="form-group">
+	<label for="password"><?= isset($meta['id']) ? "New" : "" ?> Password</label>
+	<div class="input-group">
+		<input type="password" name="password" id="password" class="form-control" autocomplete="off"
+			pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
+			title="Password must be 8-20 characters, include uppercase, lowercase, and a number">
+		<span class="input-group-text">
+			<i class="bi bi-eye-slash toggle-password" data-target="password" style="cursor:pointer;"></i>
+		</span>
+	</div>
+	<?php if(isset($meta['id'])): ?>
+		<small><i>Leave this blank if you don't want to change the password.</i></small>
+	<?php endif; ?>
+</div>
+
+<!-- Password Strength Indicator -->
+<ul id="password-requirements" class="list-unstyled small text-muted ml-2">
+	<li id="req-length" class="text-danger">❌ 8–20 characters</li>
+	<li id="req-upper" class="text-danger">❌ At least one uppercase letter</li>
+	<li id="req-lower" class="text-danger">❌ At least one lowercase letter</li>
+	<li id="req-digit" class="text-danger">❌ At least one number</li>
+</ul>
+
+<!-- Confirm Password -->
+<div class="form-group">
+	<label for="cpassword">Confirm Password</label>
+	<div class="input-group">
+		<input type="password" name="cpassword" id="cpassword" class="form-control" autocomplete="off">
+		<span class="input-group-text">
+			<i class="bi bi-eye-slash toggle-password" data-target="cpassword" style="cursor:pointer;"></i>
+		</span>
+	</div>
+	<div class="invalid-feedback" id="cpassword-error">Passwords do not match.</div>
+</div>
+
 
 				<!-- Security Question -->
 				<div class="form-group">
@@ -103,7 +123,7 @@ if(isset($_GET['id'])){
 					<input type="text" name="security_answer" id="security_answer" class="form-control" value="<?php echo isset($meta['security_answer']) ? $meta['security_answer'] : '' ?>" required>
 				</div>
 
-				<!-- Zone/Purok Dropdown (Updated to Dropdown 1-7) -->
+				<!-- Zone/Purok Dropdown -->
 				<div class="form-group">
 					<label for="zone">Zone/Purok</label>
 					<select name="zone" id="zone" class="form-control" required>
@@ -122,9 +142,9 @@ if(isset($_GET['id'])){
 				<div class="form-group">
 					<label for="" class="control-label">Avatar</label>
 					<div class="custom-file">
-		              <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
-		              <label class="custom-file-label" for="customFile">Choose file</label>
-		            </div>
+						<input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))" accept="image/png, image/jpeg">
+						<label class="custom-file-label" for="customFile">Choose file</label>
+					</div>
 				</div>
 
 				<!-- Avatar Display -->
@@ -139,7 +159,7 @@ if(isset($_GET['id'])){
 		<div class="col-md-12">
 			<div class="row">
 				<button class="btn btn-sm btn-primary rounded-0 mr-3" form="manage-user">Save User Details</button>
-				<a href="./?page=user/list" class="btn btn-sm btn-default border rounded-0" form="manage-user"><i class="fa fa-angle-left"></i> Cancel</a>
+				<a href="./?page=user/list" class="btn btn-sm btn-default border rounded-0"><i class="fa fa-angle-left"></i> Cancel</a>
 			</div>
 		</div>
 	</div>
@@ -168,67 +188,102 @@ if(isset($_GET['id'])){
 		}
 	}
 
-	
+	// Calculate age based on birthdate and validate it
+	$('#birthdate').change(function() {
+	    var birthdate = new Date($(this).val());
+	    var today = new Date();
+	    var age = today.getFullYear() - birthdate.getFullYear();
+	    var month = today.getMonth() - birthdate.getMonth();
+	    
+	    if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
+	        age--;
+	    }
+	    
+	    $('#age').val(age);
+
+	    if (age < 15 || age > 30) {
+	        $('#age').addClass('is-invalid');
+	        if ($('#age').next('.invalid-feedback').length === 0) {
+	            $('#age').after('<div class="invalid-feedback">Age must be between 15 and 30 years old.</div>');
+	        }
+	    } else {
+	        $('#age').removeClass('is-invalid');
+	        $('#age').next('.invalid-feedback').remove();
+	    }
+	});
+
 	$('#manage-user').submit(function(e){
-    e.preventDefault();  // Prevent the form from submitting immediately
-    start_loader();  // Start the loading animation (as you've implemented)
+	    e.preventDefault();  
+	    start_loader();
 
-    // Validate the age (change the range to 15-30)
-    var age = $('#age').val();
-    if (age < 15 || age > 30) {
-        alert('Age must be between 15 and 30 years old.');
-        end_loader();  // Stop loader if validation fails
-        return;  // Stop the form submission
-    }
+	    var age = $('#age').val();
+	    if (age < 15 || age > 30) {
+	        alert('Age must be between 15 and 30 years old.');
+	        end_loader();
+	        return;
+	    }
 
-    // Continue with the form submission if age is valid
-    $.ajax({
-        url: _base_url_ + 'classes/Users.php?f=save',
-        data: new FormData($(this)[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        type: 'POST',
-        success: function(resp) {
-			if (resp == 1) {
-    location.href = './?page=user/list';
-} else if (resp == 3) {
-    $('#msg').html('<div class="alert alert-danger">Username already exists</div>');
-    end_loader();
-} else {
-    $('#msg').html('<div class="alert alert-danger">An unexpected error occurred.</div>');
-    end_loader();
+	    var password = $('#password').val();
+	    var cpassword = $('#cpassword').val();
+
+	    // Only validate confirm password if password field is not empty (for edit)
+	    if(password.length > 0 && password !== cpassword){
+	        $('#cpassword').addClass('is-invalid');
+	        end_loader();
+	        return;
+	    } else {
+	        $('#cpassword').removeClass('is-invalid');
+	    }
+
+	    $.ajax({
+	        url: _base_url_ + 'classes/Users.php?f=save',
+	        data: new FormData($(this)[0]),
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        method: 'POST',
+	        success: function(resp) {
+	            if (resp == 1) {
+	                location.href = './?page=user/list';
+	            } else if (resp == 3) {
+	                $('#msg').html('<div class="alert alert-danger">Username already exists</div>');
+	                end_loader();
+	            } else {
+	                $('#msg').html('<div class="alert alert-danger">An unexpected error occurred: ' + resp + '</div>');
+	                end_loader();
+	            }
+	        },
+	        error: function(xhr, status, error) {
+	            $('#msg').html('<div class="alert alert-danger">AJAX error: ' + error + '</div>');
+	            end_loader();
+	        }
+	    });
+	});
+</script>
+<script>
+function checkPasswordStrength(password) {
+	const lengthCheck = password.length >= 8 && password.length <= 20;
+	const upperCheck = /[A-Z]/.test(password);
+	const lowerCheck = /[a-z]/.test(password);
+	const digitCheck = /\d/.test(password);
+
+	$('#req-length').toggleClass('text-success', lengthCheck).toggleClass('text-danger', !lengthCheck).html((lengthCheck ? '✅' : '❌') + ' 8–20 characters');
+	$('#req-upper').toggleClass('text-success', upperCheck).toggleClass('text-danger', !upperCheck).html((upperCheck ? '✅' : '❌') + ' At least one uppercase letter');
+	$('#req-lower').toggleClass('text-success', lowerCheck).toggleClass('text-danger', !lowerCheck).html((lowerCheck ? '✅' : '❌') + ' At least one lowercase letter');
+	$('#req-digit').toggleClass('text-success', digitCheck).toggleClass('text-danger', !digitCheck).html((digitCheck ? '✅' : '❌') + ' At least one number');
 }
 
-        }
-    });
+$('#password').on('input', function() {
+	const password = $(this).val();
+	checkPasswordStrength(password);
 });
 
-// Calculate age based on birthdate and validate it
-$('#birthdate').change(function() {
-    var birthdate = new Date($(this).val());
-    var today = new Date();
-    var age = today.getFullYear() - birthdate.getFullYear();
-    var month = today.getMonth() - birthdate.getMonth();
-    
-    // If the current month is before the birth month, subtract 1 from the age
-    if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
-        age--;
-    }
-    
-    // Set the age field
-    $('#age').val(age);
-
-    // Validate if age is between 15 and 30
-    if (age < 15 || age > 30) {
-        $('#age').addClass('is-invalid');
-        $('#age').next('.invalid-feedback').remove(); // Remove existing message if any
-        $('#age').after('<div class="invalid-feedback">Age must be between 15 and 30 years old.</div>');
-    } else {
-        $('#age').removeClass('is-invalid');
-        $('#age').next('.invalid-feedback').remove(); // Remove any error message
-    }
+// Toggle show/hide password
+$('.toggle-password').on('click', function() {
+	const targetId = $(this).data('target');
+	const input = $('#' + targetId);
+	const type = input.attr('type') === 'password' ? 'text' : 'password';
+	input.attr('type', type);
+	$(this).toggleClass('bi-eye').toggleClass('bi-eye-slash');
 });
-
 </script>
