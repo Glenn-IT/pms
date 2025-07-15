@@ -79,6 +79,10 @@ if (isset($_SESSION['type'], $_SESSION['message'])) {
         .forgot-password-container a:hover {
             text-decoration: underline;
         }
+        #password-requirements {
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
     </style>
 </head>
 <body>
@@ -115,17 +119,24 @@ if (isset($_SESSION['type'], $_SESSION['message'])) {
 <div id="passwordFields" style="display:none;">
     <div class="input-group mb-3">
         <input type="password" class="form-control" name="new_password" id="new_password"
-               placeholder="New Password" pattern="^[a-zA-Z0-9]{8,20}$"
-               title="Password must be 8-20 characters and alphanumeric only" required />
+       placeholder="New Password"
+       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$"
+       title="Password must be 8-20 characters, include uppercase, lowercase, and a number"
+       required />
         <span class="input-group-text">
             <i class="bi bi-eye-slash toggle-password" data-target="new_password" style="cursor:pointer;"></i>
         </span>
     </div>
-
+<ul id="password-requirements" class="list-unstyled small text-muted">
+    <li id="req-length" class="text-danger">❌ 8–20 characters</li>
+    <li id="req-upper" class="text-danger">❌ At least one uppercase letter</li>
+    <li id="req-lower" class="text-danger">❌ At least one lowercase letter</li>
+    <li id="req-digit" class="text-danger">❌ At least one number</li>
+</ul>
     <div class="input-group mb-3">
-        <input type="password" class="form-control" name="confirm_password" id="confirm_password"
-               placeholder="Confirm Password" pattern="^[a-zA-Z0-9]{8,20}$"
-               title="Password must be 8-20 characters and alphanumeric only" required />
+       <input type="password" class="form-control" name="confirm_password" id="confirm_password"
+       placeholder="Confirm Password"
+       
         <span class="input-group-text">
             <i class="bi bi-eye-slash toggle-password" data-target="confirm_password" style="cursor:pointer;"></i>
         </span>
@@ -228,6 +239,29 @@ document.getElementById('verifySecurity').addEventListener('click', function () 
         console.error('Error:', error);
         alert('Failed to verify. Please try again.');
     });
+});
+</script>
+
+<script>
+document.getElementById('new_password').addEventListener('input', function () {
+    const value = this.value;
+
+    const lengthValid = value.length >= 8 && value.length <= 20;
+    const upperValid = /[A-Z]/.test(value);
+    const lowerValid = /[a-z]/.test(value);
+    const digitValid = /[0-9]/.test(value);
+
+    document.getElementById('req-length').className = lengthValid ? 'text-success' : 'text-danger';
+    document.getElementById('req-length').innerHTML = (lengthValid ? '✅' : '❌') + ' 8–20 characters';
+
+    document.getElementById('req-upper').className = upperValid ? 'text-success' : 'text-danger';
+    document.getElementById('req-upper').innerHTML = (upperValid ? '✅' : '❌') + ' At least one uppercase letter';
+
+    document.getElementById('req-lower').className = lowerValid ? 'text-success' : 'text-danger';
+    document.getElementById('req-lower').innerHTML = (lowerValid ? '✅' : '❌') + ' At least one lowercase letter';
+
+    document.getElementById('req-digit').className = digitValid ? 'text-success' : 'text-danger';
+    document.getElementById('req-digit').innerHTML = (digitValid ? '✅' : '❌') + ' At least one number';
 });
 </script>
 
