@@ -3,6 +3,8 @@
 <html lang="en" class="" style="height: auto;">
  <?php require_once('inc/header.php') ?>
 <body class="hold-transition login-page">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
   <script>
     start_loader()
   </script>
@@ -41,13 +43,13 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input type="password" class="form-control"  name="password" placeholder="Password" id="password-input">
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <span class="fas fa-lock"></span>
-              </div>
-            </div>
-          </div>
+  <input type="password" class="form-control" name="password" placeholder="Password" id="password-input">
+  <div class="input-group-append">
+    <span class="input-group-text">
+      <i class="bi bi-eye-slash toggle-password" data-target="password-input" style="cursor:pointer;"></i>
+    </span>
+  </div>
+</div>
           <div class="row">
             <div class="col-8">
               <!-- <a href="< ?php echo base_url ?>">Go to Website</a> -->
@@ -182,6 +184,23 @@
           $('#login-message').text('An error occurred. Please try again.');
         }
       });
+    });
+  });
+</script>
+<script>
+  document.querySelectorAll('.toggle-password').forEach(icon => {
+    icon.addEventListener('click', () => {
+      const targetId = icon.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      }
     });
   });
 </script>
