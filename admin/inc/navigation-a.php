@@ -55,14 +55,7 @@
                       </a>
                     </li> 
 
-                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-about_us">
-                        <i class="nav-icon fas fa-file-alt"></i>
-                        <p>
-                          About us
-                        </p>
-                      </a>
-                    </li> 
+                     
                     
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>
@@ -94,18 +87,18 @@
                       <a href="#" class="nav-link nav-presents">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
-                          List of Presents
+                          Attendance List
                         </p>
                       </a>
                     </li> 
-                    <li class="nav-item dropdown">
+                    <!--<li class="nav-item dropdown">
                       <a href="#" class="nav-link nav-absents">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           List of Absents
                         </p>
                       </a>
-                    </li> 
+                    </li>-->
                     <li class="nav-header">Maintenance</li>
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link nav-user_list">
@@ -115,7 +108,14 @@
                         </p>
                       </a>
                     </li>
-                    
+                     <li class="nav-item dropdown">
+                      <a href="#" class="nav-link nav-about_us">
+                        <i class="nav-icon fas fa-file-alt"></i>
+                        <p>
+                          About us
+                        </p>
+                      </a>
+                    </li>
                     <?php endif; ?>
                   </ul>
                 </nav>
