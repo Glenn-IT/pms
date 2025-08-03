@@ -584,6 +584,125 @@ Class Master extends DBConnection {
 	
 	
 //End of Announcement Code
+
+//Start Event Code
+function save_event() {
+    extract($_POST);
+    $data = "";
+
+    $title = $this->conn->real_escape_string(htmlspecialchars($title));
+    $description = $this->conn->real_escape_string(htmlspecialchars($description));
+
+    if(!empty($title))
+        $data .= " `title`='{$title}' ";
+    if(!empty($description))
+        $data .= ", `description`='{$description}' ";
+    if(!empty($date_created))
+        $data .= ", `date_created`='{$date_created}' ";
+
+    if(!empty($id)){
+        $sql = "UPDATE `event_list` SET {$data} WHERE id = '{$id}'";
+    } else {
+        $sql = "INSERT INTO `event_list` SET {$data}";
+    }
+
+    $save = $this->conn->query($sql);
+    if($this->capture_err())
+        return $this->capture_err();
+
+    if($save){
+        $eid = !empty($id) ? $id : $this->conn->insert_id;
+        $resp['eid'] = $eid;
+        $resp['status'] = 'success';
+
+        if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
+            $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+            $dir = "uploads/events/";
+            if(!is_dir(base_app . $dir)) mkdir(base_app . $dir);
+            $fname = $dir . $eid . '.' . $ext;
+
+            move_uploaded_file($_FILES['img']['tmp_name'], base_app . $fname);
+            $this->conn->query("UPDATE event_list SET image_path = '{$fname}' WHERE id = '{$eid}'");
+        }
+
+        $resp['msg'] = "Event successfully saved.";
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = $this->conn->error . " [{$sql}]";
+    }
+
+    return json_encode($resp);
+}
+
+function delete_event() {
+    extract($_POST);
+
+    $get = $this->conn->query("SELECT * FROM event_list WHERE id = '{$id}'");
+    if($get->num_rows > 0){
+        $ev = $get->fetch_assoc();
+        if(is_file(base_app . $ev['image_path'])){
+            unlink(base_app . $ev['image_path']);
+        }
+    }
+
+    $del = $this->conn->query("DELETE FROM `event_list` WHERE id = '{$id}'");
+    if($del){
+        $resp['status'] = 'success';
+        $this->settings->set_flashdata('success', "Event successfully deleted.");
+    } else {
+        $resp['status'] = 'failed';
+        $resp['error'] = $this->conn->error;
+    }
+
+    return json_encode($resp);
+}
+function get_latest_event(){
+    $qry = $this->conn->query("SELECT * FROM `event_list` ORDER BY `date_created` DESC LIMIT 1");
+    if($qry && $qry->num_rows > 0){
+        $row = $qry->fetch_assoc();
+        return json_encode([
+            'status' => 'success',
+            'image_path' => $row['image_path'],
+            'date' => date("F j, Y - g:i A", strtotime($row['date_created'])),
+            'description' => $row['description']
+        ]);
+    } else {
+        return json_encode([
+            'status' => 'fail',
+            'msg' => 'No event found.'
+        ]);
+    }
+}
+function get_all_events(){
+    $events = [];
+    $qry = $this->conn->query("SELECT * FROM event_list ORDER BY date_created DESC");
+    if($qry){
+        while($row = $qry->fetch_assoc()){
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            $events[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $events]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+function search_events(){
+    extract($_GET); // get `keyword`
+    $events = [];
+    $keyword = $this->conn->real_escape_string($keyword);
+    $qry = $this->conn->query("SELECT * FROM `event_list` WHERE `description` LIKE '%$keyword%' ORDER BY date_created DESC");
+    if($qry){
+        while($row = $qry->fetch_assoc()){
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            $events[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $events]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+//End Event Code
 }
 
 $Master = new Master();
@@ -653,6 +772,22 @@ switch ($action) {
 	case 'search_announcements':
 	echo $Master->search_announcements();
 	break;
+		case 'save_event':
+		echo $Master->save_event();
+	break;
+	case 'delete_event':
+		echo $Master->delete_event();
+	break;
+	case 'get_latest_event':
+		echo $Master->get_latest_event();
+	break;
+	case 'get_all_events':
+		echo $Master->get_all_events();
+	break;
+	case 'search_events':
+		echo $Master->search_events();
+	break;
+
 	
 		
 	default:

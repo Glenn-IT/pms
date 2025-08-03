@@ -47,7 +47,7 @@
                     </li> 
 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-event">
+                      <a href="<?php echo base_url ?>admin/?page=event/index" class="nav-link nav-event">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>
                           Event
