@@ -459,51 +459,55 @@ Class Master extends DBConnection {
 	}
 	//Announcement Code
 	function save_announcement() {
-		extract($_POST);
-		$data = "";
-	
-		// Sanitize description
-		$description = $this->conn->real_escape_string(htmlspecialchars($description));
-	
-		if(!empty($description))
-			$data .= " `description`='{$description}' ";
-		if(!empty($date_created))
-			$data .= ", `date_created`='{$date_created}' ";
-	
-		if(!empty($id)){
-			$sql = "UPDATE `announcement_list` SET {$data} WHERE id = '{$id}'";
-		} else {
-			$sql = "INSERT INTO `announcement_list` SET {$data}";
-		}
-	
-		$save = $this->conn->query($sql);
-		if($this->capture_err())
-			return $this->capture_err();
-	
-		if($save){
-			$aid = !empty($id) ? $id : $this->conn->insert_id;
-			$resp['aid'] = $aid;
-			$resp['status'] = 'success';
-	
-			// Handle image upload
-			if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
-				$ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
-				$dir = "uploads/announcements/";
-				if(!is_dir(base_app . $dir)) mkdir(base_app . $dir);
-				$fname = $dir . $aid . '.' . $ext;
-	
-				move_uploaded_file($_FILES['img']['tmp_name'], base_app . $fname);
-				$this->conn->query("UPDATE announcement_list SET image_path = '{$fname}' WHERE id = '{$aid}'");
-			}
-	
-			$resp['msg'] = "Announcement successfully saved.";
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = $this->conn->error . " [{$sql}]";
-		}
-	
-		return json_encode($resp);
-	}
+    extract($_POST);
+    $data = "";
+
+    // Sanitize title & description
+    $title = $this->conn->real_escape_string(htmlspecialchars($title));
+    $description = $this->conn->real_escape_string(htmlspecialchars($description));
+
+    if(!empty($title))
+        $data .= " `title`='{$title}' ";
+    if(!empty($description))
+        $data .= ", `description`='{$description}' ";
+    if(!empty($date_created))
+        $data .= ", `date_created`='{$date_created}' ";
+
+    if(!empty($id)){
+        $sql = "UPDATE `announcement_list` SET {$data} WHERE id = '{$id}'";
+    } else {
+        $sql = "INSERT INTO `announcement_list` SET {$data}";
+    }
+
+    $save = $this->conn->query($sql);
+    if($this->capture_err())
+        return $this->capture_err();
+
+    if($save){
+        $aid = !empty($id) ? $id : $this->conn->insert_id;
+        $resp['aid'] = $aid;
+        $resp['status'] = 'success';
+
+        // Handle image upload
+        if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
+            $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+            $dir = "uploads/announcements/";
+            if(!is_dir(base_app . $dir)) mkdir(base_app . $dir);
+            $fname = $dir . $aid . '.' . $ext;
+
+            move_uploaded_file($_FILES['img']['tmp_name'], base_app . $fname);
+            $this->conn->query("UPDATE announcement_list SET image_path = '{$fname}' WHERE id = '{$aid}'");
+        }
+
+        $resp['msg'] = "Announcement successfully saved.";
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = $this->conn->error . " [{$sql}]";
+    }
+
+    return json_encode($resp);
+}
+
 
 	function delete_announcement() {
 		extract($_POST);
@@ -534,6 +538,7 @@ Class Master extends DBConnection {
 			$row = $qry->fetch_assoc();
 			return json_encode([
 				'status' => 'success',
+				
 				'image_path' => $row['image_path'], // e.g. 'uploads/announcements/1.png'
 				'date' => date("F j, Y - g:i A", strtotime($row['date_created'])),
 				'description' => $row['description']

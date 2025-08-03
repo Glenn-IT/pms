@@ -1,4 +1,3 @@
-
 <?php if($_settings->chk_flashdata('success')): ?>
 <script>
     alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
@@ -10,23 +9,22 @@
 
 <style>
     .announcement-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: flex-start;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
     }
     .announcement-card {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        overflow: hidden;
-        transition: box-shadow 0.2s;
-        width: 100%;
-        max-width: 370px;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1.5rem;
-    }
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: box-shadow 0.2s, height 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    /* height: 500px; REMOVE THIS */
+    min-height: 500px; /* Optional: ensures a base height */
+}
+
     .announcement-card:hover {
         box-shadow: 0 8px 32px rgba(0,0,0,0.16);
     }
@@ -35,13 +33,25 @@
         height: 220px;
         object-fit: cover;
         background: #f5f5f5;
+        flex-shrink: 0;
     }
     .announcement-body {
         padding: 1.25rem;
-        flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        flex-grow: 1;
+    }
+    .announcement-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #333;
+        height: 48px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
     }
     .announcement-date {
         font-size: 0.95rem;
@@ -52,8 +62,27 @@
     .announcement-desc {
         font-size: 1.08rem;
         color: #222;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        transition: all 0.3s ease;
         min-height: 60px;
+        max-height: 80px;
+    }
+    .announcement-desc.expanded {
+        -webkit-line-clamp: unset;
+        max-height: none;
+    }
+    .read-more {
+        color: #007bff;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+        display: none; /* Hidden by default */
     }
     .announcement-actions {
         display: flex;
@@ -62,11 +91,7 @@
     }
     @media (max-width: 900px) {
         .announcement-grid {
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .announcement-card {
-            max-width: 100%;
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -75,18 +100,17 @@
     <div class="card-header d-flex justify-content-between align-items-center" style="display:flex;justify-content:space-between;align-items:center;">
         <h3 class="card-title mb-0">Announcements</h3>
         <div class="d-flex align-items-center ml-auto">
-    <label for="sort_announcement" class="mr-2 mb-0" style="font-weight:normal;">Sort by:</label>
-    <select id="sort_announcement" class="form-control form-control-sm mr-3" style="width:auto;display:inline-block;">
-        <option value="desc">Newest First</option>
-        <option value="asc">Oldest First</option>
-    </select>
-    <?php if($_settings->userdata('type') == 1): ?>
-    <button class="btn btn-primary btn-sm" type="button" id="add_announcement">
-        <i class="fa fa-plus"></i> Add Announcement
-    </button>
-    <?php endif; ?>
-</div>
-
+            <label for="sort_announcement" class="mr-2 mb-0" style="font-weight:normal;">Sort by:</label>
+            <select id="sort_announcement" class="form-control form-control-sm mr-3" style="width:auto;display:inline-block;">
+                <option value="desc">Newest First</option>
+                <option value="asc">Oldest First</option>
+            </select>
+            <?php if($_settings->userdata('type') == 1): ?>
+            <button class="btn btn-primary btn-sm" type="button" id="add_announcement">
+                <i class="fa fa-plus"></i> Add Announcement
+            </button>
+            <?php endif; ?>
+        </div>
     </div>
     <div class="card-body">
         <div class="container-fluid">
@@ -97,18 +121,21 @@
     </div>
 </div>
 
-<!-- Modal (Optional for future adding/editing) -->
+<!-- Modal -->
 <div class="modal fade" id="announcement_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-md" role="document">
         <form id="announcement_form">
-        <input type="hidden" name="id" id="announcement_id">
-
+            <input type="hidden" name="id" id="announcement_id">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add New Announcement</h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
                     <div class="form-group">
                         <label for="img">Announcement Image</label>
                         <input type="file" class="form-control" name="img" accept="image/*" required>
@@ -151,14 +178,24 @@ function renderAnnouncements(sortOrder = 'desc') {
             <div class="announcement-card">
                 <img src="../${ann.image_path}" class="announcement-img" alt="Announcement">
                 <div class="announcement-body">
+                    <div class="announcement-title">${ann.title}</div>
                     <div class="announcement-date">
                         <i class="fa fa-calendar"></i> ${ann.date}
                     </div>
                     <div class="announcement-desc">${ann.description}</div>
+                    <span class="read-more">Read More</span>
                     ${adminType == 1 ? `
                     <div class="announcement-actions">
-                        <button class="btn btn-sm btn-primary edit_announcement" data-id="${ann.id}" data-date="${ann.date_created}" data-description="${ann.description}"><i class="fa fa-edit"></i> Edit</button>
-                        <button class="btn btn-sm btn-danger delete_announcement" data-id="${ann.id}"><i class="fa fa-trash"></i> Delete</button>
+                        <button class="btn btn-sm btn-primary edit_announcement" 
+                            data-id="${ann.id}" 
+                            data-title="${ann.title}" 
+                            data-date="${ann.date_created}" 
+                            data-description="${ann.description}">
+                            <i class="fa fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger delete_announcement" data-id="${ann.id}">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
                     </div>
                     ` : ''}
                 </div>
@@ -166,6 +203,13 @@ function renderAnnouncements(sortOrder = 'desc') {
         `;
     });
     $('#announcement_list').html(html);
+
+    // Show "Read More" if description is long
+    $('.announcement-desc').each(function(){
+        if ($(this)[0].scrollHeight > $(this).outerHeight()) {
+            $(this).siblings('.read-more').show();
+        }
+    });
 }
 
 function loadAllAnnouncements(){
@@ -197,6 +241,24 @@ $(function(){
         renderAnnouncements($(this).val());
     });
 
+    // Read More Toggle
+    // Read More Toggle
+$(document).on('click', '.read-more', function(){
+    const desc = $(this).siblings('.announcement-desc');
+    const card = $(this).closest('.announcement-card');
+
+    if(desc.hasClass('expanded')){
+        desc.removeClass('expanded');
+        $(this).text('Read More');
+        card.css('height', ''); // Reset to auto height
+    } else {
+        desc.addClass('expanded');
+        $(this).text('Show Less');
+        card.css('height', 'auto'); // Allow auto expansion
+    }
+});
+
+
     $('#announcement_form').submit(function(e){
         e.preventDefault();
         var formData = new FormData(this);
@@ -225,7 +287,6 @@ $(function(){
         });
     });
 
-    // Reset Modal on Add
     $('#add_announcement').click(function(){
         $('#announcement_form')[0].reset();
         $('#announcement_id').val('');
@@ -234,7 +295,6 @@ $(function(){
         $('#announcement_modal').modal('show');
     });
 
-    // Delete Announcement
     $(document).on('click', '.delete_announcement', function(){
         if(confirm("Are you sure you want to delete this announcement?")){
             let id = $(this).data('id');
@@ -259,33 +319,19 @@ $(function(){
         }
     });
 
-    // Edit Announcement
     $(document).on('click', '.edit_announcement', function(){
         const id = $(this).data('id');
+        const title = $(this).data('title');
         const date = $(this).data('date');
         const description = $(this).data('description');
 
         $('#announcement_modal .modal-title').text('Edit Announcement');
         $('#announcement_id').val(id);
+        $('[name="title"]').val(title);
         $('[name="description"]').val(description);
         $('[name="date"]').val(new Date(date).toISOString().slice(0,16));
         $('[name="img"]').prop('required', false);
         $('#announcement_modal').modal('show');
     });
-
-    // (Optional) View for non-admins
-    if(adminType == 0){
-        $(document).on('click', '#announcement_list ul li', function(){
-            const img = $(this).data('image');
-            const date = $(this).data('date');
-            const description = $(this).data('description');
-
-            $('#view_announcement_img').attr('src', img);
-            $('#view_announcement_date').text(date);
-            $('#view_announcement_desc').text(description);
-
-            $('#announcement_view_modal').modal('show');
-        });
-    }
 });
 </script>
