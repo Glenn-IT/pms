@@ -33,15 +33,43 @@
         <div class="col-md-4">
             <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
                 <div class="icon text-success mb-2"><i class="fa fa-calendar-alt fa-2x"></i></div>
-                <h5 class="mb-1">Upcoming Events</h5>
+                <h5 class="mb-1">Events</h5>
                 <h3 class="font-weight-bold" id="event_count">0</h3>
             </div>
         </div>
         
+        
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fa fa-venus-mars mr-2"></i>Gender Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="genderChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fa fa-map-marker-alt mr-2"></i>Population Per Zone</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="zoneChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
     
 </div>
+
+<!-- Include Chart.js -->
+<script src="../plugins/chart.js/Chart.min.js"></script>
 
 <script>
 $(document).ready(function(){   // Fetch stats (example)
@@ -59,7 +87,94 @@ $(document).ready(function(){   // Fetch stats (example)
             console.log('Response:', xhr.responseText);
         }
     });
+    
+    // Load Gender Chart
+    $.ajax({
+        url: '../classes/Master.php?f=get_gender_stats',
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                createGenderChart(resp.data);
+            }
+        }
+    });
+    
+    // Load Zone Chart
+    $.ajax({
+        url: '../classes/Master.php?f=get_zone_stats',
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                createZoneChart(resp.data);
+            }
+        }
+    });
 });
+
+function createGenderChart(data) {
+    const ctx = document.getElementById('genderChart').getContext('2d');
+    const labels = data.map(item => item.label);
+    const counts = data.map(item => item.count);
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: ['#007bff', '#dc3545'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+function createZoneChart(data) {
+    const ctx = document.getElementById('zoneChart').getContext('2d');
+    const labels = data.map(item => item.label);
+    const counts = data.map(item => item.count);
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Population',
+                data: counts,
+                backgroundColor: '#28a745',
+                borderColor: '#1e7e34',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
 </script>
 
 <style>

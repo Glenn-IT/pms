@@ -720,6 +720,40 @@ function get_dashboard_stats() {
     return json_encode(['status' => 'success', 'data' => $stats]);
 }
 
+function get_gender_stats() {
+    $gender_stats = [];
+    
+    // Get gender distribution (excluding admin - type = 1)
+    $gender_qry = $this->conn->query("SELECT sex, COUNT(*) as count FROM `users` WHERE `status` = 1 AND `type` != 1 GROUP BY sex");
+    if($gender_qry) {
+        while($row = $gender_qry->fetch_assoc()) {
+            $gender_stats[] = [
+                'label' => $row['sex'],
+                'count' => (int)$row['count']
+            ];
+        }
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $gender_stats]);
+}
+
+function get_zone_stats() {
+    $zone_stats = [];
+    
+    // Get zone distribution (excluding admin - type = 1)
+    $zone_qry = $this->conn->query("SELECT zone, COUNT(*) as count FROM `users` WHERE `status` = 1 AND `type` != 1 GROUP BY zone ORDER BY zone");
+    if($zone_qry) {
+        while($row = $zone_qry->fetch_assoc()) {
+            $zone_stats[] = [
+                'label' => 'Zone ' . $row['zone'],
+                'count' => (int)$row['count']
+            ];
+        }
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $zone_stats]);
+}
+
 //End Event Code
 }
 
@@ -732,6 +766,12 @@ switch ($action) {
 	break;
 	case 'get_dashboard_stats':
 		echo $Master->get_dashboard_stats();
+	break;
+	case 'get_gender_stats':
+		echo $Master->get_gender_stats();
+	break;
+	case 'get_zone_stats':
+		echo $Master->get_zone_stats();
 	break;
 	case 'save_prison':
 		echo $Master->save_prison();
