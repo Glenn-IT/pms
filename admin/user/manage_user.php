@@ -254,6 +254,9 @@ if(isset($_GET['id'])){
 	            } else if (resp == 3) {
 	                $('#msg').html('<div class="alert alert-danger">Username already exists</div>');
 	                end_loader();
+	            } else if (resp == 5) {
+	                $('#msg').html('<div class="alert alert-danger">A user with the same name and birthdate already exists</div>');
+	                end_loader();
 	            } else {
 	                $('#msg').html('<div class="alert alert-danger">An unexpected error occurred: ' + resp + '</div>');
 	                end_loader();

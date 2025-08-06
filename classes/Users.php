@@ -38,6 +38,12 @@ Class Users extends DBConnection {
         return 3; // Username already exists
     }
 
+    // ✅ Check for duplicate user details (firstname, middlename, lastname, birthdate)
+    $duplicate_check = $this->conn->query("SELECT * FROM users WHERE firstname = '{$firstname}' AND middlename = '{$middlename}' AND lastname = '{$lastname}' AND birthdate = '{$birthdate}' " . (!empty($id) ? "AND id != '{$id}'" : ""));
+    if ($duplicate_check && $duplicate_check->num_rows > 0) {
+        return 5; // User with same details already exists
+    }
+
     foreach($_POST as $k => $v){
         if(!in_array($k,array('id'))){
             if(!empty($data)) $data .=" , ";
