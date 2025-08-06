@@ -32,6 +32,17 @@ Class Users extends DBConnection {
     extract($_POST);
     $data = '';
 
+    // ✅ Check age validation - Don't allow users above 30
+    if (isset($birthdate)) {
+        $birth_date = new DateTime($birthdate);
+        $current_date = new DateTime();
+        $age = $current_date->diff($birth_date)->y;
+        
+        if ($age > 30) {
+            return 6; // Age above 30 not allowed
+        }
+    }
+
     // ✅ Check for duplicate username
     $check = $this->conn->query("SELECT * FROM users WHERE username = '{$username}' " . (!empty($id) ? "AND id != '{$id}'" : ""));
     if ($check && $check->num_rows > 0) {
@@ -267,6 +278,30 @@ Class Users extends DBConnection {
 		return json_encode($resp);
 	}
 	
+	public function check_and_deactivate_users_over_31(){
+		// Get all active users
+		$users_query = $this->conn->query("SELECT id, firstname, lastname, birthdate, status FROM users WHERE status = 1");
+		$deactivated_count = 0;
+		
+		if($users_query && $users_query->num_rows > 0) {
+			while($user = $users_query->fetch_assoc()) {
+				$birth_date = new DateTime($user['birthdate']);
+				$current_date = new DateTime();
+				$age = $current_date->diff($birth_date)->y;
+				
+				// If user is 31 or older, deactivate them
+				if($age >= 31) {
+					$update_query = $this->conn->query("UPDATE users SET status = 0 WHERE id = {$user['id']}");
+					if($update_query) {
+						$deactivated_count++;
+					}
+				}
+			}
+		}
+		
+		return $deactivated_count;
+	}
+	
 }
 
 $users = new users();
@@ -280,6 +315,10 @@ switch ($action) {
 	break;
 	case 'toggle_status':
 		echo $users->toggle_status();
+	break;
+	case 'check_age':
+		echo $users->check_and_deactivate_users_over_31();
+	break;
 	break;
 	case 'registration':
 		echo $users->registration();

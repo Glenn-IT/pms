@@ -58,7 +58,8 @@ if(isset($_GET['id'])){
 				<div class="form-group">
 					<label for="age">Age</label>
 					<input type="number" name="age" id="age" class="form-control" value="<?php echo isset($meta['age']) ? $meta['age'] : '' ?>" readonly required>
-					<div class="invalid-feedback">Age must be between 15 and 30 years old.</div>
+					<div class="invalid-feedback">Age must be between 15 and 30 years old. Users above 30 are not allowed.</div>
+					<small class="text-warning"><strong>Note:</strong> Users above 30 years old cannot be registered in the system.</small>
 				</div>
 
 				<!-- Username -->
@@ -210,7 +211,7 @@ if(isset($_GET['id'])){
 	    if (age < 15 || age > 30) {
 	        $('#age').addClass('is-invalid');
 	        if ($('#age').next('.invalid-feedback').length === 0) {
-	            $('#age').after('<div class="invalid-feedback">Age must be between 15 and 30 years old.</div>');
+	            $('#age').after('<div class="invalid-feedback">Age must be between 15 and 30 years old. Users above 30 are not allowed.</div>');
 	        }
 	    } else {
 	        $('#age').removeClass('is-invalid');
@@ -224,7 +225,7 @@ if(isset($_GET['id'])){
 
 	    var age = $('#age').val();
 	    if (age < 15 || age > 30) {
-	        alert('Age must be between 15 and 30 years old.');
+	        alert('Age must be between 15 and 30 years old. Users above 30 are not allowed to register.');
 	        end_loader();
 	        return;
 	    }
@@ -256,6 +257,9 @@ if(isset($_GET['id'])){
 	                end_loader();
 	            } else if (resp == 5) {
 	                $('#msg').html('<div class="alert alert-danger">A user with the same name and birthdate already exists</div>');
+	                end_loader();
+	            } else if (resp == 6) {
+	                $('#msg').html('<div class="alert alert-danger">Users above 30 years old are not allowed to register</div>');
 	                end_loader();
 	            } else {
 	                $('#msg').html('<div class="alert alert-danger">An unexpected error occurred: ' + resp + '</div>');
