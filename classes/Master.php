@@ -705,11 +705,11 @@ function search_events(){
 function get_dashboard_stats() {
     $stats = [];
     
-    // Count registered youth (users with status = 1)
+    // Count registered youth (users with status = 1, minus 1 for admin)
     $youth_qry = $this->conn->query("SELECT COUNT(*) as count FROM `users` WHERE `status` = 1");
     if($youth_qry) {
         $youth_result = $youth_qry->fetch_assoc();
-        $stats['youth'] = $youth_result['count'];
+        $stats['youth'] = $youth_result['count'] - 1; // Subtract 1 to exclude admin
     } else {
         $stats['youth'] = 0;
     }
