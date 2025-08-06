@@ -163,7 +163,7 @@
             window.location.href = '<?= base_url ?>admin/index.php'; // change to your post-login redirect
           }
           else if(resp.status === 'inactive'){
-            $('#login-message').text('Your account is inactive. Please contact support.');
+            $('#login-message').text(resp.msg || 'Your account has been deactivated. Please contact support.');
           }
           else if(resp.status === 'incorrect'){
             // Increment failed attempts

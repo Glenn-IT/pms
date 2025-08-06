@@ -146,6 +146,18 @@ Class Users extends DBConnection {
 			return false;
 		}
 	}
+	
+	public function toggle_status(){
+		extract($_POST);
+		$qry = $this->conn->query("UPDATE users SET status = '$status' WHERE id = '$id'");
+		if($qry){
+			$status_text = $status == 1 ? 'activated' : 'deactivated';
+			$this->settings->set_flashdata('success',"User has been $status_text successfully.");
+			return 1;
+		}else{
+			return false;
+		}
+	}
 	function registration(){
 		if(!empty($_POST['password']))
 			$_POST['password'] = md5($_POST['password']);
@@ -259,6 +271,9 @@ switch ($action) {
 	break;
 	case 'delete':
 		echo $users->delete_users();
+	break;
+	case 'toggle_status':
+		echo $users->toggle_status();
 	break;
 	case 'registration':
 		echo $users->registration();

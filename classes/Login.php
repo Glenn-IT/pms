@@ -30,7 +30,14 @@ class Login extends DBConnection {
         $result = $stmt->get_result();
         
         if ($result->num_rows > 0) {
-            foreach ($result->fetch_array() as $k => $v) {
+            $user_data = $result->fetch_array();
+            
+            // Check if user status is active (1)
+            if (isset($user_data['status']) && $user_data['status'] == 0) {
+                return json_encode(array('status' => 'inactive', 'msg' => 'Your account has been deactivated. Please contact SK Secretary.'));
+            }
+            
+            foreach ($user_data as $k => $v) {
                 if (!is_numeric($k) && $k != 'password') {
                     $this->settings->set_userdata($k, $v);
                 }

@@ -23,10 +23,11 @@
 			<table class="table table-hover table-striped table-bordered" id="list">
 				<colgroup>
 					<col width="5%">
-					<col width="15%">
-					<col width="15%">
-					<col width="20%">
-					<col width="15%">
+					<col width="12%">
+					<col width="12%">
+					<col width="18%">
+					<col width="13%">
+					<col width="10%">
 					<col width="10%">
 					<col width="10%">
 					<col width="10%">
@@ -40,6 +41,7 @@
 						<th>Zone/Purok</th>
 						<th>Username</th>
 						<th>Type</th>
+						<th>Status</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -67,6 +69,13 @@
 									N/A
                                 <?php endif; ?>
                             </td>
+							<td class="text-center">
+                                <?php if(isset($row['status']) && $row['status'] == 1): ?>
+                                    <span class="badge badge-success">Active</span>
+                                <?php else: ?>
+                                    <span class="badge badge-danger">Deactivated</span>
+                                <?php endif; ?>
+                            </td>
 							<td align="center">
 								 <button type="button" class="btn btn-flat p-1 btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
 				                  		Action
@@ -74,6 +83,12 @@
 				                  </button>
 				                  <div class="dropdown-menu" role="menu">
 				                    <a class="dropdown-item" href="./?page=user/manage_user&id=<?= $row['id'] ?>"><span class="fa fa-edit text-dark"></span> Edit</a>
+				                    <div class="dropdown-divider"></div>
+				                    <?php if(isset($row['status']) && $row['status'] == 1): ?>
+				                    	<a class="dropdown-item toggle_status" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-status="0"><span class="fa fa-toggle-off text-danger"></span> Deactivate</a>
+				                    <?php else: ?>
+				                    	<a class="dropdown-item toggle_status" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-status="1"><span class="fa fa-toggle-on text-success"></span> Activate</a>
+				                    <?php endif; ?>
 				                    <div class="dropdown-divider"></div>
 				                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
 				                  </div>
@@ -90,9 +105,14 @@
 		$('.delete_data').click(function(){
 			_conf("Are you sure to delete this User permanently?","delete_user",[$(this).attr('data-id')])
 		})
+		$('.toggle_status').click(function(){
+			var status = $(this).attr('data-status');
+			var message = status == 1 ? "Are you sure to activate this User?" : "Are you sure to deactivate this User?";
+			_conf(message,"toggle_user_status",[$(this).attr('data-id'), status])
+		})
 		$('.table').dataTable({
 			columnDefs: [
-				{ orderable: false, targets: [7] } // Adjusted due to added column
+				{ orderable: false, targets: [8] } // Adjusted due to added Status column
 			],
 			order:[0,'asc']
 		});
@@ -119,10 +139,32 @@
 			}
 		})
 	}
+	
+	function toggle_user_status($id, $status){
+		start_loader();
+		$.ajax({
+			url:_base_url_+"classes/Users.php?f=toggle_status",
+			method:"POST",
+			data:{id: $id, status: $status},
+			error:err=>{
+				console.log(err)
+				alert_toast("An error occured.",'error');
+				end_loader();
+			},
+			success:function(resp){
+				if(resp == 1){
+					location.reload();
+				}else{
+					alert_toast("An error occured.",'error');
+					end_loader();
+				}
+			}
+		})
+	}
 </script>
 
 <style>
-	/* Hide 6th column (index 5, 0-based) */
+	/* Hide 7th column (Type column, index 6, 0-based) */
 	#list th:nth-child(7),
 	#list td:nth-child(7) {
 		display: none;

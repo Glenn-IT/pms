@@ -138,6 +138,12 @@ if(isset($_GET['id'])){
 					</select>
 				</div>
 
+				<!-- Hidden User Type - Auto set to Staff (2) -->
+				<input type="hidden" name="type" value="2">
+
+				<!-- Hidden Status - Auto set to Active (1) -->
+				<input type="hidden" name="status" value="1">
+
 				<!-- Avatar Upload -->
 				<div class="form-group">
 					<label for="" class="control-label">Avatar</label>
