@@ -37,43 +37,26 @@
                 <h3 class="font-weight-bold" id="event_count">0</h3>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
-                <div class="icon text-warning mb-2"><i class="fa fa-handshake fa-2x"></i></div>
-                <h5 class="mb-1">Active Programs</h5>
-                <h3 class="font-weight-bold" id="program_count">0</h3>
-            </div>
-        </div>
+        
     </div>
 
     
 </div>
 
 <script>
-$(document).ready(function(){
-    // Fetch latest announcement
+$(document).ready(function(){   // Fetch stats (example)
     $.ajax({
-        url: 'classes/Master.php?f=get_latest_announcement',
-        dataType: 'json',
-        success: function(resp){
-            if(resp.status === 'success'){
-                $('#latest_announcement').text(resp.data.description);
-            } else {
-                $('#latest_announcement').text("No announcements available.");
-            }
-        }
-    });
-
-    // Fetch stats (example)
-    $.ajax({
-        url: 'classes/Master.php?f=get_dashboard_stats',
+        url: '../classes/Master.php?f=get_dashboard_stats',
         dataType: 'json',
         success: function(resp){
             if(resp.status === 'success'){
                 $('#youth_count').text(resp.data.youth || 0);
                 $('#event_count').text(resp.data.events || 0);
-                $('#program_count').text(resp.data.programs || 0);
             }
+        },
+        error: function(xhr, status, error) {
+            console.log('AJAX Error:', error);
+            console.log('Response:', xhr.responseText);
         }
     });
 });

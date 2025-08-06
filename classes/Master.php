@@ -702,6 +702,24 @@ function search_events(){
     }
 }
 
+function get_dashboard_stats() {
+    $stats = [];
+    
+    // Count registered youth (users with status = 1)
+    $youth_qry = $this->conn->query("SELECT COUNT(*) as count FROM `users` WHERE `status` = 1");
+    if($youth_qry) {
+        $youth_result = $youth_qry->fetch_assoc();
+        $stats['youth'] = $youth_result['count'];
+    } else {
+        $stats['youth'] = 0;
+    }
+    
+    // Count upcoming events (placeholder for now)
+    $stats['events'] = 0;
+    
+    return json_encode(['status' => 'success', 'data' => $stats]);
+}
+
 //End Event Code
 }
 
@@ -711,6 +729,9 @@ $sysset = new SystemSettings();
 switch ($action) {
 	case 'delete_img':
 		echo $Master->delete_img();
+	break;
+	case 'get_dashboard_stats':
+		echo $Master->get_dashboard_stats();
 	break;
 	case 'save_prison':
 		echo $Master->save_prison();
