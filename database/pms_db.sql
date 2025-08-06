@@ -345,7 +345,17 @@ INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `p
 (9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-05-22 14:10:08', '2025-08-06 12:57:45', 3, '2000-01-05', 25, 'Male'),
 (13, 'Glenard', 'U', 'Pagurayan', 'Glenn', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'sample', NULL, NULL, 2, 1, '2025-08-06 12:58:30', '2025-08-06 12:58:30', 1, '2000-02-02', 25, 'Male'),
 (14, 'Killua', 'Pol', 'Zoldyck', 'Killua', '86c8148718b55269a336f9e2c57b4117', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:00:23', '2025-08-06 13:44:23', 2, '2000-08-08', 24, 'Male'),
-(15, 'Glen', 'U', 'Pagurayan', 'User', '5725dbcc7254ee8422d1cb60db29625c', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:51:20', '2025-08-06 13:51:20', 1, '2000-08-23', 24, 'Male');
+(15, 'Glen', 'U', 'Pagurayan', 'User', '5725dbcc7254ee8422d1cb60db29625c', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:51:20', '2025-08-06 13:51:20', 1, '2000-08-23', 24, 'Male'),
+(16, 'Maria', 'Santos', 'Cruz', 'maria_cruz', '5d41402abc4b2a76b9719d911017c592', 'pet', 'fluffy', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1995-03-15', 30, 'Female'),
+(17, 'Jose', 'Miguel', 'Reyes', 'jose_reyes', '098f6bcd4621d373cade4e832627b4f6', 'pet', 'buddy', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1992-07-22', 33, 'Male'),
+(18, 'Ana', 'Isabel', 'Garcia', 'ana_garcia', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'pet', 'mittens', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1998-11-10', 26, 'Female'),
+(19, 'Roberto', 'Carlos', 'Martinez', 'roberto_martinez', 'aab3238922bcc25a6f606eb525ffdc56', 'pet', 'max', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1990-05-08', 35, 'Male'),
+(20, 'Carmen', 'Rosa', 'Lopez', 'carmen_lopez', '900150983cd24fb0d6963f7d28e17f72', 'pet', 'luna', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1996-09-14', 28, 'Female'),
+(21, 'Miguel', 'Antonio', 'Hernandez', 'miguel_hernandez', 'e10adc3949ba59abbe56e057f20f883e', 'pet', 'rocky', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1993-12-03', 31, 'Male'),
+(22, 'Sofia', 'Elena', 'Gonzalez', 'sofia_gonzalez', '25d55ad283aa400af464c76d713c07ad', 'pet', 'bella', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1999-02-28', 26, 'Female'),
+(23, 'Carlos', 'Eduardo', 'Rodriguez', 'carlos_rodriguez', '827ccb0eea8a706c4c34a16891f84e7b', 'pet', 'charlie', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1991-06-17', 34, 'Male'),
+(24, 'Isabella', 'Marie', 'Torres', 'isabella_torres', '25f9e794323b453885f5181f1b624d0b', 'pet', 'milo', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1997-04-12', 28, 'Female'),
+(25, 'Fernando', 'Luis', 'Flores', 'fernando_flores', 'e99a18c428cb38d5f260853678922e03', 'pet', 'oscar', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1994-10-25', 30, 'Male');
 
 -- --------------------------------------------------------
 
@@ -528,7 +538,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `visit_list`

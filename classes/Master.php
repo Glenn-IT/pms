@@ -714,8 +714,23 @@ function get_dashboard_stats() {
         $stats['youth'] = 0;
     }
     
-    // Count upcoming events (placeholder for now)
-    $stats['events'] = 0;
+    // Count events
+    $event_qry = $this->conn->query("SELECT COUNT(*) as count FROM `event_list`");
+    if($event_qry) {
+        $event_result = $event_qry->fetch_assoc();
+        $stats['events'] = (int)$event_result['count'];
+    } else {
+        $stats['events'] = 0;
+    }
+    
+    // Count announcements
+    $announcement_qry = $this->conn->query("SELECT COUNT(*) as count FROM `announcement_list`");
+    if($announcement_qry) {
+        $announcement_result = $announcement_qry->fetch_assoc();
+        $stats['announcements'] = (int)$announcement_result['count'];
+    } else {
+        $stats['announcements'] = 0;
+    }
     
     return json_encode(['status' => 'success', 'data' => $stats]);
 }
@@ -754,6 +769,33 @@ function get_zone_stats() {
     return json_encode(['status' => 'success', 'data' => $zone_stats]);
 }
 
+function get_status_stats() {
+    $status_stats = [];
+    
+    // Get status distribution (excluding admin - type = 1)
+    $status_qry = $this->conn->query("SELECT 
+        CASE 
+            WHEN status = 1 THEN 'Active' 
+            WHEN status = 0 THEN 'Inactive' 
+        END as status_label, 
+        COUNT(*) as count 
+        FROM `users` 
+        WHERE `type` != 1 
+        GROUP BY status 
+        ORDER BY status DESC");
+    
+    if($status_qry) {
+        while($row = $status_qry->fetch_assoc()) {
+            $status_stats[] = [
+                'label' => $row['status_label'],
+                'count' => (int)$row['count']
+            ];
+        }
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $status_stats]);
+}
+
 //End Event Code
 }
 
@@ -772,6 +814,9 @@ switch ($action) {
 	break;
 	case 'get_zone_stats':
 		echo $Master->get_zone_stats();
+	break;
+	case 'get_status_stats':
+		echo $Master->get_status_stats();
 	break;
 	case 'save_prison':
 		echo $Master->save_prison();

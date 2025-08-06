@@ -6,20 +6,7 @@
     </div>
 
     <!-- Announcement Highlight -->
-    <div class="announcement-highlight mb-4">
-        <div class="card shadow-sm rounded-lg border-0">
-            <div class="card-body d-flex align-items-center">
-                <div class="icon mr-3 text-primary">
-                    <i class="fa fa-bullhorn fa-3x"></i>
-                </div>
-                <div>
-                    
-                    
-                    <h5><a href="index.php?page=announcements" class="btn btn-link p-0 mt-2">View All Announcements →</a></h5>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Quick Stats -->
     <div class="row mb-4">
@@ -37,13 +24,20 @@
                 <h3 class="font-weight-bold" id="event_count">0</h3>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
+                <div class="icon text-success mb-2"><i class="fa fa-calendar-alt fa-2x"></i></div>
+                <h5 class="mb-1">Announcements</h5>
+                <h3 class="font-weight-bold" id="announcement_count">0</h3>
+            </div>
+        </div>
         
         
     </div>
 
     <!-- Charts Section -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-lg">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="fa fa-venus-mars mr-2"></i>Gender Distribution</h5>
@@ -53,13 +47,23 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-lg">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0"><i class="fa fa-map-marker-alt mr-2"></i>Population Per Zone</h5>
                 </div>
                 <div class="card-body">
                     <canvas id="zoneChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fa fa-user-check mr-2"></i>Active/Inactive Users</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusChart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
@@ -80,6 +84,7 @@ $(document).ready(function(){   // Fetch stats (example)
             if(resp.status === 'success'){
                 $('#youth_count').text(resp.data.youth || 0);
                 $('#event_count').text(resp.data.events || 0);
+                $('#announcement_count').text(resp.data.announcements || 0);
             }
         },
         error: function(xhr, status, error) {
@@ -106,6 +111,17 @@ $(document).ready(function(){   // Fetch stats (example)
         success: function(resp){
             if(resp.status === 'success'){
                 createZoneChart(resp.data);
+            }
+        }
+    });
+    
+    // Load Status Chart
+    $.ajax({
+        url: '../classes/Master.php?f=get_status_stats',
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                createStatusChart(resp.data);
             }
         }
     });
@@ -170,6 +186,34 @@ function createZoneChart(data) {
             plugins: {
                 legend: {
                     display: false
+                }
+            }
+        }
+    });
+}
+
+function createStatusChart(data) {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    const labels = data.map(item => item.label);
+    const counts = data.map(item => item.count);
+    
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: ['#17a2b8', '#6c757d'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
             }
         }
