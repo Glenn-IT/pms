@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2025 at 07:35 AM
+-- Generation Time: Aug 06, 2025 at 08:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,6 +54,7 @@ INSERT INTO `action_list` (`id`, `name`, `status`, `delete_flag`, `date_created`
 
 CREATE TABLE `announcement_list` (
   `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `image_path` varchar(255) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
@@ -63,10 +64,12 @@ CREATE TABLE `announcement_list` (
 -- Dumping data for table `announcement_list`
 --
 
-INSERT INTO `announcement_list` (`id`, `image_path`, `description`, `date_created`) VALUES
-(2, 'uploads/announcements/2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:36'),
-(3, 'uploads/announcements/3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:53'),
-(4, 'uploads/announcements/4.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:53:14');
+INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `description`, `date_created`) VALUES
+(2, '', 'uploads/announcements/2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:36'),
+(3, '', 'uploads/announcements/3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:53'),
+(4, 'Sample 2', 'uploads/announcements/4.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:53:14'),
+(5, 'Sample', 'uploads/announcements/5.jpg', 'asdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdvvv', '2025-07-31 16:45:03'),
+(6, 'awd', 'uploads/announcements/6.jpg', 'daw', '2025-08-04 03:16:59');
 
 -- --------------------------------------------------------
 
@@ -136,6 +139,29 @@ INSERT INTO `crime_list` (`id`, `name`, `status`, `delete_flag`, `date_created`,
 (8, 'Sexual Assult', 1, 0, '2022-05-31 09:27:06', '2022-05-31 09:27:06'),
 (9, 'Terrorism', 1, 0, '2022-05-31 09:27:26', '2022-05-31 09:27:26'),
 (10, 'Stalking and Harassment', 1, 0, '2022-05-31 09:27:43', '2022-05-31 09:28:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_list`
+--
+
+CREATE TABLE `event_list` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `date_created` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_list`
+--
+
+INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `date_created`) VALUES
+(1, 'Sample', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/1.png', '2025-08-04 03:37:22'),
+(2, 'Sample 4', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/2.png', '2025-08-04 03:37:40'),
+(3, 'Smaple 3', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/3.png', '2025-08-04 03:38:02');
 
 -- --------------------------------------------------------
 
@@ -301,6 +327,7 @@ CREATE TABLE `users` (
   `avatar` text DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `type` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `date_added` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `zone` int(1) NOT NULL,
@@ -313,12 +340,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
-(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, '2021-01-20 14:02:37', '2025-05-29 19:03:25', 0, NULL, 0, 'Male'),
-(9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', 'ee11cbb19052e40b07aac0ca060c23ee', 'pet', 'Sample', NULL, NULL, 2, '2025-05-22 14:10:08', '2025-05-29 19:30:24', 3, NULL, 0, 'Male'),
-(10, 'test', 'test', 'test', 'test', 'c06db68e819be6ec3d26c6038d8e8d1f', 'pet', 'sample', NULL, NULL, 0, '2025-05-29 19:30:00', '2025-06-11 12:54:33', 6, '2000-02-02', 25, 'Male'),
-(11, 'dasdasdasd', 'asdfasd', 'fsafasd', 'asdfsad', 'e5faf3f30cd9acb1b33c2ff66460fb39', 'pet', 'asdasdaw', NULL, NULL, 0, '2025-05-29 20:20:44', '2025-05-29 20:20:51', 2, '2001-01-01', 24, 'Male'),
-(12, 'asdawdw', 'qweqwe', 'asdwca', 'sdfawe', 'd1a93790c073af2c0d399d0fed015396', 'pet', 'qweqwr', NULL, NULL, 0, '2025-05-29 21:05:33', '2025-05-29 21:05:33', 1, '2000-02-02', 25, 'Male');
+INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
+(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, 1, '2021-01-20 14:02:37', '2025-05-29 19:03:25', 0, NULL, 0, 'Male'),
+(9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-05-22 14:10:08', '2025-08-06 12:57:45', 3, '2000-01-05', 25, 'Male'),
+(13, 'Glenard', 'U', 'Pagurayan', 'Glenn', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'sample', NULL, NULL, 2, 1, '2025-08-06 12:58:30', '2025-08-06 12:58:30', 1, '2000-02-02', 25, 'Male'),
+(14, 'Killua', 'Pol', 'Zoldyck', 'Killua', '86c8148718b55269a336f9e2c57b4117', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:00:23', '2025-08-06 13:44:23', 2, '2000-08-08', 24, 'Male'),
+(15, 'Glen', 'U', 'Pagurayan', 'User', '5725dbcc7254ee8422d1cb60db29625c', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:51:20', '2025-08-06 13:51:20', 1, '2000-08-23', 24, 'Male');
 
 -- --------------------------------------------------------
 
@@ -371,6 +398,12 @@ ALTER TABLE `cell_list`
 -- Indexes for table `crime_list`
 --
 ALTER TABLE `crime_list`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `event_list`
+--
+ALTER TABLE `event_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -441,7 +474,7 @@ ALTER TABLE `action_list`
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cell_list`
@@ -454,6 +487,12 @@ ALTER TABLE `cell_list`
 --
 ALTER TABLE `crime_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `event_list`
+--
+ALTER TABLE `event_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `inmate_list`
@@ -489,7 +528,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `visit_list`
