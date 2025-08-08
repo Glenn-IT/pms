@@ -69,7 +69,7 @@
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-population">
+                      <a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population">
                         <i class="nav-icon fas fa-th-list"></i>
                         <p>
                         Population
@@ -84,14 +84,7 @@
                         </p>
                       </a>
                     </li> 
-                    <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-attended_events">
-                        <i class="nav-icon fas fa-list"></i>
-                        <p>
-                          Attended Events
-                        </p>
-                      </a>
-                    </li> 
+                    
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-presents">
                         <i class="nav-icon fas fa-bars"></i>
