@@ -65,6 +65,15 @@
                         </p>
                       </a>
                     </li> 
+
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=skofficials/index" class="nav-link nav-skofficials_index">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                          SK Officials
+                        </p>
+                      </a>
+                    </li> 
                     
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>

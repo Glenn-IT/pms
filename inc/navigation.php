@@ -39,6 +39,14 @@
                         </p>
                       </a>
                     </li> 
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=skofficials" class="nav-link nav-skofficials">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                          SK Officials
+                        </p>
+                      </a>
+                    </li> 
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Maintenance</li>
                     <li class="nav-item dropdown">

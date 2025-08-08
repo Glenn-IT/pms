@@ -989,6 +989,88 @@ function get_status_stats() {
     return json_encode(['status' => 'success', 'data' => $status_stats]);
 }
 
+	// SK Officials Functions
+	function save_official(){
+		// Check if user is admin
+		if($this->settings->userdata('type') != 1){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
+			return json_encode($resp);
+		}
+		
+		extract($_POST);
+		$data = "";
+		foreach($_POST as $k =>$v){
+			if(!in_array($k,array('id'))){
+				if(!empty($data)) $data .=",";
+				$v = $this->conn->real_escape_string(htmlspecialchars($v));
+				$data .= " `{$k}`='{$v}' ";
+			}
+		}
+		
+		// Check position limits: 1 Chairman, max 7 Councilors
+		if($position == 'chairman'){
+			$check_chairman = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'chairman' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
+			if($check_chairman > 0){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "There can only be one SK Chairman.";
+				return json_encode($resp);
+			}
+		} elseif($position == 'councilor'){
+			$check_councilor = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'councilor' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
+			if($check_councilor >= 7){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Maximum of 7 SK Councilors allowed.";
+				return json_encode($resp);
+			}
+		}
+		
+		if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
+			$fname = strtotime(date('y-m-d H:i')).'_'.($_FILES['img']['name']);
+			$move = move_uploaded_file($_FILES['img']['tmp_name'],'../uploads/sk_officials/'. $fname);
+			$data .= ", `image_path` = '{$fname}' ";
+		}
+		
+		if(empty($id)){
+			$sql = "INSERT INTO `sk_officials` set {$data} ";
+		}else{
+			$sql = "UPDATE `sk_officials` set {$data} where id = '{$id}' ";
+		}
+		
+		$save = $this->conn->query($sql);
+		if($save){
+			$resp['status'] = 'success';
+			if(empty($id))
+				$this->settings->set_flashdata('success',"New SK Official successfully saved.");
+			else
+				$this->settings->set_flashdata('success',"SK Official successfully updated.");
+		}else{
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+	
+	function delete_official(){
+		// Check if user is admin
+		if($this->settings->userdata('type') != 1){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
+			return json_encode($resp);
+		}
+		
+		extract($_POST);
+		$del = $this->conn->query("UPDATE `sk_officials` set `status` = 0 where id = '{$id}'");
+		if($del){
+			$resp['status'] = 'success';
+			$this->settings->set_flashdata('success',"SK Official successfully deleted.");
+		}else{
+			$resp['status'] = 'failed';
+			$resp['error'] = $this->conn->error;
+		}
+		return json_encode($resp);
+	}
+
 //End Event Code
 }
 
@@ -1094,6 +1176,12 @@ switch ($action) {
 	break;
 	case 'get_all_events_with_attendance':
 		echo $Master->get_all_events_with_attendance();
+	break;
+	case 'save_official':
+		echo $Master->save_official();
+	break;
+	case 'delete_official':
+		echo $Master->delete_official();
 	break;
 
 	
