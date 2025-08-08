@@ -49,7 +49,7 @@
                    
 
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=event/index" class="nav-link nav-event">
+                      <a href="<?php echo base_url ?>admin/?page=event/index" class="nav-link nav-event_index">
                         <i class="nav-icon fas fa-file-alt"></i>
                         <p>
                           Event
@@ -58,7 +58,7 @@
                     </li> 
 
                       <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-qrcode_index">
+                      <a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-QRCode_index">
                         <i class="nav-icon fas fa-qrcode"></i>
                         <p>
                           My QR Code
@@ -78,7 +78,7 @@
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population">
+                      <a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">
                         <i class="nav-icon fas fa-th-list"></i>
                         <p>
                         Population
@@ -86,7 +86,7 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-active_purok">
+                      <a href="<?php echo base_url ?>admin/?page=activepurok/index" class="nav-link nav-activepurok_index">
                         <i class="nav-icon fas fa-border-all"></i>
                         <p>
                           Active Purok
@@ -95,7 +95,7 @@
                     </li> 
                     
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-presents">
+                      <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           Attendance List
