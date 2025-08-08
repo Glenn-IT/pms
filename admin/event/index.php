@@ -36,6 +36,18 @@
         object-fit: cover;
         background: #f5f5f5;
         flex-shrink: 0;
+        position: relative;
+    }
+
+    .image-indicator {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
     }
 
     .event-body {
@@ -97,6 +109,66 @@
         display: flex;
         gap: 0.5rem;
         margin-top: auto;
+        flex-wrap: wrap;
+    }
+
+    .image-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .image-preview {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #ddd;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .gallery-image:hover {
+        transform: scale(1.05);
     }
 
     @media (max-width: 900px) {
@@ -131,9 +203,9 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal for Add/Edit Event -->
 <div class="modal fade" id="event_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <form id="event_form">
             <input type="hidden" name="id" id="event_id">
             <div class="modal-content">
@@ -147,8 +219,10 @@
                         <input type="text" class="form-control" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="img">Event Image</label>
-                        <input type="file" class="form-control" name="img" accept="image/*" required>
+                        <label for="img">Event Images</label>
+                        <input type="file" class="form-control" name="images[]" accept="image/*" multiple required>
+                        <small class="text-muted">You can select multiple images</small>
+                        <div id="image_preview_container" class="image-preview-container"></div>
                     </div>
                     <div class="form-group">
                         <label for="date">Date & Time</label>
@@ -168,6 +242,43 @@
     </div>
 </div>
 
+<!-- Modal for View Event -->
+<div class="modal fade" id="view_event_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="view_event_content">
+                    <!-- Event details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Image Gallery -->
+<div class="modal fade" id="image_gallery_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Images</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="image_gallery_content">
+                    <!-- Gallery images will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 let eventData = [];
 
@@ -184,9 +295,16 @@ function renderEvents(sortOrder = 'desc') {
     });
     let html = '';
     sorted.forEach(event => {
+        const images = event.images || [];
+        const primaryImage = images[0] || event.image_path;
+        const imageCount = images.length || (event.image_path ? 1 : 0);
+        
         html += `
             <div class="event-card">
-                <img src="../${event.image_path}" class="event-img" alt="Event">
+                <div class="event-img" style="position: relative;">
+                    <img src="../${primaryImage}" class="event-img" alt="Event" style="position: static;">
+                    ${imageCount > 1 ? `<div class="image-indicator">${imageCount} photos</div>` : ''}
+                </div>
                 <div class="event-body">
                     <div class="event-title">${event.title}</div>
                     <div class="event-date">
@@ -194,8 +312,11 @@ function renderEvents(sortOrder = 'desc') {
                     </div>
                     <div class="event-desc">${event.description}</div>
                     <span class="read-more">Read More</span>
-                    ${adminType == 1 ? `
                     <div class="event-actions">
+                        <button class="btn btn-sm btn-info view_event" data-id="${event.id}">
+                            <i class="fa fa-eye"></i> View
+                        </button>
+                        ${adminType == 1 ? `
                         <button class="btn btn-sm btn-primary edit_event" 
                             data-id="${event.id}" 
                             data-title="${event.title}" 
@@ -206,8 +327,8 @@ function renderEvents(sortOrder = 'desc') {
                         <button class="btn btn-sm btn-danger delete_event" data-id="${event.id}">
                             <i class="fa fa-trash"></i> Delete
                         </button>
+                        ` : ''}
                     </div>
-                    ` : ''}
                 </div>
             </div>
         `;
@@ -244,11 +365,73 @@ function loadAllEvents() {
     });
 }
 
+function showImageGallery(eventId) {
+    const event = eventData.find(e => e.id == eventId);
+    if (event && (event.images || event.image_path)) {
+        let content = '<div class="image-gallery">';
+        
+        if (event.images && event.images.length > 0) {
+            event.images.forEach(image => {
+                content += `<img src="../${image}" class="gallery-image" alt="Event Image" style="height: 200px; cursor: zoom-in;" onclick="window.open('../${image}', '_blank')">`;
+            });
+        } else if (event.image_path) {
+            content += `<img src="../${event.image_path}" class="gallery-image" alt="Event Image" style="height: 200px; cursor: zoom-in;" onclick="window.open('../${event.image_path}', '_blank')">`;
+        }
+        
+        content += '</div>';
+        $('#image_gallery_content').html(content);
+        $('#image_gallery_modal').modal('show');
+    }
+}
+
 $(function() {
     loadAllEvents();
 
     $('#sort_event').on('change', function() {
         renderEvents($(this).val());
+    });
+
+    // Image preview functionality
+    $('input[name="images[]"]').on('change', function() {
+        const files = this.files;
+        const container = $('#image_preview_container');
+        container.empty();
+        
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const preview = $(`
+                    <div class="image-preview" data-index="${i}">
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-image" data-index="${i}">×</button>
+                    </div>
+                `);
+                container.append(preview);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image preview
+    $(document).on('click', '.remove-image', function() {
+        const index = $(this).data('index');
+        $(this).closest('.image-preview').remove();
+        
+        // Reset file input to remove the file
+        const fileInput = $('input[name="images[]"]')[0];
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+        
+        for (let i = 0; i < files.length; i++) {
+            if (i !== index) {
+                dt.items.add(files[i]);
+            }
+        }
+        
+        fileInput.files = dt.files;
     });
 
     // Read More Toggle
@@ -259,13 +442,40 @@ $(function() {
         if (desc.hasClass('expanded')) {
             desc.removeClass('expanded');
             $(this).text('Read More');
-            card.css('height', ''); // Reset to auto height
+            card.css('height', '');
         } else {
             desc.addClass('expanded');
             $(this).text('Show Less');
-            card.css('height', 'auto'); // Allow auto expansion
+            card.css('height', 'auto');
         }
     });
+
+    // View event functionality
+    $(document).on('click', '.view_event', function() {
+    const eventId = $(this).data('id');
+    const event = eventData.find(e => e.id == eventId);
+    
+    if (event) {
+        let content = '';
+        
+        if (event.images && event.images.length > 0) {
+            content += `<div class="image-gallery">`;
+            
+            event.images.forEach(image => {
+                content += `<img src="../${image}" class="gallery-image" alt="Event Image" style="height: 300px; cursor: zoom-in;" onclick="window.open('../${image}', '_blank')">`;
+            });
+            
+            content += `</div>`;
+        } else if (event.image_path) {
+            content += `<img src="../${event.image_path}" class="gallery-image" alt="Event Image" style="height: 300px; cursor: zoom-in; width: 100%;" onclick="window.open('../${event.image_path}', '_blank')">`;
+        } else {
+            content = '<p>No images available for this event.</p>';
+        }
+        
+        $('#view_event_content').html(content);
+        $('#view_event_modal').modal('show');
+    }
+});
 
     $('#event_form').submit(function(e) {
         e.preventDefault();
@@ -298,7 +508,8 @@ $(function() {
     $('#add_event').click(function() {
         $('#event_form')[0].reset();
         $('#event_id').val('');
-        $('[name="img"]').prop('required', true);
+        $('#image_preview_container').empty();
+        $('input[name="images[]"]').prop('required', true);
         $('#event_modal .modal-title').text('Add New Event');
         $('#event_modal').modal('show');
     });
@@ -338,7 +549,8 @@ $(function() {
         $('[name="title"]').val(title);
         $('[name="description"]').val(description);
         $('[name="date"]').val(new Date(date).toISOString().slice(0, 16));
-        $('[name="img"]').prop('required', false);
+        $('input[name="images[]"]').prop('required', false);
+        $('#image_preview_container').empty();
         $('#event_modal').modal('show');
     });
 });

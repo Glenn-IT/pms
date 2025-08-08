@@ -597,8 +597,8 @@ function save_event() {
         $data .= " `title`='{$title}' ";
     if(!empty($description))
         $data .= ", `description`='{$description}' ";
-    if(!empty($date_created))
-        $data .= ", `date_created`='{$date_created}' ";
+    if(!empty($date))
+        $data .= ", `date_created`='{$date}' ";
 
     if(!empty($id)){
         $sql = "UPDATE `event_list` SET {$data} WHERE id = '{$id}'";
@@ -615,14 +615,35 @@ function save_event() {
         $resp['eid'] = $eid;
         $resp['status'] = 'success';
 
-        if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
-            $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+        // Handle multiple image upload
+        if(isset($_FILES['images']) && !empty($_FILES['images']['name'][0])){
             $dir = "uploads/events/";
-            if(!is_dir(base_app . $dir)) mkdir(base_app . $dir);
-            $fname = $dir . $eid . '.' . $ext;
-
-            move_uploaded_file($_FILES['img']['tmp_name'], base_app . $fname);
-            $this->conn->query("UPDATE event_list SET image_path = '{$fname}' WHERE id = '{$eid}'");
+            if(!is_dir(base_app . $dir)) mkdir(base_app . $dir, 0777, true);
+            
+            $imagePaths = [];
+            $totalFiles = count($_FILES['images']['name']);
+            
+            for($i = 0; $i < $totalFiles; $i++){
+                if($_FILES['images']['error'][$i] == UPLOAD_ERR_OK){
+                    $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
+                    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+                    
+                    if(in_array(strtolower($ext), $allowedTypes)){
+                        $filename = $eid . '_' . time() . '_' . $i . '.' . $ext;
+                        $filepath = $dir . $filename;
+                        
+                        if(move_uploaded_file($_FILES['images']['tmp_name'][$i], base_app . $filepath)){
+                            $imagePaths[] = $filepath;
+                        }
+                    }
+                }
+            }
+            
+            if(!empty($imagePaths)){
+                $imagePathsJson = json_encode($imagePaths);
+                $imagePathsJson = $this->conn->real_escape_string($imagePathsJson);
+                $this->conn->query("UPDATE event_list SET image_paths = '{$imagePathsJson}' WHERE id = '{$eid}'");
+            }
         }
 
         $resp['msg'] = "Event successfully saved.";
@@ -634,13 +655,52 @@ function save_event() {
     return json_encode($resp);
 }
 
+function get_all_events(){
+    $events = [];
+    $qry = $this->conn->query("SELECT * FROM event_list ORDER BY date_created DESC");
+    if($qry){
+        while($row = $qry->fetch_assoc()){
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            
+            // Handle multiple images
+            if(!empty($row['image_paths'])){
+                $row['images'] = json_decode($row['image_paths'], true);
+            } else if(!empty($row['image_path'])){
+                // Fallback for single image (backward compatibility)
+                $row['images'] = [$row['image_path']];
+            } else {
+                $row['images'] = [];
+            }
+            
+            $events[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $events]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
 function delete_event() {
     extract($_POST);
 
     $get = $this->conn->query("SELECT * FROM event_list WHERE id = '{$id}'");
     if($get->num_rows > 0){
         $ev = $get->fetch_assoc();
-        if(is_file(base_app . $ev['image_path'])){
+        
+        // Delete multiple images
+        if(!empty($ev['image_paths'])){
+            $imagePaths = json_decode($ev['image_paths'], true);
+            if(is_array($imagePaths)){
+                foreach($imagePaths as $imagePath){
+                    if(is_file(base_app . $imagePath)){
+                        unlink(base_app . $imagePath);
+                    }
+                }
+            }
+        }
+        
+        // Delete single image (backward compatibility)
+        if(!empty($ev['image_path']) && is_file(base_app . $ev['image_path'])){
             unlink(base_app . $ev['image_path']);
         }
     }
@@ -673,7 +733,7 @@ function get_latest_event(){
         ]);
     }
 }
-function get_all_events(){
+/*function get_all_events(){
     $events = [];
     $qry = $this->conn->query("SELECT * FROM event_list ORDER BY date_created DESC");
     if($qry){
@@ -685,7 +745,7 @@ function get_all_events(){
     } else {
         return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
     }
-}
+}*/
 function search_events(){
     extract($_GET); // get `keyword`
     $events = [];
