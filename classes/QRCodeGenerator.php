@@ -22,7 +22,7 @@ class QRCodeGenerator {
         $qrString = sprintf(
             "PMS-USER-%05d-%s-%s", 
             $userId, 
-            strtoupper(substr($userData['username'], 0, 8)), 
+            strtoupper(str_replace(' ', '_', substr($userData['username'], 0, 8))), 
             substr($uniqueData['unique_hash'], 0, 8)
         );
         
@@ -63,7 +63,8 @@ class QRCodeGenerator {
      * @return array|false - User data if valid, false if invalid
      */
     public static function validateQRCode($qrCode) {
-        if (preg_match('/^PMS-USER-(\d{5})-([A-Z0-9_]{1,8})-([a-f0-9]{8})$/', $qrCode, $matches)) {
+        // Updated regex to allow spaces in username part and longer usernames
+        if (preg_match('/^PMS-USER-(\d{5})-([A-Z0-9_ ]{1,15})-([a-f0-9]{8})$/', $qrCode, $matches)) {
             return [
                 'user_id' => intval($matches[1]),
                 'username_prefix' => $matches[2],
