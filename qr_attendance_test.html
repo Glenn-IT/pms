@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Attendance System - Test Page</title>
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h3>QR Attendance System - Testing</h3>
+            </div>
+            <div class="card-body">
+              <h5>Features Implemented:</h5>
+              <ul>
+                <li>
+                  <i class="fa fa-check text-success"></i> Created
+                  <code>event_attendance</code> table
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Added "Scan QR"
+                  button to events
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Added "Attendance"
+                  button for admins
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i>
+                  <strong>Camera QR code scanning functionality</strong>
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Manual QR code entry
+                  option
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Attendance recording
+                  with duplicate prevention
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Event attendance
+                  overview in announcements page
+                </li>
+                <li>
+                  <i class="fa fa-check text-success"></i> Detailed attendance
+                  viewing with data grid
+                </li>
+              </ul>
+
+              <h5>How to Use:</h5>
+              <ol>
+                <li>Go to <strong>Events</strong> page</li>
+                <li>
+                  Click
+                  <span class="btn btn-success btn-sm"
+                    ><i class="fa fa-qrcode"></i> Scan QR</span
+                  >
+                  on any event
+                </li>
+                <li>
+                  <strong>Option 1:</strong> Click "Start Camera" and point at
+                  user's QR code (auto-scans)
+                </li>
+                <li>
+                  <strong>Option 2:</strong> Manually enter QR code in the text
+                  field
+                </li>
+                <li>
+                  System automatically marks attendance when QR is detected
+                </li>
+                <li>
+                  Click
+                  <span class="btn btn-warning btn-sm"
+                    ><i class="fa fa-users"></i> Attendance</span
+                  >
+                  to view who attended
+                </li>
+                <li>
+                  Go to <strong>Announcements</strong> page to see the
+                  attendance overview table
+                </li>
+                <li>
+                  Click "View Details" to see detailed attendance for each event
+                </li>
+              </ol>
+
+              <h5>Camera Scanner Features:</h5>
+              <ul>
+                <li>
+                  <i class="fa fa-camera text-primary"></i> Real-time camera QR
+                  code detection
+                </li>
+                <li>
+                  <i class="fa fa-mobile text-primary"></i> Works on mobile
+                  devices and desktops
+                </li>
+                <li>
+                  <i class="fa fa-eye text-primary"></i> Automatic QR code
+                  recognition
+                </li>
+                <li>
+                  <i class="fa fa-bolt text-primary"></i> Instant attendance
+                  marking
+                </li>
+                <li>
+                  <i class="fa fa-shield text-primary"></i> Browser
+                  permission-based security
+                </li>
+              </ul>
+
+              <div class="row mt-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header bg-info text-white">
+                      <h6>
+                        <i class="fa fa-test-tube"></i> Test Camera Scanner
+                      </h6>
+                    </div>
+                    <div class="card-body">
+                      <p>Test the QR camera scanner functionality:</p>
+                      <a
+                        href="qr_camera_test.html"
+                        class="btn btn-info btn-block"
+                        target="_blank"
+                      >
+                        <i class="fa fa-camera"></i> Open Camera Test Page
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header bg-success text-white">
+                      <h6><i class="fa fa-qrcode"></i> Requirements</h6>
+                    </div>
+                    <div class="card-body">
+                      <ul class="mb-0">
+                        <li>Modern browser with camera support</li>
+                        <li>HTTPS connection (or localhost)</li>
+                        <li>Camera permissions granted</li>
+                        <li>Generated user QR codes</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h5>Database Structure:</h5>
+              <pre>
+event_attendance table:
+- id (auto increment)
+- event_id (foreign key to event_list)
+- user_id (foreign key to users)
+- qr_code (the scanned QR code)
+- scan_time (timestamp when scanned)
+- status (present/absent)
+- scanner_user_id (who scanned the QR)
+                        </pre
+              >
+
+              <div class="alert alert-info">
+                <strong>Note:</strong> Make sure users have QR codes generated
+                for them first!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

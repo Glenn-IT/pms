@@ -762,6 +762,139 @@ function search_events(){
     }
 }
 
+// Event Attendance Functions
+function record_event_attendance() {
+    extract($_POST);
+    $resp = array();
+    
+    if (empty($event_id) || empty($qr_code)) {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'Event ID and QR code are required';
+        return json_encode($resp);
+    }
+    
+    // Validate QR code and get user
+    require_once('QRCodeGenerator.php');
+    $validation = QRCodeGenerator::validateQRCode($qr_code);
+    
+    if (!$validation) {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'Invalid QR code format';
+        return json_encode($resp);
+    }
+    
+    $userId = $validation['user_id'];
+    
+    // Check if user exists and QR code matches
+    $userQuery = $this->conn->query("SELECT * FROM users WHERE id = '{$userId}' AND qr_code = '{$qr_code}' AND status = 1");
+    
+    if (!$userQuery || $userQuery->num_rows === 0) {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'No active user found matching this QR code';
+        return json_encode($resp);
+    }
+    
+    $user = $userQuery->fetch_assoc();
+    
+    // Check if event exists
+    $eventQuery = $this->conn->query("SELECT * FROM event_list WHERE id = '{$event_id}'");
+    if (!$eventQuery || $eventQuery->num_rows === 0) {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'Event not found';
+        return json_encode($resp);
+    }
+    
+    // Check if already attended
+    $attendanceCheck = $this->conn->query("SELECT * FROM event_attendance WHERE event_id = '{$event_id}' AND user_id = '{$userId}'");
+    
+    if ($attendanceCheck && $attendanceCheck->num_rows > 0) {
+        $existing = $attendanceCheck->fetch_assoc();
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'User ' . $user['firstname'] . ' ' . $user['lastname'] . ' has already been marked present for this event at ' . date('M j, Y g:i A', strtotime($existing['scan_time']));
+        return json_encode($resp);
+    }
+    
+    // Get scanner user ID (current logged-in user)
+    $scannerUserId = $this->settings->userdata('id');
+    
+    // Record attendance
+    $sql = "INSERT INTO event_attendance (event_id, user_id, qr_code, scan_time, status, scanner_user_id) 
+            VALUES ('{$event_id}', '{$userId}', '{$qr_code}', NOW(), 'present', '{$scannerUserId}')";
+    
+    $save = $this->conn->query($sql);
+    
+    if ($save) {
+        $resp['status'] = 'success';
+        $resp['msg'] = 'Attendance recorded successfully';
+        $resp['user'] = array(
+            'firstname' => $user['firstname'],
+            'lastname' => $user['lastname'],
+            'username' => $user['username']
+        );
+        $resp['scan_time'] = date('M j, Y g:i A');
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'Failed to record attendance: ' . $this->conn->error;
+    }
+    
+    return json_encode($resp);
+}
+
+function get_event_attendance() {
+    extract($_GET);
+    $resp = array();
+    
+    if (empty($event_id)) {
+        $resp['status'] = 'failed';
+        $resp['msg'] = 'Event ID is required';
+        return json_encode($resp);
+    }
+    
+    $sql = "SELECT ea.*, u.firstname, u.lastname, u.username, u.type 
+            FROM event_attendance ea 
+            JOIN users u ON ea.user_id = u.id 
+            WHERE ea.event_id = '{$event_id}' 
+            ORDER BY ea.scan_time DESC";
+    
+    $qry = $this->conn->query($sql);
+    
+    if ($qry) {
+        $attendance = [];
+        while ($row = $qry->fetch_assoc()) {
+            $attendance[] = $row;
+        }
+        
+        $resp['status'] = 'success';
+        $resp['data'] = $attendance;
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = $this->conn->error;
+    }
+    
+    return json_encode($resp);
+}
+
+function get_all_events_with_attendance() {
+    $events = [];
+    $sql = "SELECT e.*, 
+                   COUNT(ea.id) as attendance_count
+            FROM event_list e 
+            LEFT JOIN event_attendance ea ON e.id = ea.event_id 
+            GROUP BY e.id 
+            ORDER BY e.date_created DESC";
+    
+    $qry = $this->conn->query($sql);
+    if ($qry) {
+        while ($row = $qry->fetch_assoc()) {
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            $events[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $events]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
 function get_dashboard_stats() {
     $stats = [];
     
@@ -952,6 +1085,15 @@ switch ($action) {
 	break;
 	case 'search_events':
 		echo $Master->search_events();
+	break;
+	case 'record_event_attendance':
+		echo $Master->record_event_attendance();
+	break;
+	case 'get_event_attendance':
+		echo $Master->get_event_attendance();
+	break;
+	case 'get_all_events_with_attendance':
+		echo $Master->get_all_events_with_attendance();
 	break;
 
 	

@@ -1,5 +1,6 @@
 <?php
 require_once('../config.php');
+require_once('QRCodeGenerator.php');
 Class Users extends DBConnection {
 	private $settings;
 	public function __construct(){
@@ -100,6 +101,20 @@ Class Users extends DBConnection {
                 }
                 imagedestroy($temp);
             }
+            
+            // Generate QR Code for new user
+            try {
+                $userData = $_POST;
+                $userData['id'] = $id;
+                $qrPath = QRCodeGenerator::generateUserQR($id, $userData);
+                if ($qrPath) {
+                    $this->conn->query("UPDATE `users` set `qr_code` = '{$qrPath}' where id = '{$id}'");
+                }
+            } catch (Exception $e) {
+                // QR generation failed, but user was saved - log error but don't fail
+                error_log("QR Code generation failed for user {$id}: " . $e->getMessage());
+            }
+            
             return 1;
         }else{
             return 2;
@@ -143,6 +158,41 @@ Class Users extends DBConnection {
                 }
                 imagedestroy($temp);
             }
+            
+            // Generate new QR Code for updated user (only if it's a significant update)
+            try {
+                // Check if this is a significant update that warrants new QR code
+                $significantFields = ['firstname', 'lastname', 'username', 'zone'];
+                $needsNewQR = false;
+                
+                foreach($significantFields as $field) {
+                    if(isset($_POST[$field])) {
+                        $needsNewQR = true;
+                        break;
+                    }
+                }
+                
+                if($needsNewQR) {
+                    // Get current user data
+                    $currentUser = $this->conn->query("SELECT * FROM users WHERE id = '{$id}'")->fetch_assoc();
+                    
+                    // Delete old QR code if exists
+                    if(!empty($currentUser['qr_code'])) {
+                        QRCodeGenerator::deleteQRCode($currentUser['qr_code']);
+                    }
+                    
+                    // Generate new QR code
+                    $userData = array_merge($currentUser, $_POST);
+                    $qrPath = QRCodeGenerator::generateUserQR($id, $userData);
+                    if ($qrPath) {
+                        $this->conn->query("UPDATE `users` set `qr_code` = '{$qrPath}' where id = '{$id}'");
+                    }
+                }
+            } catch (Exception $e) {
+                // QR generation failed, but user was updated - log error but don't fail
+                error_log("QR Code generation failed for user {$id}: " . $e->getMessage());
+            }
+            
             return 1;
         }else{
             return "UPDATE users set $data where id = {$id}";
@@ -153,11 +203,23 @@ Class Users extends DBConnection {
 	
 	public function delete_users(){
 		extract($_POST);
+		
+		// Get user data before deletion to clean up files
+		$user = $this->conn->query("SELECT * FROM users WHERE id = $id")->fetch_assoc();
+		
 		$qry = $this->conn->query("DELETE FROM users where id = $id");
 		if($qry){
 			$this->settings->set_flashdata('success','User Details successfully deleted.');
+			
+			// Delete avatar file
 			if(is_file(base_app."uploads/avatars/$id.png"))
 				unlink(base_app."uploads/avatars/$id.png");
+			
+			// Delete QR code file
+			if(!empty($user['qr_code'])) {
+				QRCodeGenerator::deleteQRCode($user['qr_code']);
+			}
+			
 			return 1;
 		}else{
 			return false;

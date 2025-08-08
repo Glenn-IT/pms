@@ -12,6 +12,7 @@ if(isset($_GET['id'])){
 </script>
 <?php endif;?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <div class="card card-outline rounded-0 card-navy">
 	<div class="card-body">
@@ -157,6 +158,37 @@ if(isset($_GET['id'])){
 				<!-- Avatar Display -->
 				<div class="form-group d-flex justify-content-center">
 					<img src="<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+				</div>
+
+				<!-- QR Code Display -->
+				<div class="form-group">
+					<label for="qr_code">Unique QR Code</label>
+					<div class="d-flex justify-content-center">
+						<?php if(isset($meta['id']) && isset($meta['qr_code']) && !empty($meta['qr_code'])): ?>
+							<div class="text-center p-3 border rounded" style="background-color: #f8f9fa; min-width: 250px;">
+								<div class="mb-2">
+									<i class="fas fa-qrcode fa-3x text-primary"></i>
+								</div>
+								<div class="font-weight-bold text-monospace" style="font-size: 14px; letter-spacing: 1px;">
+									<?php echo htmlspecialchars($meta['qr_code']) ?>
+								</div>
+								<div class="mt-2">
+									<small class="text-muted">Scan this code or copy the text above</small>
+								</div>
+							</div>
+						<?php else: ?>
+							<div id="qr_placeholder" class="text-center border p-4" style="width: 250px; height: 120px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 8px;">
+								<div>
+									<i class="fas fa-qrcode fa-2x text-muted mb-2"></i>
+									<br>
+									<small class="text-muted">Unique QR code will be generated<br>automatically after saving</small>
+								</div>
+							</div>
+						<?php endif; ?>
+					</div>
+					<div class="text-center mt-2">
+						<small class="text-info"><i class="fas fa-info-circle"></i> This QR code is unique for this user and contains their identification information.</small>
+					</div>
 				</div>
 			</form>
 		</div>

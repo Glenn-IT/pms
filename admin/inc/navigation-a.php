@@ -46,6 +46,8 @@
                       </a>
                     </li> 
 
+                   
+
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=event/index" class="nav-link nav-event">
                         <i class="nav-icon fas fa-file-alt"></i>
@@ -55,7 +57,14 @@
                       </a>
                     </li> 
 
-                     
+                      <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-qrcode_index">
+                        <i class="nav-icon fas fa-qrcode"></i>
+                        <p>
+                          My QR Code
+                        </p>
+                      </a>
+                    </li> 
                     
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>

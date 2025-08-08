@@ -121,6 +121,38 @@
     </div>
 </div>
 
+<!-- Event Attendance Section -->
+<div class="card card-outline card-success mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Event Attendance Overview</h3>
+        <div class="d-flex align-items-center ml-auto">
+            <button class="btn btn-success btn-sm" type="button" id="refresh_attendance">
+                <i class="fa fa-refresh"></i> Refresh
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="attendance_table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Event Title</th>
+                            <th>Event Date</th>
+                            <th>Total Attendees</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Event attendance data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal -->
 <div class="modal fade" id="announcement_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-md" role="document">
@@ -155,6 +187,26 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal for Viewing Event Attendance Details -->
+<div class="modal fade" id="event_attendance_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Attendance Details</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="event_attendance_content">
+                    <!-- Detailed attendance data will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -234,11 +286,65 @@ function loadAllAnnouncements(){
     });
 }
 
+function loadEventAttendanceOverview() {
+    $.ajax({
+        url: '../classes/Master.php?f=get_all_events_with_attendance',
+        method: 'GET',
+        dataType: 'json',
+        success: function(resp) {
+            if (resp.status === 'success') {
+                renderEventAttendanceTable(resp.data);
+            } else {
+                $('#attendance_table tbody').html('<tr><td colspan="5" class="text-center">Failed to load event data</td></tr>');
+            }
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            $('#attendance_table tbody').html('<tr><td colspan="5" class="text-center">Error loading event data</td></tr>');
+        }
+    });
+}
+
+function renderEventAttendanceTable(events) {
+    let html = '';
+    
+    if (events.length === 0) {
+        html = '<tr><td colspan="5" class="text-center">No events found</td></tr>';
+    } else {
+        events.forEach((event, index) => {
+            html += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${event.title}</td>
+                    <td>${event.date}</td>
+                    <td>
+                        <span class="badge badge-primary">${event.attendance_count || 0}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-info view_event_attendance" 
+                                data-id="${event.id}" 
+                                data-title="${event.title}">
+                            <i class="fa fa-eye"></i> View Details
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    
+    $('#attendance_table tbody').html(html);
+}
+
 $(function(){
     loadAllAnnouncements();
+    loadEventAttendanceOverview();
 
     $('#sort_announcement').on('change', function() {
         renderAnnouncements($(this).val());
+    });
+
+    $('#refresh_attendance').on('click', function() {
+        loadEventAttendanceOverview();
     });
 
     // Read More Toggle
@@ -332,6 +438,89 @@ $(document).on('click', '.read-more', function(){
         $('[name="date"]').val(new Date(date).toISOString().slice(0,16));
         $('[name="img"]').prop('required', false);
         $('#announcement_modal').modal('show');
+    });
+
+    // View Event Attendance Details
+    $(document).on('click', '.view_event_attendance', function() {
+        const eventId = $(this).data('id');
+        const eventTitle = $(this).data('title');
+        
+        $('#event_attendance_modal .modal-title').text(`Attendance Details - ${eventTitle}`);
+        $('#event_attendance_content').html('<div class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
+        $('#event_attendance_modal').modal('show');
+        
+        $.ajax({
+            url: '../classes/Master.php?f=get_event_attendance',
+            method: 'GET',
+            data: { event_id: eventId },
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    let content = `
+                        <div class="mb-3">
+                            <h6>Total Attendees: ${resp.data.length}</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>User Type</th>
+                                        <th>Scan Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    if (resp.data.length > 0) {
+                        resp.data.forEach((record, index) => {
+                            const userType = record.type == 1 ? 'Admin' : 'User';
+                            content += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${record.firstname} ${record.lastname}</td>
+                                    <td>${record.username}</td>
+                                    <td><span class="badge badge-${record.type == 1 ? 'danger' : 'primary'}">${userType}</span></td>
+                                    <td>${new Date(record.scan_time).toLocaleString()}</td>
+                                    <td><span class="badge badge-success">Present</span></td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        content += `
+                            <tr>
+                                <td colspan="6" class="text-center">No attendance records found</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    content += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    
+                    $('#event_attendance_content').html(content);
+                } else {
+                    $('#event_attendance_content').html(`
+                        <div class="alert alert-danger">
+                            <i class="fa fa-times"></i> Failed to load attendance data: ${resp.msg}
+                        </div>
+                    `);
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+                $('#event_attendance_content').html(`
+                    <div class="alert alert-danger">
+                        <i class="fa fa-times"></i> Error loading attendance data
+                    </div>
+                `);
+            }
+        });
     });
 });
 </script>

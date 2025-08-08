@@ -111,6 +111,12 @@
         margin-top: auto;
         flex-wrap: wrap;
     }
+    
+    .event-actions .btn {
+        flex: 1;
+        min-width: 80px;
+        font-size: 0.8rem;
+    }
 
     .image-preview-container {
         display: flex;
@@ -171,9 +177,39 @@
         transform: scale(1.05);
     }
 
+    #qr_video {
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+
+    #camera_status {
+        font-size: 0.9rem;
+        min-height: 20px;
+    }
+
+    .card {
+        border: 1px solid #dee2e6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        font-weight: 500;
+    }
+
     @media (max-width: 900px) {
         .event-grid {
             grid-template-columns: 1fr;
+        }
+        
+        #qr_scan_modal .modal-dialog {
+            margin: 0.5rem;
+        }
+        
+        #qr_video {
+            max-width: 250px;
+            height: 150px;
         }
     }
 </style>
@@ -279,8 +315,96 @@
     </div>
 </div>
 
+<!-- Modal for QR Code Scanning -->
+<div class="modal fade" id="qr_scan_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan QR for Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <h6 id="event_title_display"></h6>
+                </div>
+                
+                <!-- Camera Scanner Section -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fa fa-camera"></i> Camera Scanner</h6>
+                            </div>
+                            <div class="card-body text-center">
+                                <div id="camera_section">
+                                    <video id="qr_video" width="100%" style="max-width: 300px; height: 200px; border: 1px solid #ddd;"></video>
+                                    <div class="mt-2">
+                                        <button type="button" id="start_camera" class="btn btn-success btn-sm">
+                                            <i class="fa fa-camera"></i> Start Camera
+                                        </button>
+                                        <button type="button" id="stop_camera" class="btn btn-danger btn-sm" style="display: none;">
+                                            <i class="fa fa-stop"></i> Stop Camera
+                                        </button>
+                                    </div>
+                                    <div id="camera_status" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fa fa-keyboard"></i> Manual Entry</h6>
+                            </div>
+                            <div class="card-body">
+                                <form id="qr_scan_form">
+                                    <input type="hidden" id="scan_event_id" name="event_id">
+                                    <div class="form-group">
+                                        <label for="qr_code_input">QR Code</label>
+                                        <input type="text" class="form-control" id="qr_code_input" name="qr_code" 
+                                               placeholder="Scan or enter QR code" required>
+                                        <small class="text-muted">Enter QR code manually or use camera</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <i class="fa fa-check"></i> Mark Attendance
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="scan_result" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing Attendance -->
+<div class="modal fade" id="attendance_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="attendance_content">
+                    <!-- Attendance data will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <script>
 let eventData = [];
+let qrCodeReader = null;
+let videoStream = null;
 
 function renderEvents(sortOrder = 'desc') {
     if (!eventData.length) {
@@ -316,7 +440,13 @@ function renderEvents(sortOrder = 'desc') {
                         <button class="btn btn-sm btn-info view_event" data-id="${event.id}">
                             <i class="fa fa-eye"></i> View
                         </button>
+                        <button class="btn btn-sm btn-success scan_qr_attendance" data-id="${event.id}" data-title="${event.title}">
+                            <i class="fa fa-qrcode"></i> Scan QR
+                        </button>
                         ${adminType == 1 ? `
+                        <button class="btn btn-sm btn-warning view_attendance" data-id="${event.id}" data-title="${event.title}">
+                            <i class="fa fa-users"></i> Attendance
+                        </button>
                         <button class="btn btn-sm btn-primary edit_event" 
                             data-id="${event.id}" 
                             data-title="${event.title}" 
@@ -552,6 +682,275 @@ $(function() {
         $('input[name="images[]"]').prop('required', false);
         $('#image_preview_container').empty();
         $('#event_modal').modal('show');
+    });
+
+    // QR Scan for Attendance
+    $(document).on('click', '.scan_qr_attendance', function() {
+        const eventId = $(this).data('id');
+        const eventTitle = $(this).data('title');
+        
+        $('#scan_event_id').val(eventId);
+        $('#event_title_display').text(eventTitle);
+        $('#qr_code_input').val('');
+        $('#scan_result').html('');
+        stopCamera(); // Stop any existing camera
+        $('#qr_scan_modal').modal('show');
+        
+        // Focus on QR input after modal is shown
+        $('#qr_scan_modal').on('shown.bs.modal', function() {
+            $('#qr_code_input').focus();
+        });
+        
+        // Stop camera when modal is closed
+        $('#qr_scan_modal').on('hidden.bs.modal', function() {
+            stopCamera();
+        });
+    });
+
+    // Camera Functions
+    function startCamera() {
+        // Check if browser supports getUserMedia
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            $('#camera_status').html('<span class="text-danger"><i class="fa fa-times"></i> Camera not supported in this browser</span>');
+            return;
+        }
+        
+        $('#camera_status').html('<span class="text-info"><i class="fa fa-spinner fa-spin"></i> Starting camera...</span>');
+        
+        navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: 'environment', // Use back camera if available
+                width: { ideal: 300 },
+                height: { ideal: 200 }
+            } 
+        })
+        .then(function(stream) {
+            videoStream = stream;
+            const video = document.getElementById('qr_video');
+            video.srcObject = stream;
+            video.play();
+            
+            $('#start_camera').hide();
+            $('#stop_camera').show();
+            $('#camera_status').html('<span class="text-success"><i class="fa fa-check"></i> Camera active - Point at QR code</span>');
+            
+            // Start scanning for QR codes
+            scanQRCode();
+        })
+        .catch(function(err) {
+            console.error('Error accessing camera:', err);
+            let errorMsg = 'Camera access denied or not available';
+            
+            if (err.name === 'NotAllowedError') {
+                errorMsg = 'Camera permission denied. Please allow camera access and try again.';
+            } else if (err.name === 'NotFoundError') {
+                errorMsg = 'No camera found on this device.';
+            } else if (err.name === 'NotSupportedError') {
+                errorMsg = 'Camera not supported in this browser.';
+            }
+            
+            $('#camera_status').html(`<span class="text-danger"><i class="fa fa-times"></i> ${errorMsg}</span>`);
+        });
+    }
+
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+        
+        const video = document.getElementById('qr_video');
+        video.srcObject = null;
+        
+        $('#start_camera').show();
+        $('#stop_camera').hide();
+        $('#camera_status').html('');
+        
+        if (qrCodeReader) {
+            clearTimeout(qrCodeReader);
+            qrCodeReader = null;
+        }
+    }
+
+    function scanQRCode() {
+        const video = document.getElementById('qr_video');
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        function scan() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    // QR code detected
+                    $('#qr_code_input').val(code.data);
+                    $('#camera_status').html('<span class="text-success"><i class="fa fa-check"></i> QR Code detected!</span>');
+                    
+                    // Auto-submit if QR code is valid
+                    if (code.data.trim()) {
+                        $('#qr_scan_form').submit();
+                        stopCamera();
+                        return; // Stop scanning
+                    }
+                }
+            }
+            
+            // Continue scanning if camera is still active
+            if (videoStream) {
+                qrCodeReader = setTimeout(scan, 250); // Scan every 250ms
+            }
+        }
+        
+        scan();
+    }
+
+    // Camera button events
+    $('#start_camera').click(function() {
+        startCamera();
+    });
+
+    $('#stop_camera').click(function() {
+        stopCamera();
+    });
+
+    // Handle QR Scan Form Submission
+    $('#qr_scan_form').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            event_id: $('#scan_event_id').val(),
+            qr_code: $('#qr_code_input').val().trim()
+        };
+
+        if (!formData.qr_code) {
+            alert_toast('Please enter or scan a QR code', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: '../classes/Master.php?f=record_event_attendance',
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    $('#scan_result').html(`
+                        <div class="alert alert-success">
+                            <i class="fa fa-check"></i> <strong>Success!</strong><br>
+                            <strong>Name:</strong> ${resp.user.firstname} ${resp.user.lastname}<br>
+                            <strong>Time:</strong> ${resp.scan_time}<br>
+                            Attendance recorded successfully!
+                        </div>
+                    `);
+                    $('#qr_code_input').val('').focus();
+                    alert_toast('Attendance recorded successfully', 'success');
+                } else {
+                    $('#scan_result').html(`
+                        <div class="alert alert-danger">
+                            <i class="fa fa-times"></i> <strong>Error:</strong> ${resp.msg}
+                        </div>
+                    `);
+                    alert_toast(resp.msg, 'error');
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+                $('#scan_result').html(`
+                    <div class="alert alert-danger">
+                        <i class="fa fa-times"></i> <strong>Error:</strong> Failed to process QR code
+                    </div>
+                `);
+                alert_toast('Failed to process QR code', 'error');
+            }
+        });
+    });
+
+    // View Attendance
+    $(document).on('click', '.view_attendance', function() {
+        const eventId = $(this).data('id');
+        const eventTitle = $(this).data('title');
+        
+        $('#attendance_modal .modal-title').text(`Attendance - ${eventTitle}`);
+        $('#attendance_content').html('<div class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
+        $('#attendance_modal').modal('show');
+        
+        $.ajax({
+            url: '../classes/Master.php?f=get_event_attendance',
+            method: 'GET',
+            data: { event_id: eventId },
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    let content = `
+                        <div class="mb-3">
+                            <h6>Total Attendees: ${resp.data.length}</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Type</th>
+                                        <th>Scan Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    if (resp.data.length > 0) {
+                        resp.data.forEach((record, index) => {
+                            const userType = record.type == 1 ? 'Admin' : 'User';
+                            content += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${record.firstname} ${record.lastname}</td>
+                                    <td>${record.username}</td>
+                                    <td><span class="badge badge-${record.type == 1 ? 'danger' : 'primary'}">${userType}</span></td>
+                                    <td>${new Date(record.scan_time).toLocaleString()}</td>
+                                    <td><span class="badge badge-success">Present</span></td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        content += `
+                            <tr>
+                                <td colspan="6" class="text-center">No attendance records found</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    content += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                    
+                    $('#attendance_content').html(content);
+                } else {
+                    $('#attendance_content').html(`
+                        <div class="alert alert-danger">
+                            <i class="fa fa-times"></i> Failed to load attendance data
+                        </div>
+                    `);
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+                $('#attendance_content').html(`
+                    <div class="alert alert-danger">
+                        <i class="fa fa-times"></i> Error loading attendance data
+                    </div>
+                `);
+            }
+        });
     });
 });
 </script>
