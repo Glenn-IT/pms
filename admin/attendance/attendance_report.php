@@ -46,6 +46,25 @@ $total_active_users = $total_active_users_qry->fetch_assoc()['count'];
 // Calculate absent count: total active users minus those who attended
 $absent_count = $total_active_users - $present_count;
 $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with existing code
+
+// Get list of absent users (active users who didn't scan QR for this event)
+$absent_users_qry = $conn->query("
+    SELECT 
+        u.id,
+        CONCAT(u.firstname, ' ', COALESCE(CONCAT(u.middlename, ' '), ''), u.lastname) as full_name,
+        u.zone,
+        u.username
+    FROM `users` u 
+    WHERE u.status = 1 
+    AND u.type != 1 
+    AND u.id NOT IN (
+        SELECT ea.user_id 
+        FROM `event_attendance` ea 
+        WHERE ea.event_id = '{$event_id}' 
+        AND ea.status = 'present'
+    )
+    ORDER BY u.firstname, u.lastname
+");
 ?>
 
 <style>
@@ -87,6 +106,8 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
         .no-print { display: none !important; }
         .card { border: none !important; box-shadow: none !important; }
         .report-header { background: #333 !important; -webkit-print-color-adjust: exact; }
+        .print-section { display: none !important; }
+        .print-section.print-active { display: block !important; }
     }
 </style>
 
@@ -96,9 +117,17 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
             <a href="./?page=attendance" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Attendance Management
             </a>
-            <button onclick="window.print()" class="btn btn-primary float-right">
-                <i class="fas fa-print"></i> Print Report
-            </button>
+            <div class="float-right">
+                <button onclick="printAll()" class="btn btn-primary mr-2">
+                    <i class="fas fa-print"></i> Print Complete Report
+                </button>
+                <button onclick="printPresent()" class="btn btn-success mr-2">
+                    <i class="fas fa-print"></i> Print Present Only
+                </button>
+                <button onclick="printAbsent()" class="btn btn-danger">
+                    <i class="fas fa-print"></i> Print Absent Only
+                </button>
+            </div>
         </div>
     </div>
     
@@ -112,7 +141,7 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
         <div class="col-md-3">
             <div class="stat-card total">
                 <div class="stat-number text-info"><?= $total_active_users ?></div>
-                <div class="stat-label">Total Active Users</div>
+                <div class="stat-label">Total Active SK</div>
             </div>
         </div>
         <div class="col-md-3">
@@ -141,7 +170,7 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
                 <i class="fas fa-list"></i> Detailed Attendance List (QR Scanned Only)
             </h4>
         </div>
-        <div class="card-body">
+        <div class="card-body print-section" id="presentSection">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <strong>Event:</strong> <?= htmlspecialchars($event['title']) ?>
@@ -153,7 +182,13 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
             
             <div class="alert alert-info">
                 <i class="fas fa-info-circle"></i>
-                <strong>Note:</strong> "Absent" count represents active users who did not scan their QR code for this event. The detailed list below only shows users who actually scanned their QR codes.
+                <strong>Report Overview:</strong> 
+                <ul class="mb-0 mt-2">
+                    <li><strong>Present:</strong> SK who scanned their QR code for this event</li>
+                    <li><strong>Absent:</strong> Active SK who did not scan their QR code for this event</li>
+                    <li>The table below shows only SK who scanned their QR codes</li>
+                    <li>Scroll down to see the complete list of absent SK's</li>
+                </ul>
             </div>
             
             <?php if($total_attendees > 0): ?>
@@ -202,6 +237,54 @@ $total_attendees = $attendance_qry->num_rows; // Keep for compatibility with exi
     </div>
 </div>
 
+<!-- Absent Users Section -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h4 class="card-title mb-0">
+            <i class="fas fa-user-times text-danger"></i> Absent SK List (Did Not Scan QR)
+        </h4>
+    </div>
+    <div class="card-body print-section" id="absentSection">
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Note:</strong> These are active SK who did not scan their QR code for this event.
+        </div>
+        
+        <?php if($absent_count > 0): ?>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="absentTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="40%">Name</th>
+                        <th width="25%">Zone/Purok</th>
+                        <th width="30%">Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $j = 1;
+                    while($absent_row = $absent_users_qry->fetch_assoc()): 
+                    ?>
+                    <tr>
+                        <td><?= $j++ ?></td>
+                        <td><?= htmlspecialchars($absent_row['full_name']) ?></td>
+                        <td><?= !empty($absent_row['zone']) ? htmlspecialchars($absent_row['zone']) : '<span class="text-muted">N/A</span>' ?></td>
+                        <td><?= htmlspecialchars($absent_row['username']) ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+        <div class="alert alert-success text-center">
+            <i class="fas fa-check-circle fa-2x mb-3"></i><br>
+            <strong>Perfect Attendance!</strong> All active SK scanned their QR codes for this event.
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
 <script>
 $(document).ready(function(){
     $('#reportTable').dataTable({
@@ -211,6 +294,62 @@ $(document).ready(function(){
             { "orderable": false, "targets": [0] }
         ]
     });
+    
+    $('#absentTable').dataTable({
+        "pageLength": 50,
+        "order": [[ 1, "asc" ]],
+        "columnDefs": [
+            { "orderable": false, "targets": [0] }
+        ]
+    });
+    
     $('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle');
 });
+
+// Print functions
+function printAll() {
+    // Show all sections for printing
+    $('.print-section').removeClass('print-active');
+    window.print();
+}
+
+function printPresent() {
+    // Show only present section for printing
+    $('.print-section').removeClass('print-active');
+    $('#presentSection').addClass('print-active');
+    
+    // Create a temporary title for the print
+    var originalTitle = document.title;
+    document.title = 'Present Attendees - <?= htmlspecialchars($event['title']) ?>';
+    
+    window.print();
+    
+    // Restore original title
+    document.title = originalTitle;
+    
+    // Remove the class after printing
+    setTimeout(function() {
+        $('#presentSection').removeClass('print-active');
+    }, 1000);
+}
+
+function printAbsent() {
+    // Show only absent section for printing
+    $('.print-section').removeClass('print-active');
+    $('#absentSection').addClass('print-active');
+    
+    // Create a temporary title for the print
+    var originalTitle = document.title;
+    document.title = 'Absent Users - <?= htmlspecialchars($event['title']) ?>';
+    
+    window.print();
+    
+    // Restore original title
+    document.title = originalTitle;
+    
+    // Remove the class after printing
+    setTimeout(function() {
+        $('#absentSection').removeClass('print-active');
+    }, 1000);
+}
 </script>

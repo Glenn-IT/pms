@@ -16,19 +16,28 @@ if($event_qry->num_rows == 0) {
 }
 $event = $event_qry->fetch_assoc();
 
-// Get attendance data
+// Get all users with their attendance status for this event
 $attendance_qry = $conn->query("
     SELECT 
-        ea.*,
+        u.id as user_id,
         CONCAT(u.firstname, ' ', COALESCE(CONCAT(u.middlename, ' '), ''), u.lastname) as attendee_name,
         u.avatar as attendee_avatar,
         u.zone as attendee_zone,
-        CONCAT(scanner.firstname, ' ', COALESCE(CONCAT(scanner.middlename, ' '), ''), scanner.lastname) as scanner_name
-    FROM `event_attendance` ea 
-    LEFT JOIN `users` u ON ea.user_id = u.id 
+        ea.scan_time,
+        CASE 
+            WHEN ea.id IS NOT NULL THEN ea.status
+            ELSE 'absent'
+        END as status,
+        CONCAT(scanner.firstname, ' ', COALESCE(CONCAT(scanner.middlename, ' '), ''), scanner.lastname) as scanner_name,
+        ea.id as attendance_id
+    FROM `users` u 
+    LEFT JOIN `event_attendance` ea ON u.id = ea.user_id AND ea.event_id = '{$event_id}'
     LEFT JOIN `users` scanner ON ea.scanner_user_id = scanner.id 
-    WHERE ea.event_id = '{$event_id}' 
-    ORDER BY ea.scan_time DESC
+    WHERE u.status = 1 AND u.type != 1
+    ORDER BY 
+        CASE WHEN ea.id IS NOT NULL THEN 0 ELSE 1 END,
+        ea.scan_time DESC,
+        u.lastname ASC, u.firstname ASC
 ");
 ?>
 
@@ -55,7 +64,26 @@ $attendance_qry = $conn->query("
                         <h4><?= htmlspecialchars($event['title']) ?></h4>
                         <p class="text-muted"><?= htmlspecialchars($event['description']) ?></p>
                         <p><strong>Date of Event:</strong> <?= date("M d, Y h:i A", strtotime($event['date_created'])) ?></p>
-                        <p><strong>Total Attendees:</strong> <span class="badge badge-success"><?= $attendance_qry->num_rows ?></span></p>
+                        <?php 
+                        // Count present and absent attendees
+                        $total_users = $attendance_qry->num_rows;
+                        $present_count = 0;
+                        $absent_count = 0;
+                        
+                        // Reset the query result pointer and count statuses
+                        $attendance_qry->data_seek(0);
+                        while($count_row = $attendance_qry->fetch_assoc()) {
+                            if($count_row['status'] == 'present') {
+                                $present_count++;
+                            } else {
+                                $absent_count++;
+                            }
+                        }
+                        // Reset pointer again for display
+                        $attendance_qry->data_seek(0);
+                        ?>
+                        <p><strong>Total Registered:</strong> <span class="badge badge-info"><?= $total_users ?></span></p>
+                        <p><strong>Present:</strong> <span class="badge badge-success"><?= $present_count ?></span> | <strong>Absent:</strong> <span class="badge badge-danger"><?= $absent_count ?></span></p>
                     </div>
                 </div>
             </div>
@@ -80,7 +108,13 @@ $attendance_qry = $conn->query("
             <tr>
                 <td><?= htmlspecialchars($row['attendee_name']) ?></td>
                 <td><?= !empty($row['attendee_zone']) ? htmlspecialchars($row['attendee_zone']) : '<span class="text-muted">N/A</span>' ?></td>
-                <td><?= date("M d, Y h:i:s A", strtotime($row['scan_time'])) ?></td>
+                <td>
+                    <?php if($row['status'] == 'present' && !empty($row['scan_time'])): ?>
+                        <?= date("M d, Y h:i:s A", strtotime($row['scan_time'])) ?>
+                    <?php else: ?>
+                        <span class="text-muted">Not scanned</span>
+                    <?php endif; ?>
+                </td>
                 <td class="text-center">
                     <?php if($row['status'] == 'present'): ?>
                         <span class="badge badge-success">Present</span>
@@ -88,7 +122,15 @@ $attendance_qry = $conn->query("
                         <span class="badge badge-danger">Absent</span>
                     <?php endif; ?>
                 </td>
-                <td><?= !empty($row['scanner_name']) ? htmlspecialchars($row['scanner_name']) : '<em class="text-muted">Auto-scan</em>' ?></td>
+                <td>
+                    <?php if($row['status'] == 'present' && !empty($row['scanner_name'])): ?>
+                        <?= htmlspecialchars($row['scanner_name']) ?>
+                    <?php elseif($row['status'] == 'present'): ?>
+                        <em class="text-muted">Auto-scan</em>
+                    <?php else: ?>
+                        <span class="text-muted">—</span>
+                    <?php endif; ?>
+                </td>
             </tr>
             <?php endwhile; ?>
         </tbody>
@@ -96,7 +138,7 @@ $attendance_qry = $conn->query("
 </div>
 <?php else: ?>
 <div class="alert alert-info text-center">
-    <i class="fas fa-info-circle"></i> No attendance records found for this event.
+    <i class="fas fa-info-circle"></i> No registered users found in the system.
 </div>
 <?php endif; ?>
 
