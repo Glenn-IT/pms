@@ -850,7 +850,7 @@ function get_event_attendance() {
         return json_encode($resp);
     }
     
-    $sql = "SELECT ea.*, u.firstname, u.lastname, u.username, u.type 
+    $sql = "SELECT ea.*, u.firstname, u.lastname, u.username, u.type, u.zone 
             FROM event_attendance ea 
             JOIN users u ON ea.user_id = u.id 
             WHERE ea.event_id = '{$event_id}' 

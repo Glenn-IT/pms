@@ -198,6 +198,16 @@
         font-weight: 500;
     }
 
+    .scan_qr_attendance:disabled {
+        opacity: 0.6;
+        cursor: not-allowed !important;
+    }
+
+    .scan_qr_attendance:disabled:hover {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+    }
+
     @media (max-width: 900px) {
         .event-grid {
             grid-template-columns: 1fr;
@@ -423,6 +433,17 @@ function renderEvents(sortOrder = 'desc') {
         const primaryImage = images[0] || event.image_path;
         const imageCount = images.length || (event.image_path ? 1 : 0);
         
+        // Check if today is the event date
+        const today = new Date();
+        const eventDate = new Date(event.date_created);
+        
+        // Compare year, month, and day separately to avoid timezone issues
+        const isEventToday = (
+            today.getFullYear() === eventDate.getFullYear() &&
+            today.getMonth() === eventDate.getMonth() &&
+            today.getDate() === eventDate.getDate()
+        );
+        
         html += `
             <div class="event-card">
                 <div class="event-img" style="position: relative;">
@@ -433,6 +454,7 @@ function renderEvents(sortOrder = 'desc') {
                     <div class="event-title">${event.title}</div>
                     <div class="event-date">
                         <i class="fa fa-calendar"></i> ${event.date}
+                        ${isEventToday ? '<span class="badge badge-success ml-2">QR Available Today</span>' : '<span class="badge badge-secondary ml-2">QR Not Available</span>'}
                     </div>
                     <div class="event-desc">${event.description}</div>
                     <span class="read-more">Read More</span>
@@ -440,10 +462,15 @@ function renderEvents(sortOrder = 'desc') {
                         <button class="btn btn-sm btn-info view_event" data-id="${event.id}">
                             <i class="fa fa-eye"></i> View
                         </button>
-                        <button class="btn btn-sm btn-success scan_qr_attendance" data-id="${event.id}" data-title="${event.title}">
+                        ${adminType == 1 ? `
+                        <button class="btn btn-sm ${isEventToday ? 'btn-success' : 'btn-secondary'} scan_qr_attendance" 
+                                data-id="${event.id}" 
+                                data-title="${event.title}"
+                                data-event-date="${event.date_created}"
+                                ${isEventToday ? '' : 'disabled'} 
+                                title="${isEventToday ? 'Scan QR for attendance' : 'QR scanning is only available on the event date'}">
                             <i class="fa fa-qrcode"></i> Scan QR
                         </button>
-                        ${adminType == 1 ? `
                         <button class="btn btn-sm btn-warning view_attendance" data-id="${event.id}" data-title="${event.title}">
                             <i class="fa fa-users"></i> Attendance
                         </button>
@@ -686,8 +713,31 @@ $(function() {
 
     // QR Scan for Attendance
     $(document).on('click', '.scan_qr_attendance', function() {
+        // Check if button is disabled
+        if ($(this).is(':disabled')) {
+            alert_toast('QR scanning is only available on the event date', 'warning');
+            return;
+        }
+        
         const eventId = $(this).data('id');
         const eventTitle = $(this).data('title');
+        const eventDate = $(this).data('event-date');
+        
+        // Double-check the date validation
+        const today = new Date();
+        const eventDateObj = new Date(eventDate);
+        
+        // Compare year, month, and day separately to avoid timezone issues
+        const isEventToday = (
+            today.getFullYear() === eventDateObj.getFullYear() &&
+            today.getMonth() === eventDateObj.getMonth() &&
+            today.getDate() === eventDateObj.getDate()
+        );
+        
+        if (!isEventToday) {
+            alert_toast('QR scanning is only available on the event date (' + eventDateObj.toDateString() + ')', 'warning');
+            return;
+        }
         
         $('#scan_event_id').val(eventId);
         $('#event_title_display').text(eventTitle);
@@ -896,8 +946,7 @@ $(function() {
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Username</th>
-                                        <th>Type</th>
+                                        <th>Zone</th>
                                         <th>Scan Time</th>
                                         <th>Status</th>
                                     </tr>
@@ -907,13 +956,13 @@ $(function() {
                     
                     if (resp.data.length > 0) {
                         resp.data.forEach((record, index) => {
-                            const userType = record.type == 1 ? 'Admin' : 'User';
+                            // Get zone from database, with fallback to 'Unassigned'
+                            const zone = record.zone || 'Unassigned';
                             content += `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${record.firstname} ${record.lastname}</td>
-                                    <td>${record.username}</td>
-                                    <td><span class="badge badge-${record.type == 1 ? 'danger' : 'primary'}">${userType}</span></td>
+                                    <td><span class="badge badge-info">${zone}</span></td>
                                     <td>${new Date(record.scan_time).toLocaleString()}</td>
                                     <td><span class="badge badge-success">Present</span></td>
                                 </tr>
@@ -922,7 +971,7 @@ $(function() {
                     } else {
                         content += `
                             <tr>
-                                <td colspan="6" class="text-center">No attendance records found</td>
+                                <td colspan="5" class="text-center">No attendance records found</td>
                             </tr>
                         `;
                     }
