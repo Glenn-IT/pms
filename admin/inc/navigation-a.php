@@ -84,21 +84,14 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-presents">
+                      <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-presents">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           Attendance List
                         </p>
                       </a>
                     </li> 
-                    <!--<li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-absents">
-                        <i class="nav-icon fas fa-bars"></i>
-                        <p>
-                          List of Absents
-                        </p>
-                      </a>
-                    </li>-->
+                   
                     <li class="nav-header">Maintenance</li>
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link nav-user_list">
