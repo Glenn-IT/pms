@@ -21,8 +21,8 @@ if($event_qry->num_rows == 0) {
 // Build the query with optional zone filter
 $zone_condition = '';
 if(!empty($zone_filter)) {
-    $zone_filter_escaped = $conn->real_escape_string($zone_filter);
-    $zone_condition = "AND u.zone = '{$zone_filter_escaped}'";
+    $zone_filter_int = intval($zone_filter); // Convert to integer since zone is int(1)
+    $zone_condition = "AND u.zone = {$zone_filter_int}";
 }
 
 // Get all active users who did NOT attend this event

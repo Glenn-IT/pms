@@ -20,11 +20,13 @@ $event = $event_qry->fetch_assoc();
 
 // Build the query with optional zone filter
 $zone_condition = '';
+$zone_condition_no_alias = '';
 $zone_text = 'All Zones';
 if(!empty($zone_filter)) {
-    $zone_filter = $conn->real_escape_string($zone_filter);
-    $zone_condition = "AND u.zone = '{$zone_filter}'";
-    $zone_text = $zone_filter;
+    $zone_filter_int = intval($zone_filter); // Convert to integer since zone is int(1)
+    $zone_condition = "AND u.zone = {$zone_filter_int}";
+    $zone_condition_no_alias = "AND zone = {$zone_filter_int}";
+    $zone_text = "Zone " . $zone_filter_int;
 }
 
 // Get absent users (those who didn't scan QR for this event)
@@ -32,9 +34,7 @@ $absentees_qry = $conn->query("
     SELECT 
         u.id as user_id,
         CONCAT(u.firstname, ' ', COALESCE(CONCAT(u.middlename, ' '), ''), u.lastname) as user_name,
-        u.zone as user_zone,
-        u.contact_no,
-        u.email
+        u.zone as user_zone
     FROM `users` u 
     WHERE u.status = 1 
     AND u.type != 1
@@ -52,16 +52,18 @@ $absentees_qry = $conn->query("
 $present_qry = $conn->query("
     SELECT COUNT(*) as present_count 
     FROM `event_attendance` ea 
+    LEFT JOIN `users` u ON ea.user_id = u.id
     WHERE ea.event_id = '{$event_id}' 
     AND ea.status = 'present'
-");
+    " . (!empty($zone_condition) ? $zone_condition : "")
+);
 $present_count = $present_qry->fetch_assoc()['present_count'];
 
 $total_users_qry = $conn->query("
     SELECT COUNT(*) as total_count 
     FROM `users` 
     WHERE status = 1 AND type != 1
-    " . (!empty($zone_condition) ? $zone_condition : "")
+    " . (!empty($zone_condition_no_alias) ? $zone_condition_no_alias : "")
 );
 $total_users = $total_users_qry->fetch_assoc()['total_count'];
 $absent_count = $absentees_qry->num_rows;
@@ -102,8 +104,6 @@ fputcsv($output, [
     'No.',
     'Name',
     'Zone/Purok',
-    'Contact Number',
-    'Email',
     'Status'
 ]);
 
@@ -114,8 +114,6 @@ while($row = $absentees_qry->fetch_assoc()) {
         $counter++,
         $row['user_name'],
         $row['user_zone'] ?: 'N/A',
-        $row['contact_no'] ?: 'N/A',
-        $row['email'] ?: 'N/A',
         'Absent'
     ]);
 }

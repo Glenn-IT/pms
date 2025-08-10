@@ -80,10 +80,10 @@
                     <select class="form-control" id="zone-filter">
                         <option value="">All Zones</option>
                         <?php 
-                        $zone_qry = $conn->query("SELECT DISTINCT zone FROM `users` WHERE zone IS NOT NULL AND zone != '' ORDER BY zone");
+                        $zone_qry = $conn->query("SELECT DISTINCT zone FROM `users` WHERE zone IS NOT NULL AND zone != 0 ORDER BY zone");
                         while($zone = $zone_qry->fetch_assoc()):
                         ?>
-                        <option value="<?= htmlspecialchars($zone['zone']) ?>"><?= htmlspecialchars($zone['zone']) ?></option>
+                        <option value="<?= $zone['zone'] ?>">Zone <?= $zone['zone'] ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
