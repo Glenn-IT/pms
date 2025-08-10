@@ -98,13 +98,33 @@
                     </li> 
                     
                     <li class="nav-item dropdown">
-                      <!--<a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index">-->
-                         <a href="#" class="nav-link nav-attendance_index">
+                      <a href="#" class="nav-link nav-attendance_index nav-is-tree">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           Attendance List
+                          <i class="right fas fa-angle-left"></i>
                         </p>
                       </a>
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                          <a href="<?php echo base_url ?>admin/?page=attendance/present" class="nav-link nav-attendance_present tree-item">
+                            
+                            <p>List of Present</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="<?php echo base_url ?>admin/?page=attendance/absent" class="nav-link nav-attendance_absent tree-item">
+                            
+                            <p>List of Absent</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index tree-item">
+                            
+                            <p>All Attendance</p>
+                          </a>
+                        </li>
+                      </ul>
                     </li> 
                    
                     
