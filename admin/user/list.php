@@ -13,12 +13,6 @@
 </script>t-position:center center;
     }
 	
-	/* Hide 7th column (Type column, index 6, 0-based) */
-	#list th:nth-child(7),
-	#list td:nth-child(7) {
-		display: none;
-	}
-	
 	/* Age validation modal styling */
 	#ageValidationModal .modal-header {
 		border-bottom: 2px solid #ffc107;
@@ -47,12 +41,11 @@
 					<col width="5%">
 					<col width="12%">
 					<col width="12%">
-					<col width="18%">
-					<col width="13%">
-					<col width="10%">
-					<col width="10%">
-					<col width="10%">
-					<col width="10%">
+					<col width="20%">
+					<col width="15%">
+					<col width="12%">
+					<col width="12%">
+					<col width="12%">
 				</colgroup>
 				<thead>
 					<tr>
@@ -62,7 +55,6 @@
 						<th>Name</th>
 						<th>Zone/Purok</th>
 						<th>Username</th>
-						<th>Type</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
@@ -82,15 +74,6 @@
 							<td><?php echo $row['name'] ?></td>
 							<td><?php echo isset($row['zone']) ? $row['zone'] : 'N/A'; ?></td>
 							<td><?php echo $row['username'] ?></td>
-							<td class="text-center">
-                                <?php if($row['type'] == 1): ?>
-                                    Administrator
-                                <?php elseif($row['type'] == 2): ?>
-                                    Staff
-                                <?php else: ?>
-									N/A
-                                <?php endif; ?>
-                            </td>
 							<td class="text-center">
                                 <?php if(isset($row['status']) && $row['status'] == 1): ?>
                                     <span class="badge badge-success">Active</span>
@@ -173,7 +156,7 @@
 		})
 		$('.table').dataTable({
 			columnDefs: [
-				{ orderable: false, targets: [8] } // Adjusted due to added Status column
+				{ orderable: false, targets: [7] } // Action column is now index 7
 			],
 			order:[0,'asc']
 		});
@@ -286,11 +269,3 @@
 		})
 	}
 </script>
-
-<style>
-	/* Hide 7th column (Type column, index 6, 0-based) */
-	#list th:nth-child(7),
-	#list td:nth-child(7) {
-		display: none;
-	}
-</style>
