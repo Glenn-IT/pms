@@ -121,7 +121,7 @@
     </div>
 </div>
 
-<!-- Event Attendance Section -->
+<!-- Event Attendance Section 
 <div class="card card-outline card-success mt-4">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0">Event Attendance Overview</h3>
@@ -144,7 +144,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>-->
                         <!-- Event attendance data will be loaded here -->
                     </tbody>
                 </table>

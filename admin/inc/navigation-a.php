@@ -58,7 +58,8 @@
                     </li> 
 
                       <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-QRCode_index">
+                      <!--<a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-QRCode_index">-->
+                        <a href="#" class="nav-link nav-QRCode_index">
                         <i class="nav-icon fas fa-qrcode"></i>
                         <p>
                           My QR Code
@@ -78,7 +79,8 @@
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Master List</li>
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">
+                      <!--<a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">-->
+                        <a href="#" class="nav-link nav-population_index">
                         <i class="nav-icon fas fa-th-list"></i>
                         <p>
                         Population
@@ -86,7 +88,8 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=activepurok/index" class="nav-link nav-activepurok_index">
+                      <!--<a href="<?php echo base_url ?>admin/?page=activepurok/index" class="nav-link nav-activepurok_index">-->
+                        <a href="#" class="nav-link nav-activepurok_index">
                         <i class="nav-icon fas fa-border-all"></i>
                         <p>
                           Active Purok
@@ -95,7 +98,8 @@
                     </li> 
                     
                     <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index">
+                      <!--<a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index">-->
+                         <a href="#" class="nav-link nav-attendance_index">
                         <i class="nav-icon fas fa-bars"></i>
                         <p>
                           Attendance List
@@ -103,12 +107,12 @@
                       </a>
                     </li> 
                    
-                    <li class="nav-header">Maintenance</li>
+                    
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link nav-user_list">
                         <i class="nav-icon fas fa-users-cog"></i>
                         <p>
-                          Members List
+                          List of SK
                         </p>
                       </a>
                     </li>

@@ -454,7 +454,8 @@ function renderEvents(sortOrder = 'desc') {
                     <div class="event-title">${event.title}</div>
                     <div class="event-date">
                         <i class="fa fa-calendar"></i> ${event.date}
-                        ${isEventToday ? '<span class="badge badge-success ml-2">QR Available Today</span>' : '<span class="badge badge-secondary ml-2">QR Not Available</span>'}
+                        <!-- COMMENTED OUT: QR Available badges - GLENN REMINDER: Uncomment to restore QR status display -->
+                        <!-- ${isEventToday ? '<span class="badge badge-success ml-2">QR Available Today</span>' : '<span class="badge badge-secondary ml-2">QR Not Available</span>'} -->
                     </div>
                     <div class="event-desc">${event.description}</div>
                     <span class="read-more">Read More</span>
@@ -463,17 +464,19 @@ function renderEvents(sortOrder = 'desc') {
                             <i class="fa fa-eye"></i> View
                         </button>
                         ${adminType == 1 ? `
-                        <button class="btn btn-sm ${isEventToday ? 'btn-success' : 'btn-secondary'} scan_qr_attendance" 
+                        <!-- COMMENTED OUT: Scan QR Button - GLENN REMINDER: Uncomment to restore QR scanning functionality -->
+                        <!-- <button class="btn btn-sm ${isEventToday ? 'btn-success' : 'btn-secondary'} scan_qr_attendance" 
                                 data-id="${event.id}" 
                                 data-title="${event.title}"
                                 data-event-date="${event.date_created}"
                                 ${isEventToday ? '' : 'disabled'} 
                                 title="${isEventToday ? 'Scan QR for attendance' : 'QR scanning is only available on the event date'}">
                             <i class="fa fa-qrcode"></i> Scan QR
-                        </button>
-                        <button class="btn btn-sm btn-warning view_attendance" data-id="${event.id}" data-title="${event.title}">
+                        </button> -->
+                        <!-- COMMENTED OUT: Attendance Button - GLENN REMINDER: Uncomment to restore attendance viewing -->
+                        <!-- <button class="btn btn-sm btn-warning view_attendance" data-id="${event.id}" data-title="${event.title}">
                             <i class="fa fa-users"></i> Attendance
-                        </button>
+                        </button> -->
                         <button class="btn btn-sm btn-primary edit_event" 
                             data-id="${event.id}" 
                             data-title="${event.title}" 
