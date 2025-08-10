@@ -8,8 +8,30 @@
         width:3rem;
         height:3rem;
         object-fit:scale-down;
-        object-position:center center;
+  		});
+	}
+</script>t-position:center center;
     }
+	
+	/* Hide 7th column (Type column, index 6, 0-based) */
+	#list th:nth-child(7),
+	#list td:nth-child(7) {
+		display: none;
+	}
+	
+	/* Age validation modal styling */
+	#ageValidationModal .modal-header {
+		border-bottom: 2px solid #ffc107;
+	}
+	
+	#ageValidationModal .table th {
+		background-color: #f8f9fa;
+		font-weight: bold;
+	}
+	
+	#ageValidationModal .alert-warning {
+		border-left: 4px solid #ffc107;
+	}
 </style>
 <div class="card card-outline rounded-0 card-navy">
 	<div class="card-header">
@@ -100,8 +122,47 @@
 		</div>
 	</div>
 </div>
+
+<!-- Age Validation Modal -->
+<div class="modal fade" id="ageValidationModal" tabindex="-1" role="dialog" aria-labelledby="ageValidationModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-warning">
+				<h4 class="modal-title" id="ageValidationModalLabel">
+					<i class="fas fa-exclamation-triangle"></i> Age Validation Alert
+				</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-warning">
+					<h5><i class="fas fa-info-circle"></i> Notice:</h5>
+					The following Sangguniang Kabataan members are 31 years old or older and need to be deactivated according to age requirements:
+				</div>
+				<div id="usersOver31List">
+					<!-- Users list will be populated here -->
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">
+					<i class="fas fa-times"></i> Cancel
+				</button>
+				<button type="button" class="btn btn-info" id="skipValidationBtn" data-dismiss="modal">
+					<i class="fas fa-clock"></i> Skip for Now
+				</button>
+				<button type="button" class="btn btn-danger" id="deactivateUsersBtn">
+					<i class="fas fa-user-times"></i> Deactivate These Users
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 <script>
 	$(document).ready(function(){
+		// Check for users over 31 when page loads
+		checkUsersOver31();
+		
 		$('.delete_data').click(function(){
 			_conf("Are you sure to delete this User permanently?","delete_user",[$(this).attr('data-id')])
 		})
@@ -117,7 +178,70 @@
 			order:[0,'asc']
 		});
 		$('.dataTable td,.dataTable th').addClass('py-1 px-2 align-middle')
+		
+		// Handle deactivate users button click
+		$('#deactivateUsersBtn').click(function(){
+			deactivateUsersOver31();
+		});
+		
+		// Handle skip validation button click
+		$('#skipValidationBtn').click(function(){
+			sessionStorage.setItem('ageValidationSkipped', 'true');
+		});
 	})
+	
+	function checkUsersOver31(){
+		// Check if admin has skipped this validation in current session
+		if(sessionStorage.getItem('ageValidationSkipped') === 'true') {
+			return;
+		}
+		
+		$.ajax({
+			url: _base_url_ + "classes/Users.php?f=get_users_over_31",
+			method: "GET",
+			dataType: "json",
+			success: function(resp){
+				if(resp && resp.length > 0){
+					var usersList = '<div class="table-responsive"><table class="table table-striped table-bordered"><thead><tr><th>Name</th><th>Age</th></tr></thead><tbody>';
+					resp.forEach(function(user){
+						usersList += '<tr><td>' + user.firstname + ' ' + user.lastname + '</td><td>' + user.age + ' years old</td></tr>';
+					});
+					usersList += '</tbody></table></div>';
+					$('#usersOver31List').html(usersList);
+					$('#ageValidationModal').modal('show');
+				}
+			},
+			error: function(err){
+				console.log('Error checking users over 31:', err);
+			}
+		});
+	}
+	
+	function deactivateUsersOver31(){
+		start_loader();
+		$.ajax({
+			url: _base_url_ + "classes/Users.php?f=check_age",
+			method: "POST",
+			success: function(resp){
+				if(resp > 0){
+					alert_toast(resp + " user(s) have been deactivated due to age requirements.", 'success');
+					$('#ageValidationModal').modal('hide');
+					setTimeout(function(){
+						location.reload();
+					}, 1500);
+				} else {
+					alert_toast("No users were deactivated.", 'info');
+					$('#ageValidationModal').modal('hide');
+				}
+				end_loader();
+			},
+			error: function(err){
+				console.log(err);
+				alert_toast("An error occurred while deactivating users.", 'error');
+				end_loader();
+			}
+		});
+	}
 	function delete_user($id){
 		start_loader();
 		$.ajax({

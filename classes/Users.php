@@ -340,22 +340,48 @@ Class Users extends DBConnection {
 		return json_encode($resp);
 	}
 	
+	public function get_users_over_31(){
+		// Get all active users who are 31 or older
+		$users_over_31 = array();
+		$users_query = $this->conn->query("SELECT id, firstname, lastname, birthdate, status FROM users WHERE status = 1 AND birthdate IS NOT NULL");
+		
+		if($users_query && $users_query->num_rows > 0) {
+			while($user = $users_query->fetch_assoc()) {
+				if(!empty($user['birthdate'])) {
+					$birth_date = new DateTime($user['birthdate']);
+					$current_date = new DateTime();
+					$age = $current_date->diff($birth_date)->y;
+					
+					// If user is 31 or older, add to array
+					if($age >= 31) {
+						$user['age'] = $age;
+						$users_over_31[] = $user;
+					}
+				}
+			}
+		}
+		
+		return $users_over_31;
+	}
+
 	public function check_and_deactivate_users_over_31(){
 		// Get all active users
-		$users_query = $this->conn->query("SELECT id, firstname, lastname, birthdate, status FROM users WHERE status = 1");
+		$users_query = $this->conn->query("SELECT id, firstname, lastname, birthdate, status FROM users WHERE status = 1 AND birthdate IS NOT NULL");
 		$deactivated_count = 0;
 		
 		if($users_query && $users_query->num_rows > 0) {
 			while($user = $users_query->fetch_assoc()) {
-				$birth_date = new DateTime($user['birthdate']);
-				$current_date = new DateTime();
-				$age = $current_date->diff($birth_date)->y;
-				
-				// If user is 31 or older, deactivate them
-				if($age >= 31) {
-					$update_query = $this->conn->query("UPDATE users SET status = 0 WHERE id = {$user['id']}");
-					if($update_query) {
-						$deactivated_count++;
+				if(!empty($user['birthdate'])) {
+					$birth_date = new DateTime($user['birthdate']);
+					$current_date = new DateTime();
+					$age = $current_date->diff($birth_date)->y;
+					
+					// If user is 31 or older, deactivate them
+					if($age >= 31) {
+						$update_query = $this->conn->query("UPDATE users SET status = 0 WHERE id = {$user['id']}");
+						if($update_query) {
+							$deactivated_count++;
+						}
 					}
 				}
 			}
@@ -377,6 +403,9 @@ switch ($action) {
 	break;
 	case 'toggle_status':
 		echo $users->toggle_status();
+	break;
+	case 'get_users_over_31':
+		echo json_encode($users->get_users_over_31());
 	break;
 	case 'check_age':
 		echo $users->check_and_deactivate_users_over_31();
