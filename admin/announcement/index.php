@@ -6,6 +6,45 @@
 <script>
     const adminType = <?php echo json_encode($_settings->userdata('type')); ?>;
 </script>
+<!-- Modal for Event Attendance Details -->
+<div class="modal fade" id="event_attendance_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Event Attendance Details</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="event_attendance_content">
+                    <!-- Detailed attendance data will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Viewing Announcement Images -->
+<div class="modal fade" id="view_announcement_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Announcement Images</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="view_announcement_content">
+                    <!-- Announcement images will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     .announcement-grid {
@@ -14,23 +53,20 @@
         gap: 1.5rem;
     }
     .announcement-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    overflow: hidden;
-    transition: box-shadow 0.2s, height 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    /* height: 500px; REMOVE THIS */
-    min-height: 500px; /* Optional: ensures a base height */
-}
-
-    .announcement-card:hover {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: box-shadow 0.2s, height 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 450px;
+    }    .announcement-card:hover {
         box-shadow: 0 8px 32px rgba(0,0,0,0.16);
     }
     .announcement-img {
         width: 100%;
-        height: 220px;
+        height: 200px;
         object-fit: cover;
         background: #f5f5f5;
         flex-shrink: 0;
@@ -89,6 +125,77 @@
         gap: 0.5rem;
         margin-top: auto;
     }
+
+    .image-preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .image-preview {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #ddd;
+    }
+
+    .image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .gallery-image:hover {
+        transform: scale(1.05);
+    }
+
+    .image-indicator {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
     @media (max-width: 900px) {
         .announcement-grid {
             grid-template-columns: 1fr;
@@ -155,7 +262,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="announcement_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <form id="announcement_form">
             <input type="hidden" name="id" id="announcement_id">
             <div class="modal-content">
@@ -169,8 +276,10 @@
                         <input type="text" class="form-control" name="title" required>
                     </div>
                     <div class="form-group">
-                        <label for="img">Announcement Image</label>
-                        <input type="file" class="form-control" name="img" accept="image/*" required>
+                        <label for="img">Announcement Images</label>
+                        <input type="file" class="form-control" name="images[]" accept="image/*" multiple required>
+                        <small class="text-muted">You can select multiple images</small>
+                        <div id="image_preview_container" class="image-preview-container"></div>
                     </div>
                     <div class="form-group">
                         <label for="date">Date & Time</label>
@@ -226,9 +335,27 @@ function renderAnnouncements(sortOrder = 'desc') {
     });
     let html = '';
     sorted.forEach(ann => {
+        // Handle multiple images or single image
+        let imageSrc = '';
+        let imageIndicator = '';
+        
+        if (ann.images && ann.images.length > 0) {
+            imageSrc = `../${ann.images[0]}`;
+            if (ann.images.length > 1) {
+                imageIndicator = `<div class="image-indicator">+${ann.images.length - 1} more</div>`;
+            }
+        } else if (ann.image_path) {
+            imageSrc = `../${ann.image_path}`;
+        } else {
+            imageSrc = '../assets/images/placeholder.jpg';
+        }
+        
         html += `
             <div class="announcement-card">
-                <img src="../${ann.image_path}" class="announcement-img" alt="Announcement">
+                <div style="position: relative;">
+                    <img src="${imageSrc}" class="announcement-img" alt="Announcement">
+                    ${imageIndicator}
+                </div>
                 <div class="announcement-body">
                     <div class="announcement-title">${ann.title}</div>
                     <div class="announcement-date">
@@ -236,8 +363,16 @@ function renderAnnouncements(sortOrder = 'desc') {
                     </div>
                     <div class="announcement-desc">${ann.description}</div>
                     <span class="read-more">Read More</span>
-                    ${adminType == 1 ? `
                     <div class="announcement-actions">
+                        ${(ann.images && ann.images.length > 0) || ann.image_path ? `
+                        <button class="btn btn-sm btn-info view_announcement_images" 
+                            data-id="${ann.id}" 
+                            data-title="${ann.title}"
+                            data-images='${JSON.stringify(ann.images || [ann.image_path])}'>
+                            <i class="fa fa-eye"></i> View Images
+                        </button>
+                        ` : ''}
+                        ${adminType == 1 ? `
                         <button class="btn btn-sm btn-primary edit_announcement" 
                             data-id="${ann.id}" 
                             data-title="${ann.title}" 
@@ -248,8 +383,8 @@ function renderAnnouncements(sortOrder = 'desc') {
                         <button class="btn btn-sm btn-danger delete_announcement" data-id="${ann.id}">
                             <i class="fa fa-trash"></i> Delete
                         </button>
+                        ` : ''}
                     </div>
-                    ` : ''}
                 </div>
             </div>
         `;
@@ -343,6 +478,74 @@ $(function(){
         renderAnnouncements($(this).val());
     });
 
+    // Image preview functionality
+    $('input[name="images[]"]').on('change', function() {
+        const files = this.files;
+        const container = $('#image_preview_container');
+        container.empty();
+        
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const preview = $(`
+                    <div class="image-preview" data-index="${i}">
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-image" data-index="${i}">×</button>
+                    </div>
+                `);
+                container.append(preview);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Remove image preview
+    $(document).on('click', '.remove-image', function() {
+        const index = $(this).data('index');
+        $(this).closest('.image-preview').remove();
+        
+        // Reset file input to remove the file
+        const fileInput = $('input[name="images[]"]')[0];
+        const dt = new DataTransfer();
+        const files = fileInput.files;
+        
+        for (let i = 0; i < files.length; i++) {
+            if (i !== index) {
+                dt.items.add(files[i]);
+            }
+        }
+        
+        fileInput.files = dt.files;
+    });
+
+    // View announcement images functionality
+    $(document).on('click', '.view_announcement_images', function() {
+        const announcementTitle = $(this).data('title');
+        const images = $(this).data('images');
+        
+        let content = '';
+        
+        if (images && images.length > 0) {
+            content += `<div class="image-gallery">`;
+            
+            images.forEach(image => {
+                const imagePath = image.startsWith('../') ? image : `../${image}`;
+                content += `<img src="${imagePath}" class="gallery-image" alt="Announcement Image" style="height: 300px; cursor: zoom-in;" onclick="window.open('${imagePath}', '_blank')">`;
+            });
+            
+            content += `</div>`;
+        } else {
+            content = '<p>No images available for this announcement.</p>';
+        }
+        
+        $('#view_announcement_modal .modal-title').text(`${announcementTitle} - Images`);
+        $('#view_announcement_content').html(content);
+        $('#view_announcement_modal').modal('show');
+    });
+
     $('#refresh_attendance').on('click', function() {
         loadEventAttendanceOverview();
     });
@@ -396,7 +599,8 @@ $(document).on('click', '.read-more', function(){
     $('#add_announcement').click(function(){
         $('#announcement_form')[0].reset();
         $('#announcement_id').val('');
-        $('[name="img"]').prop('required', true);
+        $('#image_preview_container').empty();
+        $('input[name="images[]"]').prop('required', true);
         $('#announcement_modal .modal-title').text('Add New Announcement');
         $('#announcement_modal').modal('show');
     });
@@ -436,7 +640,8 @@ $(document).on('click', '.read-more', function(){
         $('[name="title"]').val(title);
         $('[name="description"]').val(description);
         $('[name="date"]').val(new Date(date).toISOString().slice(0,16));
-        $('[name="img"]').prop('required', false);
+        $('input[name="images[]"]').prop('required', false);
+        $('#image_preview_container').empty();
         $('#announcement_modal').modal('show');
     });
 

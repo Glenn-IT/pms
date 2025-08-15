@@ -75,9 +75,18 @@
                         </p>
                       </a>
                     </li> 
+
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=aboutus/index" class="nav-link nav-aboutus_index">
+                        <i class="nav-icon fas fa-info-circle"></i>
+                        <p>
+                          About Us
+                        </p>
+                      </a>
+                    </li>
                     
                     <?php if($_settings->userdata('type') == 1): ?>
-                    <li class="nav-header">Master List</li>
+                    <li class="nav-header">Admin function</li>
                     <li class="nav-item dropdown">
                       <!--<a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">-->
                         <a href="#" class="nav-link nav-population_index">
@@ -107,20 +116,20 @@
                       </a>
                       <ul class="nav nav-treeview">
                         <li class="nav-item">
-                          <a href="<?php echo base_url ?>admin/?page=attendance/present" class="nav-link nav-attendance_present tree-item">
-                            
+                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/present" class="nav-link nav-attendance_present tree-item">-->
+                            <a href="#" class="nav-link nav-attendance_present tree-item">
                             <p>List of Present</p>
                           </a>
                         </li>
                         <li class="nav-item">
-                          <a href="<?php echo base_url ?>admin/?page=attendance/absent" class="nav-link nav-attendance_absent tree-item">
-                            
+                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/absent" class="nav-link nav-attendance_absent tree-item">-->
+                          <a href="#" class="nav-link nav-attendance_absent tree-item">  
                             <p>List of Absent</p>
                           </a>
                         </li>
                         <li class="nav-item">
-                          <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index tree-item">
-                            
+                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index tree-item">-->
+                            <a href="#" class="nav-link nav-attendance_index tree-item">
                             <p>All Attendance</p>
                           </a>
                         </li>
@@ -136,14 +145,7 @@
                         </p>
                       </a>
                     </li>
-                     <li class="nav-item dropdown">
-                      <a href="#" class="nav-link nav-about_us">
-                        <i class="nav-icon fas fa-file-alt"></i>
-                        <p>
-                          About us
-                        </p>
-                      </a>
-                    </li>
+                    
                     <?php endif; ?>
                   </ul>
                 </nav>

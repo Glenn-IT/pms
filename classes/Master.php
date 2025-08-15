@@ -488,15 +488,32 @@ Class Master extends DBConnection {
         $resp['aid'] = $aid;
         $resp['status'] = 'success';
 
-        // Handle image upload
-        if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
-            $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+        // Handle multiple images upload
+        if(isset($_FILES['images']) && !empty($_FILES['images']['tmp_name'][0])){
             $dir = "uploads/announcements/";
             if(!is_dir(base_app . $dir)) mkdir(base_app . $dir);
-            $fname = $dir . $aid . '.' . $ext;
-
-            move_uploaded_file($_FILES['img']['tmp_name'], base_app . $fname);
-            $this->conn->query("UPDATE announcement_list SET image_path = '{$fname}' WHERE id = '{$aid}'");
+            
+            $imagePaths = [];
+            
+            for($i = 0; $i < count($_FILES['images']['tmp_name']); $i++){
+                if($_FILES['images']['tmp_name'][$i] != ''){
+                    $ext = pathinfo($_FILES['images']['name'][$i], PATHINFO_EXTENSION);
+                    $fname = $dir . $aid . '_' . ($i + 1) . '.' . $ext;
+                    
+                    if(move_uploaded_file($_FILES['images']['tmp_name'][$i], base_app . $fname)){
+                        $imagePaths[] = $fname;
+                    }
+                }
+            }
+            
+            if(!empty($imagePaths)){
+                // Store first image in image_path for backward compatibility
+                $this->conn->query("UPDATE announcement_list SET image_path = '{$imagePaths[0]}' WHERE id = '{$aid}'");
+                
+                // Store all images as JSON in images column (add this column if it doesn't exist)
+                $imagesJson = json_encode($imagePaths);
+                $this->conn->query("UPDATE announcement_list SET images = '{$imagesJson}' WHERE id = '{$aid}'");
+            }
         }
 
         $resp['msg'] = "Announcement successfully saved.";
@@ -515,7 +532,21 @@ Class Master extends DBConnection {
 		$get = $this->conn->query("SELECT * FROM announcement_list WHERE id = '{$id}'");
 		if($get->num_rows > 0){
 			$ann = $get->fetch_assoc();
-			if(is_file(base_app . $ann['image_path'])){
+			
+			// Delete multiple images if exists
+			if(!empty($ann['images'])){
+				$images = json_decode($ann['images'], true);
+				if($images){
+					foreach($images as $imagePath){
+						if(is_file(base_app . $imagePath)){
+							unlink(base_app . $imagePath);
+						}
+					}
+				}
+			}
+			
+			// Delete single image for backward compatibility
+			if(!empty($ann['image_path']) && is_file(base_app . $ann['image_path'])){
 				unlink(base_app . $ann['image_path']);
 			}
 		}
@@ -557,6 +588,17 @@ Class Master extends DBConnection {
 		if($qry){
 			while($row = $qry->fetch_assoc()){
 				$row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+				
+				// Handle multiple images
+				if(!empty($row['images'])){
+					$row['images'] = json_decode($row['images'], true);
+				} else if(!empty($row['image_path'])){
+					// For backward compatibility
+					$row['images'] = [$row['image_path']];
+				} else {
+					$row['images'] = [];
+				}
+				
 				$announcements[] = $row;
 			}
 			return json_encode(['status' => 'success', 'data' => $announcements]);

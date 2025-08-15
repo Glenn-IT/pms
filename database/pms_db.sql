@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 06, 2025 at 08:10 AM
+-- Generation Time: Aug 10, 2025 at 04:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -65,11 +65,24 @@ CREATE TABLE `announcement_list` (
 --
 
 INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `description`, `date_created`) VALUES
-(2, '', 'uploads/announcements/2.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:36'),
-(3, '', 'uploads/announcements/3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:46:53'),
-(4, 'Sample 2', 'uploads/announcements/4.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim, neque at condimentum eleifend, quam purus accumsan quam, vitae sagittis erat erat vitae nunc. Donec posuere blandit nulla sit amet placerat. Morbi eleifend ultricies justo. Donec interdum nec justo feugiat tincidunt. Duis at fringilla turpis, vitae dignissim neque. Sed ut urna euismod, rhoncus nisl at, consectetur lacus. Duis quis sapien dui. Aenean elementum quis lorem vitae gravida.', '2025-06-11 12:53:14'),
-(5, 'Sample', 'uploads/announcements/5.jpg', 'asdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdasdwadawdawdvvv', '2025-07-31 16:45:03'),
-(6, 'awd', 'uploads/announcements/6.jpg', 'daw', '2025-08-04 03:16:59');
+(7, 'Sample Announcement B', 'uploads/announcements/7.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:16:51'),
+(8, 'Sample Announcement A', 'uploads/announcements/8.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:17:13'),
+(9, 'Sample Announcement C', 'uploads/announcements/9.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:17:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `attendance`
+--
+
+CREATE TABLE `attendance` (
+  `id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `fullname` varchar(255) NOT NULL,
+  `time_scanned` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -143,6 +156,55 @@ INSERT INTO `crime_list` (`id`, `name`, `status`, `delete_flag`, `date_created`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `event_name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `event_date` date NOT NULL,
+  `event_time` time NOT NULL,
+  `status` tinyint(1) DEFAULT 1,
+  `date_created` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_attendance`
+--
+
+CREATE TABLE `event_attendance` (
+  `id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `qr_code` varchar(255) NOT NULL,
+  `scan_time` datetime DEFAULT current_timestamp(),
+  `status` enum('present','absent') DEFAULT 'present',
+  `scanner_user_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_attendance`
+--
+
+INSERT INTO `event_attendance` (`id`, `event_id`, `user_id`, `qr_code`, `scan_time`, `status`, `scanner_user_id`) VALUES
+(10, 8, 33, 'PMS-USER-00033-SAMPLE_F-a9336fa1', '2025-08-09 11:43:33', 'present', 1),
+(11, 8, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-09 11:43:42', 'present', 1),
+(12, 8, 31, 'PMS-USER-00031-SAMPLE D-177120fe', '2025-08-09 11:43:49', 'present', 1),
+(13, 8, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-08-09 11:43:52', 'present', 1),
+(14, 8, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-08-09 11:43:57', 'present', 1),
+(15, 8, 28, 'PMS-USER-00028-SAMPLE A-887fcc39', '2025-08-09 11:44:01', 'present', 1),
+(16, 9, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-10 17:59:07', 'present', 1),
+(17, 9, 31, 'PMS-USER-00031-SAMPLE D-177120fe', '2025-08-10 17:59:15', 'present', 1),
+(18, 9, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-08-10 17:59:26', 'present', 1),
+(19, 9, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-08-10 18:00:14', 'present', 1),
+(20, 11, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-10 18:43:54', 'present', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `event_list`
 --
 
@@ -151,6 +213,8 @@ CREATE TABLE `event_list` (
   `title` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `image_path` varchar(255) DEFAULT NULL,
+  `image_paths` text DEFAULT NULL,
+  `images` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -158,10 +222,11 @@ CREATE TABLE `event_list` (
 -- Dumping data for table `event_list`
 --
 
-INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `date_created`) VALUES
-(1, 'Sample', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/1.png', '2025-08-04 03:37:22'),
-(2, 'Sample 4', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/2.png', '2025-08-04 03:37:40'),
-(3, 'Smaple 3', 'SampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSampleSample', 'uploads/events/3.png', '2025-08-04 03:38:02');
+INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
+(8, 'Sample Event B', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/8_1754651939_0.png\",\"uploads\\/events\\/8_1754651939_1.png\",\"uploads\\/events\\/8_1754651939_2.png\",\"uploads\\/events\\/8_1754651939_3.png\",\"uploads\\/events\\/8_1754651939_4.png\"]', NULL, '2025-08-09 19:18:00'),
+(9, 'Sample Event C', 'Lorem ipsum dolor sit amet, consecteturs adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/9_1754651958_0.png\",\"uploads\\/events\\/9_1754651958_1.png\",\"uploads\\/events\\/9_1754651958_2.png\",\"uploads\\/events\\/9_1754651958_3.png\",\"uploads\\/events\\/9_1754651958_4.png\"]', NULL, '2025-08-10 11:19:00'),
+(10, 'Sample Event D', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/10_1754651989_0.png\",\"uploads\\/events\\/10_1754651989_1.png\",\"uploads\\/events\\/10_1754651989_2.png\",\"uploads\\/events\\/10_1754651989_3.png\",\"uploads\\/events\\/10_1754651989_4.png\"]', NULL, '2025-08-11 19:19:00'),
+(11, 'Sample F', 'dawedwaoidbioawd', NULL, '[\"uploads\\/events\\/11_1754822554_0.jpg\",\"uploads\\/events\\/11_1754822554_1.jpg\",\"uploads\\/events\\/11_1754822554_2.jpg\",\"uploads\\/events\\/11_1754822554_3.jpg\",\"uploads\\/events\\/11_1754822554_4.jpg\",\"uploads\\/events\\/11_1754822554_5.jpg\"]', NULL, '2025-08-10 18:42:00');
 
 -- --------------------------------------------------------
 
@@ -285,6 +350,47 @@ CREATE TABLE `security_questions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sk_officials`
+--
+
+CREATE TABLE `sk_officials` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `position` enum('chairman','councilor') NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `middlename` varchar(100) DEFAULT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `sex` enum('Male','Female') NOT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `zone` varchar(50) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `order_position` int(11) DEFAULT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sk_officials`
+--
+
+INSERT INTO `sk_officials` (`id`, `name`, `position`, `image_path`, `firstname`, `middlename`, `lastname`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `status`, `order_position`, `date_created`, `date_updated`) VALUES
+(1, '', 'chairman', '1754649960_s036012017.webp', 'Johnawd', 'A.', 'Dela Cruz', '1998-05-15', 'Male', '09123456789', 'john.delacruz@email.com', 'Zone 1', 0, 1, '2025-08-08 18:10:03', '2025-08-08 18:46:56'),
+(2, '', 'councilor', NULL, 'Maria', 'B.', 'Santos', '2000-03-20', 'Female', '09987654321', 'maria.santos@email.com', 'Zone 2', 0, 2, '2025-08-08 18:10:03', '2025-08-08 18:47:03'),
+(3, '', 'councilor', NULL, 'Jose', 'C.', 'Garcia', '1999-07-10', 'Male', '09111222333', 'jose.garcia@email.com', 'Zone 3', 0, 3, '2025-08-08 18:10:03', '2025-08-08 18:47:02'),
+(4, '', 'councilor', NULL, 'Ana', 'D.', 'Rodriguez', '2001-01-25', 'Female', '09444555666', 'ana.rodriguez@email.com', 'Zone 4', 0, 4, '2025-08-08 18:10:03', '2025-08-08 18:46:58'),
+(5, '', 'councilor', NULL, 'Miguel', 'E.', 'Lopez', '1997-11-30', 'Male', '09777888999', 'miguel.lopez@email.com', 'Zone 5', 0, 5, '2025-08-08 18:10:03', '2025-08-08 18:47:05'),
+(6, '', 'councilor', NULL, 'Carmen', 'F.', 'Martinez', '2000-09-12', 'Female', '09123987456', 'carmen.martinez@email.com', 'Zone 6', 0, 6, '2025-08-08 18:10:03', '2025-08-08 18:47:00'),
+(7, '', 'councilor', NULL, 'Pedro', 'G.', 'Gonzalez', '1998-12-05', 'Male', '09654321987', 'pedro.gonzalez@email.com', 'Zone 7', 0, 7, '2025-08-08 18:10:03', '2025-08-08 18:47:07'),
+(8, '', 'councilor', NULL, 'Rosa', 'H.', 'Hernandez', '1999-04-18', 'Female', '09321654987', 'rosa.hernandez@email.com', 'Zone 8', 0, 8, '2025-08-08 18:10:03', '2025-08-08 18:47:09'),
+(9, '', 'chairman', '1754650080_s036012017.webp', 'Zues', 'Col', 'Cong', '2000-08-08', 'Male', '0998798778', 'awd@gmail.com', 'Zone 1', 1, NULL, '2025-08-08 18:48:10', '2025-08-08 18:48:10'),
+(10, '', 'councilor', '1754650080_s036012017.webp', 'Bread', 'Tug', 'Opes', '2000-06-20', 'Female', '09987987987', 'Wd@gmail.com', 'Zone 6', 1, NULL, '2025-08-08 18:48:54', '2025-08-08 18:48:54');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `system_info`
 --
 
@@ -325,6 +431,7 @@ CREATE TABLE `users` (
   `security_question` varchar(255) DEFAULT NULL,
   `security_answer` varchar(255) DEFAULT NULL,
   `avatar` text DEFAULT NULL,
+  `qr_code` text DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
   `type` tinyint(1) NOT NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 1,
@@ -340,22 +447,15 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
-(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', NULL, 1, 1, '2021-01-20 14:02:37', '2025-05-29 19:03:25', 0, NULL, 0, 'Male'),
-(9, 'Cristel', 'Estrada', 'Pulig', 'Cristel', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-05-22 14:10:08', '2025-08-06 12:57:45', 3, '2000-01-05', 25, 'Male'),
-(13, 'Glenard', 'U', 'Pagurayan', 'Glenn', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'sample', NULL, NULL, 2, 1, '2025-08-06 12:58:30', '2025-08-06 12:58:30', 1, '2000-02-02', 25, 'Male'),
-(14, 'Killua', 'Pol', 'Zoldyck', 'Killua', '86c8148718b55269a336f9e2c57b4117', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:00:23', '2025-08-06 13:44:23', 2, '2000-08-08', 24, 'Male'),
-(15, 'Glen', 'U', 'Pagurayan', 'User', '5725dbcc7254ee8422d1cb60db29625c', 'pet', 'Sample', NULL, NULL, 2, 1, '2025-08-06 13:51:20', '2025-08-06 13:51:20', 1, '2000-08-23', 24, 'Male'),
-(16, 'Maria', 'Santos', 'Cruz', 'maria_cruz', '5d41402abc4b2a76b9719d911017c592', 'pet', 'fluffy', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1995-03-15', 30, 'Female'),
-(17, 'Jose', 'Miguel', 'Reyes', 'jose_reyes', '098f6bcd4621d373cade4e832627b4f6', 'pet', 'buddy', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1992-07-22', 33, 'Male'),
-(18, 'Ana', 'Isabel', 'Garcia', 'ana_garcia', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'pet', 'mittens', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1998-11-10', 26, 'Female'),
-(19, 'Roberto', 'Carlos', 'Martinez', 'roberto_martinez', 'aab3238922bcc25a6f606eb525ffdc56', 'pet', 'max', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1990-05-08', 35, 'Male'),
-(20, 'Carmen', 'Rosa', 'Lopez', 'carmen_lopez', '900150983cd24fb0d6963f7d28e17f72', 'pet', 'luna', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1996-09-14', 28, 'Female'),
-(21, 'Miguel', 'Antonio', 'Hernandez', 'miguel_hernandez', 'e10adc3949ba59abbe56e057f20f883e', 'pet', 'rocky', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1993-12-03', 31, 'Male'),
-(22, 'Sofia', 'Elena', 'Gonzalez', 'sofia_gonzalez', '25d55ad283aa400af464c76d713c07ad', 'pet', 'bella', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1999-02-28', 26, 'Female'),
-(23, 'Carlos', 'Eduardo', 'Rodriguez', 'carlos_rodriguez', '827ccb0eea8a706c4c34a16891f84e7b', 'pet', 'charlie', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 2, '1991-06-17', 34, 'Male'),
-(24, 'Isabella', 'Marie', 'Torres', 'isabella_torres', '25f9e794323b453885f5181f1b624d0b', 'pet', 'milo', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 3, '1997-04-12', 28, 'Female'),
-(25, 'Fernando', 'Luis', 'Flores', 'fernando_flores', 'e99a18c428cb38d5f260853678922e03', 'pet', 'oscar', NULL, NULL, 2, 1, '2025-08-06 14:00:00', '2025-08-06 14:00:00', 1, '1994-10-25', 30, 'Male');
+INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `qr_code`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
+(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male'),
+(28, 'Lincoln', 'Gude', 'Soper', 'sample A', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00028-SAMPLE A-887fcc39', NULL, 2, 1, '2025-08-08 19:20:58', '2025-08-10 19:23:44', 1, '2000-02-02', 25, 'Male'),
+(29, 'Kule', 'Lopus', 'Skuer', 'Sample B', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00029-SAMPLE B-365e407a', NULL, 2, 1, '2025-08-08 19:21:35', '2025-08-08 19:21:35', 2, '2001-01-05', 24, 'Female'),
+(30, 'Kuuso', 'Jute', 'Slop', 'Sample C', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00030-SAMPLE C-f5622689', NULL, 2, 1, '2025-08-08 19:22:17', '2025-08-08 19:22:17', 3, '2003-03-02', 22, 'Male'),
+(31, 'Lopeu', 'Kold', 'Suer', 'Sample D', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00031-SAMPLE D-177120fe', NULL, 2, 1, '2025-08-08 19:23:06', '2025-08-08 22:43:21', 4, '2004-05-05', 21, 'Female'),
+(32, 'Kikusu', 'Kosp', 'Posi', 'Sample E', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00032-SAMPLE_E-d87f48da', NULL, 2, 1, '2025-08-08 19:37:54', '2025-08-08 19:37:54', 2, '2005-09-06', 19, 'Female'),
+(33, 'Kkols', 'Iolw', 'Loper', 'Sample F', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00033-SAMPLE_F-a9336fa1', NULL, 2, 1, '2025-08-08 22:37:37', '2025-08-08 22:37:37', 5, '2008-05-30', 17, 'Female'),
+(34, 'Slowp', 'U', 'Soper', 'Sample X', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00034-SAMPLE_X-7288e467', NULL, 2, 1, '2025-08-10 19:44:07', '2025-08-10 20:33:47', 1, '1994-08-11', 30, 'Male');
 
 -- --------------------------------------------------------
 
@@ -398,6 +498,15 @@ ALTER TABLE `announcement_list`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `attendance`
+--
+ALTER TABLE `attendance`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_attendance` (`event_id`,`user_id`),
+  ADD KEY `event_id` (`event_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `cell_list`
 --
 ALTER TABLE `cell_list`
@@ -409,6 +518,22 @@ ALTER TABLE `cell_list`
 --
 ALTER TABLE `crime_list`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `event_attendance`
+--
+ALTER TABLE `event_attendance`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `event_user_unique` (`event_id`,`user_id`),
+  ADD KEY `event_id` (`event_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `scanner_user_id` (`scanner_user_id`);
 
 --
 -- Indexes for table `event_list`
@@ -452,6 +577,12 @@ ALTER TABLE `security_questions`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `sk_officials`
+--
+ALTER TABLE `sk_officials`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `system_info`
 --
 ALTER TABLE `system_info`
@@ -484,7 +615,13 @@ ALTER TABLE `action_list`
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `attendance`
+--
+ALTER TABLE `attendance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `cell_list`
@@ -499,10 +636,22 @@ ALTER TABLE `crime_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `event_attendance`
+--
+ALTER TABLE `event_attendance`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `inmate_list`
@@ -529,6 +678,12 @@ ALTER TABLE `security_questions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `sk_officials`
+--
+ALTER TABLE `sk_officials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `system_info`
 --
 ALTER TABLE `system_info`
@@ -538,7 +693,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `visit_list`
@@ -555,6 +710,14 @@ ALTER TABLE `visit_list`
 --
 ALTER TABLE `cell_list`
   ADD CONSTRAINT `prison_id_fk_cl` FOREIGN KEY (`prison_id`) REFERENCES `cell_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `event_attendance`
+--
+ALTER TABLE `event_attendance`
+  ADD CONSTRAINT `event_attendance_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event_list` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `event_attendance_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `event_attendance_ibfk_3` FOREIGN KEY (`scanner_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `inmate_crimes`
