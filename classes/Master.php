@@ -466,6 +466,18 @@ Class Master extends DBConnection {
     $title = $this->conn->real_escape_string(htmlspecialchars($title));
     $description = $this->conn->real_escape_string(htmlspecialchars($description));
 
+    // Check for duplicate title and date
+    if(!empty($title) && !empty($date_created)){
+        $date_only = date('Y-m-d', strtotime($date_created));
+        $duplicate_check = $this->conn->query("SELECT * FROM `announcement_list` WHERE `title` = '{$title}' AND DATE(`date_created`) = '{$date_only}'" . (!empty($id) ? " AND id != {$id}" : ""));
+        
+        if($duplicate_check && $duplicate_check->num_rows > 0){
+            $resp['status'] = 'failed';
+            $resp['msg'] = "An announcement with the same title and date already exists.";
+            return json_encode($resp);
+        }
+    }
+
     if(!empty($title))
         $data .= " `title`='{$title}' ";
     if(!empty($description))
@@ -604,6 +616,21 @@ Class Master extends DBConnection {
 			return json_encode(['status' => 'success', 'data' => $announcements]);
 		} else {
 			return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+		}
+	}
+	
+	function check_announcement_duplicate(){
+		extract($_GET);
+		$title = $this->conn->real_escape_string(htmlspecialchars($title));
+		$date_only = date('Y-m-d', strtotime($date));
+		$id = isset($id) ? $id : '';
+		
+		$duplicate_check = $this->conn->query("SELECT * FROM `announcement_list` WHERE `title` = '{$title}' AND DATE(`date_created`) = '{$date_only}'" . (!empty($id) ? " AND id != {$id}" : ""));
+		
+		if($duplicate_check && $duplicate_check->num_rows > 0){
+			return json_encode(['status' => 'duplicate', 'msg' => 'Duplicate found']);
+		} else {
+			return json_encode(['status' => 'unique', 'msg' => 'No duplicate found']);
 		}
 	}
 	
@@ -1191,6 +1218,9 @@ switch ($action) {
 		break;
 		case 'get_all_announcements':
 			echo $Master->get_all_announcements();
+			break;
+		case 'check_announcement_duplicate':
+			echo $Master->check_announcement_duplicate();
 			break;
 	case 'search_announcements':
 	echo $Master->search_announcements();

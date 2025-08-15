@@ -196,6 +196,15 @@
         font-size: 0.8rem;
     }
 
+    #duplicate_warning {
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 900px) {
         .announcement-grid {
             grid-template-columns: 1fr;
@@ -570,6 +579,32 @@ $(document).on('click', '.read-more', function(){
 
     $('#announcement_form').submit(function(e){
         e.preventDefault();
+        
+        // Check for duplicate before submitting
+        const title = $('[name="title"]').val().trim();
+        const date = $('[name="date"]').val();
+        const id = $('#announcement_id').val();
+        
+        if(title && date) {
+            // Check for duplicates
+            const dateOnly = new Date(date).toISOString().split('T')[0];
+            let isDuplicate = false;
+            
+            announcementsData.forEach(ann => {
+                const annDateOnly = new Date(ann.date_created).toISOString().split('T')[0];
+                if(ann.title.toLowerCase() === title.toLowerCase() && 
+                   annDateOnly === dateOnly && 
+                   ann.id != id) {
+                    isDuplicate = true;
+                }
+            });
+            
+            if(isDuplicate) {
+                alert_toast("An announcement with the same title and date already exists.", 'error');
+                return;
+            }
+        }
+        
         var formData = new FormData(this);
         $.ajax({
             url: '../classes/Master.php?f=save_announcement',
@@ -602,7 +637,40 @@ $(document).on('click', '.read-more', function(){
         $('#image_preview_container').empty();
         $('input[name="images[]"]').prop('required', true);
         $('#announcement_modal .modal-title').text('Add New Announcement');
+        $('#duplicate_warning').remove(); // Remove any existing warning
         $('#announcement_modal').modal('show');
+    });
+
+    // Real-time duplicate validation
+    $(document).on('input change', '[name="title"], [name="date"]', function() {
+        const title = $('[name="title"]').val().trim();
+        const date = $('[name="date"]').val();
+        const id = $('#announcement_id').val();
+        
+        // Remove existing warning
+        $('#duplicate_warning').remove();
+        
+        if(title && date) {
+            const dateOnly = new Date(date).toISOString().split('T')[0];
+            let isDuplicate = false;
+            
+            announcementsData.forEach(ann => {
+                const annDateOnly = new Date(ann.date_created).toISOString().split('T')[0];
+                if(ann.title.toLowerCase() === title.toLowerCase() && 
+                   annDateOnly === dateOnly && 
+                   ann.id != id) {
+                    isDuplicate = true;
+                }
+            });
+            
+            if(isDuplicate) {
+                const warning = `<div id="duplicate_warning" class="alert alert-warning mt-2">
+                    <i class="fa fa-exclamation-triangle"></i> 
+                    Warning: An announcement with this title and date already exists.
+                </div>`;
+                $('[name="date"]').closest('.form-group').after(warning);
+            }
+        }
     });
 
     $(document).on('click', '.delete_announcement', function(){
@@ -642,6 +710,7 @@ $(document).on('click', '.read-more', function(){
         $('[name="date"]').val(new Date(date).toISOString().slice(0,16));
         $('input[name="images[]"]').prop('required', false);
         $('#image_preview_container').empty();
+        $('#duplicate_warning').remove(); // Remove any existing warning
         $('#announcement_modal').modal('show');
     });
 
