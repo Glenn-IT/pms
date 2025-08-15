@@ -637,8 +637,65 @@ $(function() {
     }
 });
 
+    // Function to check for duplicate title and time
+    function checkDuplicateEvent(title, datetime, currentEventId = null) {
+        if (!title || !datetime) return false;
+        
+        try {
+            const inputDate = new Date(datetime);
+            if (isNaN(inputDate.getTime())) return false; // Invalid date
+            
+            const inputTime = inputDate.toTimeString().substring(0, 8); // HH:MM:SS format
+            
+            return eventData.some(event => {
+                // Skip current event when editing
+                if (currentEventId && event.id == currentEventId) {
+                    return false;
+                }
+                
+                // Check if title matches (case insensitive)
+                if (event.title.toLowerCase().trim() === title.toLowerCase().trim()) {
+                    try {
+                        const eventDate = new Date(event.date_created);
+                        if (isNaN(eventDate.getTime())) return false; // Invalid event date
+                        
+                        const eventTime = eventDate.toTimeString().substring(0, 8);
+                        
+                        // Check if time matches
+                        if (eventTime === inputTime) {
+                            return true;
+                        }
+                    } catch (e) {
+                        console.warn('Error parsing event date:', event.date_created, e);
+                        return false;
+                    }
+                }
+                
+                return false;
+            });
+        } catch (e) {
+            console.warn('Error in duplicate check:', e);
+            return false;
+        }
+    }
+
     $('#event_form').submit(function(e) {
         e.preventDefault();
+        
+        // Get form values
+        const title = $('[name="title"]').val().trim();
+        const datetime = $('[name="date"]').val();
+        const currentEventId = $('#event_id').val();
+        
+        // Check for duplicates
+        if (checkDuplicateEvent(title, datetime, currentEventId)) {
+            const inputDate = new Date(datetime);
+            const timeString = inputDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            alert_toast(`An event with the title "${title}" and time "${timeString}" already exists. Please use a different title or time.`, 'error');
+            return;
+        }
+        
         var formData = new FormData(this);
         $.ajax({
             url: '../classes/Master.php?f=save_event',
@@ -671,7 +728,46 @@ $(function() {
         $('#image_preview_container').empty();
         $('input[name="images[]"]').prop('required', true);
         $('#event_modal .modal-title').text('Add New Event');
+        $('#duplicate_warning').remove(); // Remove any existing warning
         $('#event_modal').modal('show');
+    });
+
+    // Real-time duplicate validation
+    function validateDuplicate() {
+        const title = $('[name="title"]').val().trim();
+        const datetime = $('[name="date"]').val();
+        const currentEventId = $('#event_id').val();
+        
+        // Remove existing warning
+        $('#duplicate_warning').remove();
+        
+        if (title && datetime) {
+            if (checkDuplicateEvent(title, datetime, currentEventId)) {
+                try {
+                    const inputDate = new Date(datetime);
+                    const timeString = inputDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const warningHtml = `
+                        <div id="duplicate_warning" class="alert alert-warning mt-2" style="font-size: 0.9rem;">
+                            <i class="fa fa-exclamation-triangle"></i> 
+                            <strong>Warning:</strong> An event with the title "${title}" and time "${timeString}" already exists. 
+                            Please use a different title or time.
+                        </div>
+                    `;
+                    
+                    $('[name="date"]').closest('.form-group').after(warningHtml);
+                    return false;
+                } catch (e) {
+                    console.warn('Error in validateDuplicate:', e);
+                }
+            }
+        }
+        return true;
+    }
+
+    // Add event listeners for real-time validation
+    $(document).on('input change', '[name="title"], [name="date"]', function() {
+        setTimeout(validateDuplicate, 300); // Debounce validation
     });
 
     $(document).on('click', '.delete_event', function() {
@@ -711,7 +807,11 @@ $(function() {
         $('[name="date"]').val(new Date(date).toISOString().slice(0, 16));
         $('input[name="images[]"]').prop('required', false);
         $('#image_preview_container').empty();
+        $('#duplicate_warning').remove(); // Remove any existing warning
         $('#event_modal').modal('show');
+        
+        // Validate after setting values
+        setTimeout(validateDuplicate, 100);
     });
 
     // QR Scan for Attendance

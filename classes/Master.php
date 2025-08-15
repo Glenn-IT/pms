@@ -662,6 +662,48 @@ function save_event() {
     $title = $this->conn->real_escape_string(htmlspecialchars($title));
     $description = $this->conn->real_escape_string(htmlspecialchars($description));
 
+    // Check for duplicate title and time (same title and same time, regardless of date)
+    if(!empty($title) && !empty($date)) {
+        try {
+            $inputDateTime = new DateTime($date);
+            $inputTime = $inputDateTime->format('H:i:s');
+            
+            // Query to check for existing events with same title and time
+            $duplicateQuery = "SELECT id, title, date_created FROM `event_list` 
+                              WHERE `title` = '{$title}' 
+                              AND TIME(`date_created`) = '{$inputTime}'";
+            
+            // If updating, exclude the current record from duplicate check
+            if(!empty($id)) {
+                $duplicateQuery .= " AND id != '{$id}'";
+            }
+            
+            $duplicateCheck = $this->conn->query($duplicateQuery);
+            
+            if($this->capture_err())
+                return $this->capture_err();
+                
+            if($duplicateCheck && $duplicateCheck->num_rows > 0) {
+                $existing = $duplicateCheck->fetch_assoc();
+                try {
+                    $existingDateTime = new DateTime($existing['date_created']);
+                    $existingDate = $existingDateTime->format('Y-m-d');
+                    $existingTime = $existingDateTime->format('H:i');
+                } catch (Exception $e) {
+                    $existingDate = 'unknown date';
+                    $existingTime = $inputTime;
+                }
+                
+                $resp['status'] = 'failed';
+                $resp['msg'] = "An event with the same title '{$title}' and time {$existingTime} already exists on {$existingDate}. Please use a different title or time.";
+                return json_encode($resp);
+            }
+        } catch (Exception $e) {
+            // If date parsing fails, continue without duplicate check
+            error_log("Date parsing error in save_event: " . $e->getMessage());
+        }
+    }
+
     if(!empty($title))
         $data .= " `title`='{$title}' ";
     if(!empty($description))
