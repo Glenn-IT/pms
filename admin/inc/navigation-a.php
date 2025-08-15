@@ -57,15 +57,17 @@
                       </a>
                     </li> 
 
-                      <li class="nav-item dropdown">
-                      <!--<a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-QRCode_index">-->
-                        <a href="#" class="nav-link nav-QRCode_index">
+                    <?php if($_settings->userdata('type') != 1): ?>
+                    <li class="nav-item dropdown">
+                     <a href="<?php echo base_url ?>admin/?page=QRCode/index" class="nav-link nav-QRCode_index">
+                        <!-- <a href="#" class="nav-link nav-QRCode_index">-->
                         <i class="nav-icon fas fa-qrcode"></i>
                         <p>
                           My QR Code
                         </p>
                       </a>
                     </li> 
+                    <?php endif; ?>
 
                     <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=skofficials/index" class="nav-link nav-skofficials_index">
@@ -88,8 +90,8 @@
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Admin function</li>
                     <li class="nav-item dropdown">
-                      <!--<a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">-->
-                        <a href="#" class="nav-link nav-population_index">
+                     <a href="<?php echo base_url ?>admin/?page=population/index" class="nav-link nav-population_index">
+                        <!-- <a href="#" class="nav-link nav-population_index">-->
                         <i class="nav-icon fas fa-th-list"></i>
                         <p>
                         Population
@@ -97,8 +99,8 @@
                       </a>
                     </li> 
                     <li class="nav-item dropdown">
-                      <!--<a href="<?php echo base_url ?>admin/?page=activepurok/index" class="nav-link nav-activepurok_index">-->
-                        <a href="#" class="nav-link nav-activepurok_index">
+                     <a href="<?php echo base_url ?>admin/?page=activepurok/index" class="nav-link nav-activepurok_index">
+                        <!-- <a href="#" class="nav-link nav-activepurok_index">-->
                         <i class="nav-icon fas fa-border-all"></i>
                         <p>
                           Active Purok
@@ -116,20 +118,20 @@
                       </a>
                       <ul class="nav nav-treeview">
                         <li class="nav-item">
-                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/present" class="nav-link nav-attendance_present tree-item">-->
-                            <a href="#" class="nav-link nav-attendance_present tree-item">
+                          <a href="<?php echo base_url ?>admin/?page=attendance/present" class="nav-link nav-attendance_present tree-item">
+                            <!--<a href="#" class="nav-link nav-attendance_present tree-item">-->
                             <p>List of Present</p>
                           </a>
                         </li>
                         <li class="nav-item">
-                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/absent" class="nav-link nav-attendance_absent tree-item">-->
-                          <a href="#" class="nav-link nav-attendance_absent tree-item">  
+                         <a href="<?php echo base_url ?>admin/?page=attendance/absent" class="nav-link nav-attendance_absent tree-item">
+                          <!-- <a href="#" class="nav-link nav-attendance_absent tree-item"> --> 
                             <p>List of Absent</p>
                           </a>
                         </li>
                         <li class="nav-item">
-                          <!--<a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index tree-item">-->
-                            <a href="#" class="nav-link nav-attendance_index tree-item">
+                          <a href="<?php echo base_url ?>admin/?page=attendance/index" class="nav-link nav-attendance_index tree-item">
+                           <!-- <a href="#" class="nav-link nav-attendance_index tree-item">-->
                             <p>All Attendance</p>
                           </a>
                         </li>

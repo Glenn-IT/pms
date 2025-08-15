@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2025 at 04:26 PM
+-- Generation Time: Aug 15, 2025 at 06:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,6 +56,7 @@ CREATE TABLE `announcement_list` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `image_path` varchar(255) DEFAULT NULL,
+  `images` text DEFAULT NULL,
   `description` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -64,10 +65,9 @@ CREATE TABLE `announcement_list` (
 -- Dumping data for table `announcement_list`
 --
 
-INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `description`, `date_created`) VALUES
-(7, 'Sample Announcement B', 'uploads/announcements/7.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:16:51'),
-(8, 'Sample Announcement A', 'uploads/announcements/8.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:17:13'),
-(9, 'Sample Announcement C', 'uploads/announcements/9.jpg', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', '2025-08-08 19:17:46');
+INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `images`, `description`, `date_created`) VALUES
+(10, 'Sample A', 'uploads/announcements/10_1.png', '[\"uploads/announcements/10_1.png\",\"uploads/announcements/10_2.png\",\"uploads/announcements/10_3.png\",\"uploads/announcements/10_4.png\",\"uploads/announcements/10_5.png\"]', 'qwewqe', '2025-08-15 11:54:31'),
+(11, 'Sample B', 'uploads/announcements/11_1.jpg', '[\"uploads/announcements/11_1.jpg\",\"uploads/announcements/11_2.jpg\",\"uploads/announcements/11_3.jpg\",\"uploads/announcements/11_4.jpg\",\"uploads/announcements/11_5.jpg\"]', 'Sample', '2025-08-15 11:54:58');
 
 -- --------------------------------------------------------
 
@@ -185,23 +185,6 @@ CREATE TABLE `event_attendance` (
   `scanner_user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `event_attendance`
---
-
-INSERT INTO `event_attendance` (`id`, `event_id`, `user_id`, `qr_code`, `scan_time`, `status`, `scanner_user_id`) VALUES
-(10, 8, 33, 'PMS-USER-00033-SAMPLE_F-a9336fa1', '2025-08-09 11:43:33', 'present', 1),
-(11, 8, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-09 11:43:42', 'present', 1),
-(12, 8, 31, 'PMS-USER-00031-SAMPLE D-177120fe', '2025-08-09 11:43:49', 'present', 1),
-(13, 8, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-08-09 11:43:52', 'present', 1),
-(14, 8, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-08-09 11:43:57', 'present', 1),
-(15, 8, 28, 'PMS-USER-00028-SAMPLE A-887fcc39', '2025-08-09 11:44:01', 'present', 1),
-(16, 9, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-10 17:59:07', 'present', 1),
-(17, 9, 31, 'PMS-USER-00031-SAMPLE D-177120fe', '2025-08-10 17:59:15', 'present', 1),
-(18, 9, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-08-10 17:59:26', 'present', 1),
-(19, 9, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-08-10 18:00:14', 'present', 1),
-(20, 11, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-10 18:43:54', 'present', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -223,10 +206,8 @@ CREATE TABLE `event_list` (
 --
 
 INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
-(8, 'Sample Event B', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/8_1754651939_0.png\",\"uploads\\/events\\/8_1754651939_1.png\",\"uploads\\/events\\/8_1754651939_2.png\",\"uploads\\/events\\/8_1754651939_3.png\",\"uploads\\/events\\/8_1754651939_4.png\"]', NULL, '2025-08-09 19:18:00'),
-(9, 'Sample Event C', 'Lorem ipsum dolor sit amet, consecteturs adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/9_1754651958_0.png\",\"uploads\\/events\\/9_1754651958_1.png\",\"uploads\\/events\\/9_1754651958_2.png\",\"uploads\\/events\\/9_1754651958_3.png\",\"uploads\\/events\\/9_1754651958_4.png\"]', NULL, '2025-08-10 11:19:00'),
-(10, 'Sample Event D', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas luctus sit amet dolor sit amet rutrum. Suspendisse mattis, elit in sagittis ultrices, enim dui tincidunt dui, et congue metus velit et erat. Nam bibendum ex risus, vel egestas sapien pharetra eget. Sed libero metus, feugiat eu arcu a, consectetur volutpat augue. Mauris blandit risus sit amet ex feugiat, vel dignissim tortor congue. Pellentesque blandit mauris ac tortor vulputate, eget mattis ligula interdum. Nullam varius, eros vitae molestie commodo, dui nisl suscipit ipsum, eu lacinia risus magna sed lectus.', NULL, '[\"uploads\\/events\\/10_1754651989_0.png\",\"uploads\\/events\\/10_1754651989_1.png\",\"uploads\\/events\\/10_1754651989_2.png\",\"uploads\\/events\\/10_1754651989_3.png\",\"uploads\\/events\\/10_1754651989_4.png\"]', NULL, '2025-08-11 19:19:00'),
-(11, 'Sample F', 'dawedwaoidbioawd', NULL, '[\"uploads\\/events\\/11_1754822554_0.jpg\",\"uploads\\/events\\/11_1754822554_1.jpg\",\"uploads\\/events\\/11_1754822554_2.jpg\",\"uploads\\/events\\/11_1754822554_3.jpg\",\"uploads\\/events\\/11_1754822554_4.jpg\",\"uploads\\/events\\/11_1754822554_5.jpg\"]', NULL, '2025-08-10 18:42:00');
+(14, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/14_1755231422_0.png\",\"uploads\\/events\\/14_1755231422_1.png\",\"uploads\\/events\\/14_1755231422_2.png\",\"uploads\\/events\\/14_1755231422_3.png\"]', NULL, '2025-08-15 12:16:00'),
+(15, 'Sample A', 'awd', NULL, '[\"uploads\\/events\\/15_1755231441_0.png\",\"uploads\\/events\\/15_1755231441_1.png\"]', NULL, '2025-08-15 13:17:00');
 
 -- --------------------------------------------------------
 
@@ -615,7 +596,7 @@ ALTER TABLE `action_list`
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `attendance`
@@ -651,7 +632,7 @@ ALTER TABLE `event_attendance`
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `inmate_list`
