@@ -86,6 +86,15 @@
                         </p>
                       </a>
                     </li>
+
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=devs/index" class="nav-link nav-devs_index">
+                        <i class="nav-icon fas fa-code"></i>
+                        <p>
+                          Developers Information
+                        </p>
+                      </a>
+                    </li>
                     
                     <?php if($_settings->userdata('type') == 1): ?>
                     <li class="nav-header">Admin function</li>
