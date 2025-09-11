@@ -38,6 +38,62 @@
                 </div>
             </div>
 
+            <!-- QR Code Tools Panel -->
+            <div class="card card-outline card-info mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0"><i class="fa fa-qrcode mr-2"></i>QR Code Tools</h4>
+                </div>
+                <div class="card-body">
+                    <div class="container-fluid text-center">
+                        <button type="button" class="btn btn-info btn-lg" style="min-width:200px;" data-toggle="modal" data-target="#qrCodeModal" id="openQRCodeModuleBtn">
+                            <i class="fa fa-qrcode mr-2"></i>Open QR Code Module
+                        </button>
+                        <p class="mt-2 text-muted">Access QR code generation, scanning, and management tools.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QR Code Modal -->
+            <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="qrCodeModalLabel"><i class="fa fa-qrcode mr-2"></i>QR Code Module</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="qrCodeModalBody" style="min-height:400px;">
+                            <div class="text-center text-muted py-5"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+            $(document).ready(function(){
+                $('#openQRCodeModuleBtn').on('click', function(){
+                    console.log('QR Code button clicked');
+                    $('#qrCodeModalBody').html('<div class="text-center text-muted py-5"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading...</div>');
+                    $.ajax({
+                        url: 'QRCode/modal_content.php',
+                        type: 'GET',
+                        success: function(data) {
+                            console.log('AJAX success, data length:', data.length);
+                            console.log('Data preview:', data.substring(0, 200));
+                            $('#qrCodeModalBody').html(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('AJAX error:', error);
+                            console.log('Status:', status);
+                            console.log('Response:', xhr.responseText);
+                            $('#qrCodeModalBody').html('<div class="alert alert-danger">Failed to load QR Code Module. Error: ' + error + '</div>');
+                        }
+                    });
+                });
+            });
+            </script>
+
             <!-- Quick Stats -->
             <div class="row mb-4">
                 <div class="col-lg-4 col-md-6 col-sm-12">

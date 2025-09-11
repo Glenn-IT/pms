@@ -1,4 +1,5 @@
 <?php 
+require_once('../inc/header.php');
 // Get current logged-in user data
 $user_id = $_settings->userdata('id');
 $user = $conn->query("SELECT * FROM users WHERE id = '{$user_id}'");
