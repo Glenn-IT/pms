@@ -53,6 +53,42 @@
                 </div>
             </div>
 
+            <!-- SK Officials Panel -->
+            <div class="card card-outline card-warning mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0"><i class="fa fa-users mr-2"></i>SK Officials</h4>
+                </div>
+                <div class="card-body">
+                    <div id="sk_officials_content">
+                        <div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i> Loading SK Officials...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Us Panel -->
+            <div class="card card-outline card-success mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0"><i class="fa fa-info-circle mr-2"></i>About Us</h4>
+                </div>
+                <div class="card-body">
+                    <div id="about_us_content">
+                        <div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i> Loading About Us...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Developers Information Panel -->
+            <div class="card card-outline card-purple mb-4" style="border-color: #6f42c1;">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="card-title mb-0"><i class="fa fa-code mr-2"></i>Developers Information</h4>
+                </div>
+                <div class="card-body">
+                    <div id="developers_content">
+                        <div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i> Loading Developers...</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- QR Code Modal -->
             <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl" role="document">
@@ -64,6 +100,23 @@
                             </button>
                         </div>
                         <div class="modal-body" id="qrCodeModalBody" style="min-height:400px;">
+                            <div class="text-center text-muted py-5"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SK Officials Modal -->
+            <div class="modal fade" id="skOfficialsModal" tabindex="-1" role="dialog" aria-labelledby="skOfficialsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="skOfficialsModalLabel"><i class="fa fa-users mr-2"></i>SK Officials Management</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="skOfficialsModalBody" style="min-height:400px;">
                             <div class="text-center text-muted py-5"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading...</div>
                         </div>
                     </div>
@@ -91,7 +144,51 @@
                         }
                     });
                 });
+
+                // Load SK Officials automatically on page load
+                loadSKOfficials();
+                loadAboutUs();
+                loadDevelopers();
             });
+
+            function loadSKOfficials() {
+                $.ajax({
+                    url: 'skofficials/dashboard_content.php',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#sk_officials_content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#sk_officials_content').html('<div class="alert alert-danger">Failed to load SK Officials.</div>');
+                    }
+                });
+            }
+
+            function loadAboutUs() {
+                $.ajax({
+                    url: 'aboutus/dashboard_content.php',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#about_us_content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#about_us_content').html('<div class="alert alert-danger">Failed to load About Us.</div>');
+                    }
+                });
+            }
+
+            function loadDevelopers() {
+                $.ajax({
+                    url: 'devs/dashboard_content.php',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#developers_content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#developers_content').html('<div class="alert alert-danger">Failed to load Developers Information.</div>');
+                    }
+                });
+            }
             </script>
 
             <!-- Quick Stats -->
