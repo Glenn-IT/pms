@@ -73,9 +73,9 @@ while($row = $sk_officials->fetch_assoc()) {
                         <?php 
                         // Use user avatar if available, otherwise use SK official image, otherwise placeholder
                         if(!empty($chairman['avatar'])) {
-                            $image_path = '../../uploads/avatars/' . $chairman['avatar'];
+                            $image_path = '../uploads/avatars/' . $chairman['avatar'];
                         } elseif(!empty($chairman['image_path'])) {
-                            $image_path = '../../uploads/sk_officials/' . $chairman['image_path'];
+                            $image_path = '../uploads/sk_officials/' . $chairman['image_path'];
                         } else {
                             $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
                         }
@@ -124,9 +124,9 @@ while($row = $sk_officials->fetch_assoc()) {
                                 <?php 
                                 // Use user avatar if available, otherwise use SK official image, otherwise placeholder
                                 if(!empty($councilor['avatar'])) {
-                                    $image_path = '../../uploads/avatars/' . $councilor['avatar'];
+                                    $image_path = '../uploads/avatars/' . $councilor['avatar'];
                                 } elseif(!empty($councilor['image_path'])) {
-                                    $image_path = '../../uploads/sk_officials/' . $councilor['image_path'];
+                                    $image_path = '../uploads/sk_officials/' . $councilor['image_path'];
                                 } else {
                                     $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
                                 }

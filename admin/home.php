@@ -10,6 +10,7 @@
                 <p class="text-muted">Stay updated with the latest announcements, events, and activities for the youth community.</p>
             </div>
 
+            <?php if($_settings->userdata('type') != 1): ?>
             <!-- Announcement Highlight -->
             <div class="card card-outline card-primary mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -88,6 +89,7 @@
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
 
             <!-- QR Code Modal -->
             <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
@@ -145,10 +147,12 @@
                     });
                 });
 
+                <?php if($_settings->userdata('type') != 1): ?>
                 // Load SK Officials automatically on page load
                 loadSKOfficials();
                 loadAboutUs();
                 loadDevelopers();
+                <?php endif; ?>
             });
 
             function loadSKOfficials() {
@@ -360,8 +364,10 @@ $(document).ready(function(){   // Fetch stats (example)
         loadAttendanceData(selectedEventId);
     });
 
+    <?php if($_settings->userdata('type') != 1): ?>
     loadDashboardAnnouncements();
     loadDashboardEvents();
+    <?php endif; ?>
 });
 
 function createGenderChart(data) {
