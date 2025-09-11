@@ -1100,6 +1100,99 @@ function get_status_stats() {
     return json_encode(['status' => 'success', 'data' => $status_stats]);
 }
 
+function get_attendance_stats() {
+    $attendance_stats = [];
+    $event_id = isset($_GET['event_id']) ? $_GET['event_id'] : null;
+    
+    if($event_id && $event_id != 'all') {
+        // Get attendance for specific event
+        $event_id = $this->conn->real_escape_string($event_id);
+        
+        // Get total registered users (potential attendees)
+        $total_users_qry = $this->conn->query("SELECT COUNT(*) as total FROM `users` WHERE `type` != 1 AND `status` = 1");
+        $total_users = 0;
+        if($total_users_qry) {
+            $total_users_row = $total_users_qry->fetch_assoc();
+            $total_users = (int)$total_users_row['total'];
+        }
+        
+        // Get present count for this event
+        $present_qry = $this->conn->query("
+            SELECT COUNT(*) as present_count 
+            FROM `event_attendance` 
+            WHERE `event_id` = '{$event_id}' AND `status` = 'present'
+        ");
+        
+        $present = 0;
+        if($present_qry) {
+            $present_row = $present_qry->fetch_assoc();
+            $present = (int)$present_row['present_count'];
+        }
+        
+        $absent = $total_users - $present;
+        
+        $attendance_stats[] = [
+            'label' => 'Present',
+            'count' => $present
+        ];
+        $attendance_stats[] = [
+            'label' => 'Absent', 
+            'count' => $absent
+        ];
+        
+    } else {
+        // Get overall attendance statistics across all events
+        // First get total registered users
+        $total_users_qry = $this->conn->query("SELECT COUNT(*) as total FROM `users` WHERE `type` != 1 AND `status` = 1");
+        $total_users = 0;
+        if($total_users_qry) {
+            $total_users_row = $total_users_qry->fetch_assoc();
+            $total_users = (int)$total_users_row['total'];
+        }
+        
+        // Get unique users who have attended at least one event
+        $attended_users_qry = $this->conn->query("
+            SELECT COUNT(DISTINCT user_id) as attended_count 
+            FROM `event_attendance` 
+            WHERE `status` = 'present'
+        ");
+        
+        $attended_users = 0;
+        if($attended_users_qry) {
+            $attended_row = $attended_users_qry->fetch_assoc();
+            $attended_users = (int)$attended_row['attended_count'];
+        }
+        
+        $never_attended = $total_users - $attended_users;
+        
+        $attendance_stats[] = [
+            'label' => 'Ever Attended',
+            'count' => $attended_users
+        ];
+        $attendance_stats[] = [
+            'label' => 'Never Attended', 
+            'count' => $never_attended
+        ];
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $attendance_stats]);
+}
+
+function get_events_for_dropdown() {
+    $events = [];
+    $qry = $this->conn->query("SELECT id, title, date_created FROM `event_list` ORDER BY date_created DESC");
+    if($qry) {
+        while($row = $qry->fetch_assoc()) {
+            $events[] = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'date' => date("M j, Y", strtotime($row['date_created']))
+            ];
+        }
+    }
+    return json_encode(['status' => 'success', 'data' => $events]);
+}
+
 	// SK Officials Functions
 	function save_official(){
 		// Check if user is admin
@@ -1264,6 +1357,12 @@ switch ($action) {
 	break;
 	case 'get_status_stats':
 		echo $Master->get_status_stats();
+	break;
+	case 'get_attendance_stats':
+		echo $Master->get_attendance_stats();
+	break;
+	case 'get_events_for_dropdown':
+		echo $Master->get_events_for_dropdown();
 	break;
 	case 'save_prison':
 		echo $Master->save_prison();

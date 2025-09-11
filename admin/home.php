@@ -10,21 +10,21 @@
 
     <!-- Quick Stats -->
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
                 <div class="icon text-primary mb-2"><i class="fa fa-users fa-2x"></i></div>
                 <h5 class="mb-1">Registered Youth</h5>
                 <h3 class="font-weight-bold" id="youth_count">0</h3>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
                 <div class="icon text-success mb-2"><i class="fa fa-calendar-alt fa-2x"></i></div>
                 <h5 class="mb-1">Events</h5>
                 <h3 class="font-weight-bold" id="event_count">0</h3>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card stat-card shadow-sm border-0 rounded-lg text-center p-3">
                 <div class="icon text-success mb-2"><i class="fa fa-calendar-alt fa-2x"></i></div>
                 <h5 class="mb-1">Announcements</h5>
@@ -37,33 +37,56 @@
 
     <!-- Charts Section -->
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="card shadow-sm border-0 rounded-lg">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="fa fa-venus-mars mr-2"></i>Gender Distribution</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="genderChart" width="400" height="200"></canvas>
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="genderChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="card shadow-sm border-0 rounded-lg">
                 <div class="card-header bg-success text-white">
                     <h5 class="mb-0"><i class="fa fa-map-marker-alt mr-2"></i>Population Per Zone</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="zoneChart" width="400" height="200"></canvas>
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="zoneChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-lg-3 col-md-6 col-sm-12">
             <div class="card shadow-sm border-0 rounded-lg">
                 <div class="card-header bg-info text-white">
                     <h5 class="mb-0"><i class="fa fa-user-check mr-2"></i>Active/Inactive Users</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="statusChart" width="400" height="200"></canvas>
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card shadow-sm border-0 rounded-lg">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fa fa-calendar-check mr-2"></i>Attendance Overview</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <select id="eventSelector" class="form-control form-control-sm">
+                            <option value="all">All Events</option>
+                        </select>
+                    </div>
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,6 +148,34 @@ $(document).ready(function(){   // Fetch stats (example)
             }
         }
     });
+    
+    // Load Attendance Chart
+    $.ajax({
+        url: '../classes/Master.php?f=get_attendance_stats',
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                createAttendanceChart(resp.data);
+            }
+        }
+    });
+    
+    // Load Events for Dropdown
+    $.ajax({
+        url: '../classes/Master.php?f=get_events_for_dropdown',
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                populateEventDropdown(resp.data);
+            }
+        }
+    });
+    
+    // Handle event selection change
+    $('#eventSelector').on('change', function(){
+        var selectedEventId = $(this).val();
+        loadAttendanceData(selectedEventId);
+    });
 });
 
 function createGenderChart(data) {
@@ -148,7 +199,14 @@ function createGenderChart(data) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 10,
+                        font: {
+                            size: 10
+                        }
+                    }
                 }
             }
         }
@@ -179,7 +237,19 @@ function createZoneChart(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        stepSize: 1
+                        stepSize: 1,
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45,
+                        font: {
+                            size: 10
+                        }
                     }
                 }
             },
@@ -213,9 +283,96 @@ function createStatusChart(data) {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 10,
+                        font: {
+                            size: 10
+                        }
+                    }
                 }
             }
+        }
+    });
+}
+
+function createAttendanceChart(data) {
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const labels = data.map(item => item.label);
+    const counts = data.map(item => item.count);
+    
+    // Destroy existing chart if it exists
+    if(window.attendanceChartInstance) {
+        window.attendanceChartInstance.destroy();
+    }
+    
+    // Dynamic colors based on labels
+    let colors = [];
+    labels.forEach(label => {
+        if(label.includes('Present') || label.includes('Ever Attended')) {
+            colors.push('#28a745'); // Green
+        } else {
+            colors.push('#dc3545'); // Red
+        }
+    });
+    
+    window.attendanceChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        padding: 10,
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function populateEventDropdown(events) {
+    var dropdown = $('#eventSelector');
+    dropdown.empty();
+    dropdown.append('<option value="all">All Events</option>');
+    
+    events.forEach(function(event) {
+        dropdown.append('<option value="' + event.id + '">' + event.title + ' (' + event.date + ')</option>');
+    });
+}
+
+function loadAttendanceData(eventId) {
+    var url = '../classes/Master.php?f=get_attendance_stats';
+    if(eventId && eventId !== 'all') {
+        url += '&event_id=' + eventId;
+    }
+    
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        success: function(resp){
+            if(resp.status === 'success'){
+                createAttendanceChart(resp.data);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Error loading attendance data:', error);
         }
     });
 }
@@ -226,4 +383,6 @@ function createStatusChart(data) {
 .stat-card { transition: transform 0.2s; }
 .stat-card:hover { transform: translateY(-5px); }
 .quick-links .btn { min-width: 180px; }
+.card-body { overflow: hidden; }
+canvas { max-width: 100%; height: auto; }
 </style>
