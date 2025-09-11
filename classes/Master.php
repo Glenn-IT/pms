@@ -1110,13 +1110,29 @@ function get_status_stats() {
 		}
 		
 		extract($_POST);
-		$data = "";
-		foreach($_POST as $k =>$v){
-			if(!in_array($k,array('id'))){
-				if(!empty($data)) $data .=",";
-				$v = $this->conn->real_escape_string(htmlspecialchars($v));
-				$data .= " `{$k}`='{$v}' ";
-			}
+		
+		// Check if user_id is provided
+		if(empty($user_id)){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Please select a user to assign as SK Official.";
+			return json_encode($resp);
+		}
+		
+		// Check if user exists and is active
+		$user_check = $this->conn->query("SELECT * FROM `users` WHERE `id` = '{$user_id}' AND `status` = 1");
+		if($user_check->num_rows == 0){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Selected user not found or inactive.";
+			return json_encode($resp);
+		}
+		$user_data = $user_check->fetch_assoc();
+		
+		// Check if user is already an SK official (unless editing the same record)
+		$existing_check = $this->conn->query("SELECT * FROM `sk_officials` WHERE `user_id` = '{$user_id}' AND `status` = 1 ".(!empty($id) ? " AND id != {$id} " : "")."");
+		if($existing_check->num_rows > 0){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "This user is already assigned as an SK Official.";
+			return json_encode($resp);
 		}
 		
 		// Check position limits: 1 Chairman, max 7 Councilors
@@ -1136,23 +1152,71 @@ function get_status_stats() {
 			}
 		}
 		
+		// Automatically populate user data
+		$firstname = $this->conn->real_escape_string($user_data['firstname']);
+		$middlename = $this->conn->real_escape_string($user_data['middlename']);
+		$lastname = $this->conn->real_escape_string($user_data['lastname']);
+		$full_name = trim($firstname . ' ' . $middlename . ' ' . $lastname);
+		$date_of_birth = $user_data['birthdate'];
+		$sex = $user_data['sex'];
+		$zone = 'Zone ' . $user_data['zone'];
+		
+		// Validate age (SK officials must be 18-30 years old)
+		$birth_date = new DateTime($date_of_birth);
+		$today = new DateTime();
+		$age = $today->diff($birth_date)->y;
+		if($age < 18 || $age > 30){
+			$resp['status'] = 'failed';
+			$resp['msg'] = "SK Officials must be between 18-30 years old. Selected user is {$age} years old.";
+			return json_encode($resp);
+		}
+		
+		// Prepare data for insertion/update
+		$data = "`user_id` = '{$user_id}', 
+				 `name` = '{$full_name}',
+				 `firstname` = '{$firstname}',
+				 `middlename` = '{$middlename}',
+				 `lastname` = '{$lastname}',
+				 `position` = '{$position}',
+				 `date_of_birth` = '{$date_of_birth}',
+				 `sex` = '{$sex}',
+				 `zone` = '{$zone}',
+				 `status` = 1";
+		
+		// Add optional fields if provided
+		if(!empty($contact)){
+			$contact = $this->conn->real_escape_string($contact);
+			$data .= ", `contact` = '{$contact}'";
+		}
+		if(!empty($email)){
+			$email = $this->conn->real_escape_string($email);
+			$data .= ", `email` = '{$email}'";
+		}
+		if(!empty($order_position) && is_numeric($order_position)){
+			$data .= ", `order_position` = '{$order_position}'";
+		}
+		
+		// Handle file upload
 		if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
 			$fname = strtotime(date('y-m-d H:i')).'_'.($_FILES['img']['name']);
 			$move = move_uploaded_file($_FILES['img']['tmp_name'],'../uploads/sk_officials/'. $fname);
-			$data .= ", `image_path` = '{$fname}' ";
+			if($move){
+				$data .= ", `image_path` = '{$fname}'";
+			}
 		}
 		
+		// Save to database
 		if(empty($id)){
-			$sql = "INSERT INTO `sk_officials` set {$data} ";
+			$sql = "INSERT INTO `sk_officials` SET {$data}";
 		}else{
-			$sql = "UPDATE `sk_officials` set {$data} where id = '{$id}' ";
+			$sql = "UPDATE `sk_officials` SET {$data} WHERE id = '{$id}'";
 		}
 		
 		$save = $this->conn->query($sql);
 		if($save){
 			$resp['status'] = 'success';
 			if(empty($id))
-				$this->settings->set_flashdata('success',"New SK Official successfully saved.");
+				$this->settings->set_flashdata('success',"New SK Official successfully assigned.");
 			else
 				$this->settings->set_flashdata('success',"SK Official successfully updated.");
 		}else{

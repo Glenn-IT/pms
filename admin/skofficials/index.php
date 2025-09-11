@@ -1,337 +1,247 @@
+<?php
+// Get SK Officials from database with user information
+$sk_officials = $conn->query("SELECT sk.*, u.firstname as user_firstname, u.middlename as user_middlename, 
+                             u.lastname as user_lastname, u.avatar, u.age as user_age, u.sex as user_sex, 
+                             u.zone as user_zone, u.birthdate
+                             FROM `sk_officials` sk 
+                             LEFT JOIN `users` u ON sk.user_id = u.id 
+                             WHERE sk.status = 1 
+                             ORDER BY 
+                                CASE WHEN sk.position = 'chairman' THEN 1 ELSE 2 END, 
+                                sk.order_position ASC, sk.firstname ASC");
+
+$chairman = null;
+$councilors = [];
+
+while($row = $sk_officials->fetch_assoc()) {
+    // Use user data if available, fallback to SK officials data
+    $row['display_firstname'] = !empty($row['user_firstname']) ? $row['user_firstname'] : $row['firstname'];
+    $row['display_middlename'] = !empty($row['user_middlename']) ? $row['user_middlename'] : $row['middlename'];
+    $row['display_lastname'] = !empty($row['user_lastname']) ? $row['user_lastname'] : $row['lastname'];
+    $row['display_zone'] = !empty($row['user_zone']) ? 'Zone ' . $row['user_zone'] : $row['zone'];
+    
+    if($row['position'] == 'chairman') {
+        $chairman = $row;
+    } else {
+        $councilors[] = $row;
+    }
+}
+?>
+
 <?php if($_settings->chk_flashdata('success')): ?>
 <script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
+    alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
 </script>
 <?php endif;?>
-<style>
-    .official-avatar{
-        width: 90px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 4px solid #fff;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .official-avatar:hover {
-        transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
-    
-    .official-card {
-        border: none;
-        border-radius: 16px;
-        padding: 25px;
-        margin-bottom: 25px;
-        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .official-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        transition: height 0.3s ease;
-    }
-    
-    .official-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-    }
-    
-    .official-card:hover::before {
-        height: 6px;
-    }
-    
-    .chairman-card {
-        background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
-        border-left: 5px solid #2196f3;
-    }
-    
-    .chairman-card::before {
-        background: linear-gradient(90deg, #2196f3 0%, #1976d2 100%);
-    }
-    
-    .councilor-card {
-        background: linear-gradient(135deg, #fff 0%, #e8f5e8 100%);
-        border-left: 5px solid #4caf50;
-    }
-    
-    .councilor-card::before {
-        background: linear-gradient(90deg, #4caf50 0%, #388e3c 100%);
-    }
-    
-    .official-name {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 8px;
-        letter-spacing: -0.5px;
-    }
-    
-    .official-position {
-        font-size: 1rem;
-        font-weight: 500;
-        color: #667eea;
-        margin-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .official-info {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 6px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .official-info i {
-        margin-right: 8px;
-        width: 16px;
-        color: #667eea;
-    }
-    
-    .btn-modern {
-        border-radius: 25px;
-        padding: 8px 20px;
-        font-weight: 500;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-        border: none;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn-edit {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        color: white;
-        margin-right: 8px;
-    }
-    
-    .btn-edit:hover {
-        background: linear-gradient(45deg, #5a6fd8, #6a4190);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        color: white;
-    }
-    
-    .btn-delete {
-        background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-        color: white;
-    }
-    
-    .btn-delete:hover {
-        background: linear-gradient(45deg, #ff5252, #d63031);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        color: white;
-    }
-    
-    .card-header-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 16px 16px 0 0 !important;
-        padding: 20px 25px;
-        border: none;
-    }
-    
-    .card-title-modern {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0;
-        letter-spacing: -0.5px;
-    }
-    
-    .card-modern {
-        border: none;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        overflow: hidden;
-    }
-    
-    .btn-add-modern {
-        background: rgba(255,255,255,0.2);
-        color: white;
-        border: 2px solid rgba(255,255,255,0.3);
-        border-radius: 25px;
-        padding: 10px 25px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-add-modern:hover {
-        background: rgba(255,255,255,0.3);
-        border-color: rgba(255,255,255,0.5);
-        transform: translateY(-2px);
-        color: white;
-    }
-    
-    .no-officials-container {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-    }
-    
-    .no-officials-icon {
-        font-size: 4rem;
-        color: #dee2e6;
-        margin-bottom: 20px;
-    }
-    
-    .fade-in {
-        animation: fadeIn 0.6s ease-in;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
 
-<div class="card card-modern">
-	<div class="card-header card-header-modern">
-		<h3 class="card-title card-title-modern">
-			<i class="fas fa-users mr-2"></i>SK Officials 
-			<?php if($_settings->userdata('type') == 1): ?>
-				Management
-			<?php else: ?>
-				<small style="opacity: 0.8;">(View Only)</small>
-			<?php endif; ?>
-		</h3>
-		<?php if($_settings->userdata('type') == 1): ?>
-		<div class="card-tools">
-			<button class="btn btn-add-modern" type="button" id="create_new">
-				<i class="fa fa-plus mr-2"></i> Add Official
-			</button>
-		</div>
-		<?php endif; ?>
-	</div>
-	<div class="card-body">
-		<div class="container-fluid">
-			<?php 
-			$qry = $conn->query("SELECT * FROM `sk_officials` WHERE status = 1 ORDER BY CASE WHEN position = 'chairman' THEN 1 ELSE 2 END, firstname, lastname");
-			if($qry->num_rows > 0):
-			?>
-			<div class="row">
-				<?php while($row = $qry->fetch_assoc()): 
-					$full_name = trim($row['firstname'] . ' ' . $row['middlename'] . ' ' . $row['lastname']);
-					$position_display = ucfirst($row['position']);
-				?>
-				<div class="col-lg-4 col-md-6 fade-in">
-					<div class="official-card <?php echo $row['position'] == 'chairman' ? 'chairman-card' : 'councilor-card' ?>">
-						<div class="row align-items-center">
-							<div class="col-4 text-center">
-								<?php if(!empty($row['image_path']) && file_exists('../uploads/sk_officials/'.$row['image_path'])): ?>
-									<img src="../uploads/sk_officials/<?php echo $row['image_path'] ?>" alt="Official Image" class="official-avatar">
-								<?php else: ?>
-									<div class="official-avatar bg-gradient-secondary d-flex align-items-center justify-content-center">
-										<i class="fa fa-user text-white fa-2x"></i>
-									</div>
-								<?php endif; ?>
-							</div>
-							<div class="col-8">
-								<h5 class="official-name"><?php echo htmlspecialchars($full_name) ?></h5>
-								<p class="official-position">SK <?php echo $position_display ?></p>
-								<div class="official-info">
-									<i class="fas fa-map-marker-alt"></i>
-									<span>Zone: <?php echo htmlspecialchars($row['zone']) ?></span>
-								</div>
-								<?php if(!empty($row['date_of_birth'])): 
-									$age = date_diff(date_create($row['date_of_birth']), date_create('today'))->y;
-								?>
-								<div class="official-info">
-									<i class="fas fa-birthday-cake"></i>
-									<span>Age: <?php echo $age ?></span>
-								</div>
-								<?php endif; ?>
-								<div class="official-info">
-									<i class="fas fa-phone"></i>
-									<span><?php echo htmlspecialchars($row['contact']) ?></span>
-								</div>
-								<?php if($_settings->userdata('type') == 1): ?>
-								<div class="mt-3">
-									<button class="btn btn-modern btn-edit edit_data" data-id="<?php echo $row['id'] ?>">
-										<i class="fa fa-edit mr-1"></i> Edit
-									</button>
-									<button class="btn btn-modern btn-delete delete_data" data-id="<?php echo $row['id'] ?>">
-										<i class="fa fa-trash mr-1"></i> Delete
-									</button>
-								</div>
-								<?php endif; ?>
-							</div>
-						</div>
-					</div>
-				</div>
-				<?php endwhile; ?>
-			</div>
-			<?php else: ?>
-			<div class="no-officials-container">
-				<div class="no-officials-icon">
-					<i class="fas fa-users"></i>
-				</div>
-				<h4 style="color: #6c757d; font-weight: 300;">No SK Officials Found</h4>
-				<p style="color: #adb5bd;">Start by adding your first SK official to the system.</p>
-				<?php if($_settings->userdata('type') == 1): ?>
-				<button class="btn btn-modern btn-edit mt-3" id="create_first">
-					<i class="fa fa-plus mr-2"></i> Add First Official
-				</button>
-				<?php endif; ?>
-			</div>
-			<?php endif; ?>
-		</div>
-	</div>
+<div class="card card-outline card-primary">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">SK Officials Management</h3>
+        <?php if($_settings->userdata('type') == 1): ?>
+        <button class="btn btn-primary btn-sm" type="button" onclick="new_official()">
+            <i class="fa fa-plus"></i> Add New Official
+        </button>
+        <?php endif; ?>
+    </div>
+    <div class="card-body">
+        <style>
+            .official-card {
+                background: #f4f6f9;
+                border: 2px solid #007bff;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 10px;
+                text-align: center;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+            }
+            .official-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+            .official-photo {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #007bff;
+                margin-bottom: 10px;
+                background: #e9ecef;
+            }
+            .chairman-card {
+                border-color: #dc3545;
+                background: #fff5f5;
+            }
+            .chairman-card .official-photo {
+                border-color: #dc3545;
+            }
+            .position-title {
+                font-weight: bold;
+                color: #007bff;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+            .chairman-card .position-title {
+                color: #dc3545;
+            }
+            .official-name {
+                font-weight: bold;
+                margin: 5px 0;
+                color: #333;
+            }
+            .official-details {
+                font-size: 12px;
+                color: #666;
+                margin: 2px 0;
+            }
+        </style>
+
+        <!-- Chairman Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h5 class="text-center mb-3">SK CHAIRPERSON</h5>
+                <div class="d-flex justify-content-center">
+                    <?php if($chairman): ?>
+                    <div class="official-card chairman-card">
+                        <?php 
+                        // Use user avatar if available, otherwise use SK official image, otherwise placeholder
+                        if(!empty($chairman['avatar'])) {
+                            $image_path = 'uploads/avatars/' . $chairman['avatar'];
+                        } elseif(!empty($chairman['image_path'])) {
+                            $image_path = 'uploads/sk_officials/' . $chairman['image_path'];
+                        } else {
+                            $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
+                        }
+                        
+                        $full_name = trim($chairman['display_firstname'] . ' ' . $chairman['display_middlename'] . ' ' . $chairman['display_lastname']);
+                        ?>
+                        <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Chairman Photo">
+                        <div class="position-title">SK Chairperson</div>
+                        <div class="official-name"><?php echo $full_name ?></div>
+                        <div class="official-details">Zone: <?php echo $chairman['display_zone'] ?></div>
+                        <div class="official-details">Contact: <?php echo $chairman['contact'] ?></div>
+                        <?php if($_settings->userdata('type') == 1): ?>
+                        <div class="mt-2">
+                            <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $chairman['id'] ?>)">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $chairman['id'] ?>)">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php else: ?>
+                    <div class="official-card chairman-card">
+                        <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Chairman">
+                        <div class="position-title">SK Chairperson</div>
+                        <div class="official-name">No Chairman Assigned</div>
+                        <?php if($_settings->userdata('type') == 1): ?>
+                        <div class="mt-2">
+                            <button class="btn btn-primary btn-xs" onclick="new_official('chairman')">
+                                <i class="fa fa-plus"></i> Add Chairman
+                            </button>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Councilors Section -->
+        <div class="row">
+            <div class="col-12">
+                <h5 class="text-center mb-3">SK COUNCILORS</h5>
+                <div class="row">
+                    <?php 
+                    for($i = 0; $i < 7; $i++): 
+                        $councilor = isset($councilors[$i]) ? $councilors[$i] : null;
+                    ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="official-card">
+                            <?php if($councilor): ?>
+                                <?php 
+                                // Use user avatar if available, otherwise use SK official image, otherwise placeholder
+                                if(!empty($councilor['avatar'])) {
+                                    $image_path = 'uploads/avatars/' . $councilor['avatar'];
+                                } elseif(!empty($councilor['image_path'])) {
+                                    $image_path = 'uploads/sk_officials/' . $councilor['image_path'];
+                                } else {
+                                    $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
+                                }
+                                
+                                $full_name = trim($councilor['display_firstname'] . ' ' . $councilor['display_middlename'] . ' ' . $councilor['display_lastname']);
+                                ?>
+                                <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Councilor Photo">
+                                <div class="position-title">Kagawad <?php echo $i + 1 ?></div>
+                                <div class="official-name"><?php echo $full_name ?></div>
+                                <div class="official-details">Zone: <?php echo $councilor['display_zone'] ?></div>
+                                <div class="official-details">Contact: <?php echo $councilor['contact'] ?></div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $councilor['id'] ?>)">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $councilor['id'] ?>)">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Councilor">
+                                <div class="position-title">Kagawad <?php echo $i + 1 ?></div>
+                                <div class="official-name">No Councilor Assigned</div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-primary btn-xs" onclick="new_official('councilor')">
+                                        <i class="fa fa-plus"></i> Add Councilor
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-$(document).ready(function(){
-	// Add fade-in animation to cards
-	$('.fade-in').each(function(index) {
-		$(this).css('animation-delay', (index * 0.1) + 's');
-	});
-	
-	<?php if($_settings->userdata('type') == 1): ?>
-	$('#create_new, #create_first').click(function(){
-		uni_modal("Add New SK Official","skofficials/manage_official.php")
-	})
-	$('.edit_data').click(function(){
-		uni_modal("Edit SK Official","skofficials/manage_official.php?id="+$(this).attr('data-id'))
-	})
-	$('.delete_data').click(function(){
-		_conf("Are you sure you want to delete this SK Official permanently?","delete_official",[$(this).attr('data-id')])
-	})
-	<?php endif; ?>
-})
-<?php if($_settings->userdata('type') == 1): ?>
-function delete_official($id){
-	start_loader();
-	$.ajax({
-		url:_base_url_+"classes/Master.php?f=delete_official",
-		method:"POST",
-		data:{id: $id},
-		dataType:"json",
-		error:err=>{
-			console.log(err)
-			alert_toast("An error occured.",'error');
-			end_loader();
-		},
-		success:function(resp){
-			if(typeof resp== 'object' && resp.status == 'success'){
-				location.reload();
-			}else{
-				alert_toast("An error occured.",'error');
-				end_loader();
-			}
-		}
-	})
+function new_official(position = '') {
+    uni_modal("Add New SK Official", "skofficials/manage_official.php" + (position ? "?position=" + position : ""), "large");
 }
-<?php endif; ?>
+
+function edit_official(id) {
+    uni_modal("Edit SK Official", "skofficials/manage_official.php?id=" + id, "large");
+}
+
+function delete_official(id) {
+    _conf("Are you sure to delete this SK Official?", "delete_official_confirmed", [id]);
+}
+
+function delete_official_confirmed(id) {
+    start_loader();
+    $.ajax({
+        url: _base_url_ + "classes/Master.php?f=delete_official",
+        method: "POST",
+        data: {id: id},
+        dataType: "json",
+        error: err => {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if(typeof resp == 'object' && resp.status == 'success') {
+                location.reload();
+            } else {
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            }
+        }
+    });
+}
 </script>
