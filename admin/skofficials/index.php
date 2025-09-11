@@ -19,7 +19,7 @@ while($row = $sk_officials->fetch_assoc()) {
     $row['display_middlename'] = !empty($row['user_middlename']) ? $row['user_middlename'] : $row['middlename'];
     $row['display_lastname'] = !empty($row['user_lastname']) ? $row['user_lastname'] : $row['lastname'];
     $row['display_zone'] = !empty($row['user_zone']) ? 'Zone ' . $row['user_zone'] : $row['zone'];
-        
+
     if($row['position'] == 'chairman') {
         $chairman = $row;
     } else {
@@ -35,13 +35,15 @@ while($row = $sk_officials->fetch_assoc()) {
 <?php endif;?>
 
 <div class="card card-outline card-primary">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0">SK Officials Management</h3>
-        <?php if($_settings->userdata('type') == 1): ?>
-        <button class="btn btn-primary btn-sm" type="button" onclick="new_official()">
-            <i class="fa fa-plus"></i> Add New Official
-        </button>
-        <?php endif; ?>
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">SK Officials Management</h3>
+            <?php if($_settings->userdata('type') == 1): ?>
+            <button class="btn btn-primary btn-sm" type="button" onclick="new_official()">
+                <i class="fa fa-plus"></i> Add New Official
+            </button>
+            <?php endif; ?>
+        </div>
     </div>
     <div class="card-body">
         <style>
@@ -118,7 +120,7 @@ while($row = $sk_officials->fetch_assoc()) {
                         <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Chairman Photo">
                         <div class="position-title">SK Chairperson</div>
                         <div class="official-name"><?php echo $full_name ?></div>
-                        <div class="official-details">Zone: <?php echo $chairman['display_zone'] ?></div>
+                        <div class="official-details"> <?php echo $chairman['display_zone'] ?></div>
                         <div class="official-details">Contact: <?php echo $chairman['contact'] ?></div>
                         <?php if($_settings->userdata('type') == 1): ?>
                         <div class="mt-2">

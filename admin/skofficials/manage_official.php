@@ -18,9 +18,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <label class="control-label">Select User to Assign as SK Official <span class="text-danger">*</span></label>
+                    <label class="control-label">Select Kabataan to Assign as SK Official <span class="text-danger">*</span></label>
                     <select name="user_id" id="user_id" class="form-control select2" required>
-                        <option value="">-- Select a User --</option>
+                        <option value="">-- Select a Kabataan --</option>
                         <?php
                         // Get users who are not already SK officials and are active residents (type 2)
                         $users_qry = $conn->query("SELECT u.* FROM `users` u 
