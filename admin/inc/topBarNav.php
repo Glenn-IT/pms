@@ -15,9 +15,11 @@
       <nav class="main-header navbar navbar-expand navbar-light shadow text-sm">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
+          <?php if($_settings->userdata('type') == 1): ?>
           <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
           </li>
+          <?php endif; ?>
           <li class="nav-item d-none d-sm-inline-block">
             <a href="<?php echo base_url ?>" class="nav-link"><?php echo (!isMobileDevice()) ? $_settings->info('name'):$_settings->info('short_name'); ?></a>
           </li>

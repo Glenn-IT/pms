@@ -2,10 +2,12 @@
 <!DOCTYPE html>
 <html lang="en" class="" style="height: auto;">
 <?php require_once('inc/header.php') ?>
-  <body class="sidebar-mini layout-fixed control-sidebar-slide-open layout-navbar-fixed sidebar-mini-md sidebar-mini-xs text-sm" style="height: auto;">
+  <body class="<?php echo $_settings->userdata('type') == 1 ? 'sidebar-mini layout-fixed control-sidebar-slide-open layout-navbar-fixed sidebar-mini-md sidebar-mini-xs' : 'layout-top-nav layout-navbar-fixed' ?> text-sm" style="height: auto;">
     <div class="wrapper">
       <?php require_once('inc/topBarNav.php') ?>
+      <?php if($_settings->userdata('type') == 1): ?>
       <?php require_once('inc/navigation-a.php') ?>
+      <?php endif; ?>
 
       <?php if($_settings->chk_flashdata('success')): ?>
         <script>
@@ -16,7 +18,7 @@
       <?php $page = isset($_GET['page']) ? $_GET['page'] : 'home';  ?>
 
       <!-- Content Wrapper. Contains page content -->
-      <div class="content-wrapper pt-3" style="min-height: 567.854px;">
+      <div class="content-wrapper <?php echo $_settings->userdata('type') != 1 ? 'ml-0' : '' ?> pt-3" style="min-height: 567.854px;">
         <!-- Main content -->
         <section class="content text-dark">
           <div class="container-fluid">

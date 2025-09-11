@@ -1,6 +1,6 @@
 <div class="card shadow-lg border-0 rounded-lg mt-4">
     <div class="card-header bg-dark text-white">
-        <h3 class="mb-0"><i class="fa fa-tachometer-alt mr-2"></i>Youth Dashboard</h3>
+        <h3 class="mb-0"><i class="fa fa-tachometer-alt mr-2"></i><?php echo $_settings->userdata('type') == 1 ? 'Admin Dashboard' : 'Youth Dashboard' ?></h3>
     </div>
     <div class="card-body">
         <div class="youth-dashboard">
@@ -686,6 +686,16 @@ function loadDashboardEvents() {
 .quick-links .btn { min-width: 180px; }
 .card-body { overflow: hidden; }
 canvas { max-width: 100%; height: auto; }
+
+/* Layout adjustments for users without sidebar */
+<?php if($_settings->userdata('type') != 1): ?>
+.content-wrapper {
+    margin-left: 0 !important;
+}
+body.layout-top-nav .wrapper .content-wrapper {
+    margin-left: 0;
+}
+<?php endif; ?>
 
 /* Modern Announcement Styles for Dashboard */
 .announcement-grid {
