@@ -19,7 +19,7 @@ while($row = $sk_officials->fetch_assoc()) {
     $row['display_middlename'] = !empty($row['user_middlename']) ? $row['user_middlename'] : $row['middlename'];
     $row['display_lastname'] = !empty($row['user_lastname']) ? $row['user_lastname'] : $row['lastname'];
     $row['display_zone'] = !empty($row['user_zone']) ? 'Zone ' . $row['user_zone'] : $row['zone'];
-    
+        
     if($row['position'] == 'chairman') {
         $chairman = $row;
     } else {
@@ -138,9 +138,9 @@ while($row = $sk_officials->fetch_assoc()) {
                         <div class="official-name">No Chairman Assigned</div>
                         <?php if($_settings->userdata('type') == 1): ?>
                         <div class="mt-2">
-                            <button class="btn btn-primary btn-xs" onclick="new_official('chairman')">
+                            <!--<button class="btn btn-primary btn-xs" onclick="new_official('chairman')">
                                 <i class="fa fa-plus"></i> Add Chairman
-                            </button>
+                            </button>-->
                         </div>
                         <?php endif; ?>
                     </div>
@@ -174,9 +174,9 @@ while($row = $sk_officials->fetch_assoc()) {
                                 $full_name = trim($councilor['display_firstname'] . ' ' . $councilor['display_middlename'] . ' ' . $councilor['display_lastname']);
                                 ?>
                                 <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Councilor Photo">
-                                <div class="position-title">Kagawad <?php echo $i + 1 ?></div>
+                                <div class="position-title">Councilor</div>
                                 <div class="official-name"><?php echo $full_name ?></div>
-                                <div class="official-details">Zone: <?php echo $councilor['display_zone'] ?></div>
+                                <div class="official-details">   <?php echo $councilor['display_zone'] ?></div>
                                 <div class="official-details">Contact: <?php echo $councilor['contact'] ?></div>
                                 <?php if($_settings->userdata('type') == 1): ?>
                                 <div class="mt-2">
@@ -190,13 +190,13 @@ while($row = $sk_officials->fetch_assoc()) {
                                 <?php endif; ?>
                             <?php else: ?>
                                 <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Councilor">
-                                <div class="position-title">Kagawad <?php echo $i + 1 ?></div>
+                                <div class="position-title">Councilor</div>
                                 <div class="official-name">No Councilor Assigned</div>
                                 <?php if($_settings->userdata('type') == 1): ?>
                                 <div class="mt-2">
-                                    <button class="btn btn-primary btn-xs" onclick="new_official('councilor')">
+                                    <!--<button class="btn btn-primary btn-xs" onclick="new_official('councilor')">
                                         <i class="fa fa-plus"></i> Add Councilor
-                                    </button>
+                                    </button>-->
                                 </div>
                                 <?php endif; ?>
                             <?php endif; ?>

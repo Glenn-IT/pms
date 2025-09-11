@@ -1192,9 +1192,6 @@ function get_status_stats() {
 			$email = $this->conn->real_escape_string($email);
 			$data .= ", `email` = '{$email}'";
 		}
-		if(!empty($order_position) && is_numeric($order_position)){
-			$data .= ", `order_position` = '{$order_position}'";
-		}
 		
 		// Handle file upload
 		if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){

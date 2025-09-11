@@ -96,7 +96,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
 
         <!-- Position and Other Details -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="form-group">
                     <label for="position" class="control-label">Position <span class="text-danger">*</span></label>
                     <select name="position" id="position" class="form-control" required>
@@ -104,15 +104,6 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                         <option value="chairman" <?php echo isset($position) && $position == "chairman" ? 'selected' : '' ?>>SK Chairman</option>
                         <option value="councilor" <?php echo isset($position) && $position == "councilor" ? 'selected' : '' ?>>SK Councilor</option>
                     </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="order_position" class="control-label">Order Position</label>
-                    <input name="order_position" id="order_position" type="number" class="form-control" 
-                           value="<?php echo isset($order_position) ? $order_position : ''; ?>" 
-                           placeholder="1-7 for councilors (optional)">
-                    <small class="text-muted">Leave blank for chairman, use 1-7 for councilors</small>
                 </div>
             </div>
         </div>
