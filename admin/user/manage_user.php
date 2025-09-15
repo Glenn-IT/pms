@@ -160,7 +160,7 @@ if(isset($_GET['id'])){
 					<img src="<?php echo validate_image(isset($meta['avatar']) ? $meta['avatar'] :'') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
 				</div>
 
-				<!-- QR Code Display 
+				<!-- QR Code Display -->
 				<div class="form-group">
 					<label for="qr_code">Unique QR Code</label>
 					<div class="d-flex justify-content-center">
@@ -189,7 +189,7 @@ if(isset($_GET['id'])){
 					<div class="text-center mt-2">
 						<small class="text-info"><i class="fas fa-info-circle"></i> This QR code is unique for this user and contains their identification information.</small>
 					</div>
-				</div>-->
+				</div>
 			</form>
 		</div>
 	</div>
