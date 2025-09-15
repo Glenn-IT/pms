@@ -1193,6 +1193,63 @@ function get_events_for_dropdown() {
     return json_encode(['status' => 'success', 'data' => $events]);
 }
 
+function get_most_attended_events() {
+    $events = [];
+    
+    // Query to get events with their attendance statistics
+    $qry = $this->conn->query("
+        SELECT 
+            e.id,
+            e.title,
+            e.date_created,
+            COALESCE(attended.total_attended, 0) as total_attended,
+            (
+                SELECT COUNT(*) 
+                FROM `users` u 
+                WHERE u.status = 1 AND u.type != 1 
+                AND u.id NOT IN (
+                    SELECT ea.user_id 
+                    FROM `event_attendance` ea 
+                    WHERE ea.event_id = e.id AND ea.status = 'present'
+                )
+            ) as total_absent
+        FROM `event_list` e
+        LEFT JOIN (
+            SELECT 
+                event_id, 
+                COUNT(*) as total_attended 
+            FROM `event_attendance` 
+            WHERE `status` = 'present' 
+            GROUP BY event_id
+        ) attended ON e.id = attended.event_id
+        WHERE attended.total_attended > 0
+        ORDER BY attended.total_attended DESC, e.date_created DESC
+        LIMIT 8
+    ");
+    
+    if($qry) {
+        while($row = $qry->fetch_assoc()) {
+            $total_attended = (int)$row['total_attended'];
+            $total_absent = (int)$row['total_absent'];
+            $total_records = $total_attended + $total_absent;
+            
+            $events[] = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'schedule' => $row['date_created'] ? date("M j, Y", strtotime($row['date_created'])) : 'No date set',
+                'total_attended' => $total_attended,
+                'total_absent' => $total_absent,
+                'total_records' => $total_records
+            ];
+        }
+    } else {
+        // Log error for debugging
+        error_log("MySQL Error in get_most_attended_events: " . $this->conn->error);
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $events]);
+}
+
 	// SK Officials Functions
 	function save_official(){
 		// Check if user is admin
@@ -1363,6 +1420,9 @@ switch ($action) {
 	break;
 	case 'get_events_for_dropdown':
 		echo $Master->get_events_for_dropdown();
+	break;
+	case 'get_most_attended_events':
+		echo $Master->get_most_attended_events();
 	break;
 	case 'save_prison':
 		echo $Master->save_prison();

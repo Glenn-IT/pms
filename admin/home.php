@@ -277,6 +277,22 @@
                 </div>
             </div>
 
+            <!-- Most Attended Events Panel -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0 rounded-lg">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fa fa-trophy mr-2"></i>Most Attended Events</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="mostAttendedEvents">
+                                <div class="text-center text-muted py-3"><i class="fa fa-spinner fa-spin"></i> Loading most attended events...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             
         </div>
     </div>
@@ -363,6 +379,9 @@ $(document).ready(function(){   // Fetch stats (example)
         var selectedEventId = $(this).val();
         loadAttendanceData(selectedEventId);
     });
+
+    // Load Most Attended Events
+    loadMostAttendedEvents();
 
     <?php if($_settings->userdata('type') != 1): ?>
     loadDashboardAnnouncements();
@@ -567,6 +586,100 @@ function loadAttendanceData(eventId) {
             console.log('Error loading attendance data:', error);
         }
     });
+}
+
+function loadMostAttendedEvents() {
+    $.ajax({
+        url: '../classes/Master.php?f=get_most_attended_events',
+        dataType: 'json',
+        success: function(resp){
+            console.log('Most attended events response:', resp);
+            if(resp.status === 'success'){
+                renderMostAttendedEvents(resp.data);
+            } else {
+                console.log('Error in response:', resp);
+                $('#mostAttendedEvents').html('<div class="alert alert-info">No events with attendance found.</div>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Error loading most attended events:', error);
+            console.log('Status:', status);
+            console.log('Response Text:', xhr.responseText);
+            $('#mostAttendedEvents').html('<div class="alert alert-danger">Failed to load most attended events. Please check console for details.</div>');
+        }
+    });
+}
+
+function renderMostAttendedEvents(events) {
+    if (!events || events.length === 0) {
+        $('#mostAttendedEvents').html('<div class="alert alert-info">No events with attendance found.</div>');
+        return;
+    }
+    
+    let html = '<div class="row">';
+    events.forEach((event, index) => {
+        let rankIcon = '';
+        let rankClass = '';
+        let rankText = `Top ${index + 1}`;
+        
+        if (index === 0) {
+            rankIcon = '<i class="fa fa-trophy text-warning mr-1"></i>';
+            rankClass = 'border-warning';
+        } else if (index === 1) {
+            rankIcon = '<i class="fa fa-medal text-secondary mr-1"></i>';
+            rankClass = 'border-secondary';
+        } else if (index === 2) {
+            rankIcon = '<i class="fa fa-award text-warning mr-1"></i>';
+            rankClass = 'border-warning';
+        } else if (index === 3) {
+            rankIcon = '<i class="fa fa-star text-info mr-1"></i>';
+            rankClass = 'border-info';
+        } else {
+            rankIcon = '<i class="fa fa-certificate text-primary mr-1"></i>';
+            rankClass = 'border-primary';
+        }
+        
+        let attendancePercentage = event.total_records > 0 ? 
+            Math.round((event.total_attended / event.total_records) * 100) : 0;
+        
+        html += `
+            <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+                <div class="card h-100 ${rankClass}" style="border-width: 2px;">
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <span class="badge badge-dark px-3 py-2" style="font-size: 0.9rem;">
+                                ${rankIcon}${rankText}
+                            </span>
+                        </div>
+                        <h6 class="card-title font-weight-bold">${event.title}</h6>
+                        <p class="text-muted small mb-2">${event.schedule}</p>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h5 class="text-success mb-0">${event.total_attended}</h5>
+                                <small class="text-muted">Attended</small>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="text-danger mb-0">${event.total_absent}</h5>
+                                <small class="text-muted">Absent</small>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-success" role="progressbar" 
+                                     style="width: ${attendancePercentage}%" 
+                                     aria-valuenow="${attendancePercentage}" 
+                                     aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted">${attendancePercentage}% attendance rate</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    $('#mostAttendedEvents').html(html);
 }
 
 // Dashboard Announcements AJAX
