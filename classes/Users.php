@@ -132,6 +132,12 @@ Class Users extends DBConnection {
                 }
             }
             if(!empty($_FILES['img']['tmp_name'])){
+                // Check if GD extension is loaded
+                if (!extension_loaded('gd')) {
+                    $this->settings->set_flashdata('error','GD extension is not enabled. Please enable GD extension in php.ini to upload images.');
+                    return 2;
+                }
+                
                 if(!is_dir(base_app."uploads/avatars"))
                     mkdir(base_app."uploads/avatars");
                 $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
