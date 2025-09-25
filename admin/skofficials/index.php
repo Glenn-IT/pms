@@ -191,6 +191,91 @@
         100% { transform: scale(1); }
     }
     
+    /* Success Toast Notification Styles */
+    .success-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+        z-index: 9999;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        min-width: 300px;
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .success-toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .success-toast .toast-icon {
+        font-size: 1.5em;
+        margin-right: 15px;
+        animation: bounceIn 0.6s ease-out;
+    }
+    
+    .success-toast .toast-message {
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .success-toast .toast-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+        margin-left: 10px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    
+    .success-toast .toast-close:hover {
+        opacity: 1;
+    }
+    
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes cardUpdate {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+        100% { transform: scale(1); }
+    }
+    
+    .card-updated {
+        animation: cardUpdate 0.6s ease-out;
+    }
+    
+    /* Progress bar for toast */
+    .toast-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 0 0 10px 10px;
+        animation: progressBar 3s linear forwards;
+    }
+    
+    @keyframes progressBar {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
+    
     @media (max-width: 768px) {
         .org-level {
             flex-direction: column;
@@ -203,6 +288,12 @@
         
         .page-header h1 {
             font-size: 2em;
+        }
+        
+        .success-toast {
+            right: 10px;
+            left: 10px;
+            min-width: auto;
         }
     }
 </style>
@@ -339,47 +430,230 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Additional Information Section -->
-        <div class="mt-5">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card bg-light">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>Contact Information</h5>
+<!-- Modal for Managing Officials -->
+<div class="modal fade" id="officialModal" tabindex="-1" role="dialog" aria-labelledby="officialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="officialModalLabel">
+                    <i class="fas fa-user-edit mr-2"></i>Manage Official
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="officialForm">
+                    <input type="hidden" id="officialPosition" name="position">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialName"><i class="fas fa-user mr-1"></i>Full Name</label>
+                                <input type="text" class="form-control" id="officialName" name="name" required>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p><strong>Office Address:</strong><br>
-                            Barangay Hall, [Your Barangay Name]<br>
-                            [City/Municipality, Province]</p>
-                            
-                            <p><strong>Office Hours:</strong><br>
-                            Monday - Friday: 8:00 AM - 5:00 PM<br>
-                            Saturday: 8:00 AM - 12:00 PM</p>
-                            
-                            <p><strong>General Hotline:</strong><br>
-                            <i class="fas fa-phone mr-2"></i>(02) 8XXX-XXXX</p>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialContact"><i class="fas fa-phone mr-1"></i>Contact Number</label>
+                                <input type="text" class="form-control" id="officialContact" name="contact" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialEmail"><i class="fas fa-envelope mr-1"></i>Email Address</label>
+                                <input type="email" class="form-control" id="officialEmail" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialAge"><i class="fas fa-calendar mr-1"></i>Age</label>
+                                <input type="number" class="form-control" id="officialAge" name="age" min="15" max="30">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="officialAddress"><i class="fas fa-map-marker-alt mr-1"></i>Address</label>
+                                <textarea class="form-control" id="officialAddress" name="address" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialStartDate"><i class="fas fa-calendar-check mr-1"></i>Start Date</label>
+                                <input type="date" class="form-control" id="officialStartDate" name="start_date">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="officialStatus"><i class="fas fa-check-circle mr-1"></i>Status</label>
+                                <select class="form-control" id="officialStatus" name="status">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cancel
+                </button>
+                <button type="button" class="btn btn-primary" onclick="saveOfficial()">
+                    <i class="fas fa-save mr-1"></i>Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Managing Kagawads -->
+<div class="modal fade" id="kagawadModal" tabindex="-1" role="dialog" aria-labelledby="kagawadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="kagawadModalLabel">
+                    <i class="fas fa-users-cog mr-2"></i>Manage SK Kagawads
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Kagawad 1 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 1</h6>
+                            </div>
+                            <div class="card-body">
+                                <form id="kagawadForm1">
+                                    <input type="hidden" name="kagawad_number" value="1">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control" id="kagawad1Name" name="name" value="Anna Reyes">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" class="form-control" id="kagawad1Contact" name="contact" value="0920-456-7890">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" class="form-control" id="kagawad1Email" name="email" value="anna@sk.gov.ph">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(1)">
+                                        <i class="fas fa-save mr-1"></i>Update
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kagawad 2 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 2</h6>
+                            </div>
+                            <div class="card-body">
+                                <form id="kagawadForm2">
+                                    <input type="hidden" name="kagawad_number" value="2">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control" id="kagawad2Name" name="name" value="Carlos Lopez">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" class="form-control" id="kagawad2Contact" name="contact" value="0921-567-8901">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" class="form-control" id="kagawad2Email" name="email" value="carlos@sk.gov.ph">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(2)">
+                                        <i class="fas fa-save mr-1"></i>Update
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kagawad 3 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 3</h6>
+                            </div>
+                            <div class="card-body">
+                                <form id="kagawadForm3">
+                                    <input type="hidden" name="kagawad_number" value="3">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control" id="kagawad3Name" name="name" value="Sofia Martinez">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" class="form-control" id="kagawad3Contact" name="contact" value="0922-678-9012">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" class="form-control" id="kagawad3Email" name="email" value="sofia@sk.gov.ph">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(3)">
+                                        <i class="fas fa-save mr-1"></i>Update
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kagawad 4 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 4</h6>
+                            </div>
+                            <div class="card-body">
+                                <form id="kagawadForm4">
+                                    <input type="hidden" name="kagawad_number" value="4">
+                                    <div class="form-group">
+                                        <label>Full Name</label>
+                                        <input type="text" class="form-control" id="kagawad4Name" name="name" value="Miguel Torres">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" class="form-control" id="kagawad4Contact" name="contact" value="0923-789-0123">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" class="form-control" id="kagawad4Email" name="email" value="miguel@sk.gov.ph">
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(4)">
+                                        <i class="fas fa-save mr-1"></i>Update
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card bg-light">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fas fa-bullseye mr-2"></i>Our Mission</h5>
-                        </div>
-                        <div class="card-body">
-                            <p>To serve and represent the youth of our barangay by promoting their welfare, interests, and active participation in community development initiatives.</p>
-                            
-                            <p><strong>Core Values:</strong></p>
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-check text-success mr-2"></i>Leadership</li>
-                                <li><i class="fas fa-check text-success mr-2"></i>Integrity</li>
-                                <li><i class="fas fa-check text-success mr-2"></i>Service</li>
-                                <li><i class="fas fa-check text-success mr-2"></i>Excellence</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Close
+                </button>
             </div>
         </div>
     </div>
@@ -387,18 +661,250 @@
 
 <script>
 function manage_official(position) {
-    alert('Manage ' + position.charAt(0).toUpperCase() + position.slice(1) + ' functionality to be implemented');
-    // You can implement modal forms or redirect to management pages here
+    // Set modal title and position
+    $('#officialModalLabel').html('<i class="fas fa-user-edit mr-2"></i>Manage SK ' + position.charAt(0).toUpperCase() + position.slice(1));
+    $('#officialPosition').val(position);
+    
+    // Load current data based on position
+    let currentName = '';
+    let currentContact = '';
+    let currentEmail = '';
+    
+    switch(position) {
+        case 'chairman':
+            currentName = $('#chairman-name').text();
+            currentContact = $('#chairman-contact').text();
+            currentEmail = $('#chairman-email').text();
+            break;
+        case 'secretary':
+            currentName = $('#secretary-name').text();
+            currentContact = $('#secretary-contact').text();
+            currentEmail = $('#secretary-email').text();
+            break;
+        case 'treasurer':
+            currentName = $('#treasurer-name').text();
+            currentContact = $('#treasurer-contact').text();
+            currentEmail = $('#treasurer-email').text();
+            break;
+    }
+    
+    // Populate form with current data
+    $('#officialName').val(currentName);
+    $('#officialContact').val(currentContact);
+    $('#officialEmail').val(currentEmail);
+    $('#officialStatus').val('active');
+    
+    // Show modal
+    $('#officialModal').modal('show');
 }
 
 function manage_kagawad() {
-    alert('Manage Kagawads functionality to be implemented');
-    // You can implement modal forms or redirect to management pages here
+    $('#kagawadModal').modal('show');
 }
 
 function goBackToDashboard() {
     // Go back to the main dashboard/home page
     window.location.href = '?page=home';
+}
+
+function saveOfficial() {
+    const form = $('#officialForm');
+    const position = $('#officialPosition').val();
+    const name = $('#officialName').val();
+    const contact = $('#officialContact').val();
+    const email = $('#officialEmail').val();
+    
+    // Validate required fields
+    if (!name || !contact) {
+        showErrorToast('Please fill in all required fields (Name and Contact).');
+        return;
+    }
+    
+    let targetCard;
+    
+    // Update the display based on position
+    switch(position) {
+        case 'chairman':
+            $('#chairman-name').text(name);
+            $('#chairman-contact').text(contact);
+            $('#chairman-email').text(email);
+            targetCard = $('.chairman-card');
+            break;
+        case 'secretary':
+            $('#secretary-name').text(name);
+            $('#secretary-contact').text(contact);
+            $('#secretary-email').text(email);
+            targetCard = $('.secretary-card');
+            break;
+        case 'treasurer':
+            $('#treasurer-name').text(name);
+            $('#treasurer-contact').text(contact);
+            $('#treasurer-email').text(email);
+            targetCard = $('.treasurer-card');
+            break;
+    }
+    
+    // Close modal
+    $('#officialModal').modal('hide');
+    
+    // Add animation to updated card
+    if (targetCard) {
+        targetCard.addClass('card-updated');
+        setTimeout(() => {
+            targetCard.removeClass('card-updated');
+        }, 600);
+    }
+    
+    // Show success toast
+    showSuccessToast(`SK ${position.charAt(0).toUpperCase() + position.slice(1)} information updated successfully!`);
+    
+    // Reset form
+    form[0].reset();
+}
+
+function saveKagawad(kagawadNumber) {
+    const name = $('#kagawad' + kagawadNumber + 'Name').val();
+    const contact = $('#kagawad' + kagawadNumber + 'Contact').val();
+    const email = $('#kagawad' + kagawadNumber + 'Email').val();
+    
+    // Validate required fields
+    if (!name || !contact) {
+        showErrorToast(`Please fill in Name and Contact for Kagawad ${kagawadNumber}`);
+        return;
+    }
+    
+    // Update the display in the organizational chart
+    $('#kagawad' + kagawadNumber + '-name').text(name);
+    $('#kagawad' + kagawadNumber + '-contact').text(contact);
+    
+    // Find and animate the specific kagawad card
+    const targetCard = $(`.kagawad-grid .org-card:nth-child(${kagawadNumber})`);
+    if (targetCard.length) {
+        targetCard.addClass('card-updated');
+        setTimeout(() => {
+            targetCard.removeClass('card-updated');
+        }, 600);
+    }
+    
+    // Show success toast
+    showSuccessToast(`Kagawad ${kagawadNumber} information updated successfully!`);
+}
+
+// Toast Notification Functions
+function showSuccessToast(message) {
+    const toastId = 'toast-' + Date.now();
+    const toast = $(`
+        <div class="success-toast" id="${toastId}">
+            <div class="toast-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="hideToast('${toastId}')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="toast-progress"></div>
+        </div>
+    `);
+    
+    $('body').append(toast);
+    
+    // Show toast with animation
+    setTimeout(() => {
+        toast.addClass('show');
+    }, 100);
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+        hideToast(toastId);
+    }, 3000);
+}
+
+function showErrorToast(message) {
+    const toastId = 'toast-' + Date.now();
+    const toast = $(`
+        <div class="success-toast" id="${toastId}" style="background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%); box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);">
+            <div class="toast-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="toast-message">${message}</div>
+            <button class="toast-close" onclick="hideToast('${toastId}')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="toast-progress"></div>
+        </div>
+    `);
+    
+    $('body').append(toast);
+    
+    // Show toast with animation
+    setTimeout(() => {
+        toast.addClass('show');
+    }, 100);
+    
+    // Auto hide after 4 seconds (longer for error messages)
+    setTimeout(() => {
+        hideToast(toastId);
+    }, 4000);
+}
+
+function hideToast(toastId) {
+    const toast = $('#' + toastId);
+    toast.removeClass('show');
+    setTimeout(() => {
+        toast.remove();
+    }, 400);
+}
+
+function showContactInfo(title, name, contact, email) {
+    const contactModal = $(`
+        <div class="modal fade" id="contactInfoModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-address-card mr-2"></i>Contact Information
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal">
+                            <span>&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-user-circle" style="font-size: 3em; color: #17a2b8;"></i>
+                        </div>
+                        <h5 class="text-primary">${title}</h5>
+                        <h4 class="mb-3">${name}</h4>
+                        <p class="mb-2">
+                            <i class="fas fa-phone text-success mr-2"></i>
+                            <a href="tel:${contact}" class="text-decoration-none">${contact}</a>
+                        </p>
+                        ${email ? `
+                        <p class="mb-0">
+                            <i class="fas fa-envelope text-info mr-2"></i>
+                            <a href="mailto:${email}" class="text-decoration-none">${email}</a>
+                        </p>
+                        ` : ''}
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">
+                            <i class="fas fa-times mr-1"></i>Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+    
+    // Remove any existing contact modal
+    $('#contactInfoModal').remove();
+    
+    $('body').append(contactModal);
+    $('#contactInfoModal').modal('show');
+    
+    // Remove modal from DOM when hidden
+    $('#contactInfoModal').on('hidden.bs.modal', function() {
+        $(this).remove();
+    });
 }
 
 // Add some interactive effects
@@ -416,10 +922,15 @@ $(document).ready(function() {
     );
     
     $('.org-card').click(function() {
-        var title = $(this).find('.org-title').text();
-        var name = $(this).find('.org-name').text();
-        alert('Contact: ' + name + ' (' + title + ')');
-        // You can implement detailed view modals here
+        const title = $(this).find('.org-title').text();
+        const name = $(this).find('.org-name').text();
+        const contactElement = $(this).find('.org-contact span').first();
+        const emailElement = $(this).find('.org-contact span').eq(1);
+        
+        const contact = contactElement.length ? contactElement.text() : '';
+        const email = emailElement.length ? emailElement.text() : '';
+        
+        showContactInfo(title, name, contact, email);
     });
     
     // Show a brief hint about the close button
