@@ -343,45 +343,6 @@ CREATE TABLE `security_questions` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `sk_officials`
---
-
-CREATE TABLE `sk_officials` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `position` enum('chairman','councilor') NOT NULL,
-  `image_path` varchar(255) DEFAULT NULL,
-  `firstname` varchar(100) NOT NULL,
-  `middlename` varchar(100) DEFAULT NULL,
-  `lastname` varchar(100) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `sex` enum('Male','Female') NOT NULL,
-  `contact` varchar(20) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `zone` varchar(50) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `order_position` int(11) DEFAULT NULL,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `sk_officials`
---
-
-INSERT INTO `sk_officials` (`id`, `name`, `position`, `image_path`, `firstname`, `middlename`, `lastname`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `status`, `order_position`, `date_created`, `date_updated`) VALUES
-(1, '', 'chairman', '1754649960_s036012017.webp', 'Johnawd', 'A.', 'Dela Cruz', '1998-05-15', 'Male', '09123456789', 'john.delacruz@email.com', 'Zone 1', 0, 1, '2025-08-08 18:10:03', '2025-08-08 18:46:56'),
-(2, '', 'councilor', NULL, 'Maria', 'B.', 'Santos', '2000-03-20', 'Female', '09987654321', 'maria.santos@email.com', 'Zone 2', 0, 2, '2025-08-08 18:10:03', '2025-08-08 18:47:03'),
-(3, '', 'councilor', NULL, 'Jose', 'C.', 'Garcia', '1999-07-10', 'Male', '09111222333', 'jose.garcia@email.com', 'Zone 3', 0, 3, '2025-08-08 18:10:03', '2025-08-08 18:47:02'),
-(4, '', 'councilor', NULL, 'Ana', 'D.', 'Rodriguez', '2001-01-25', 'Female', '09444555666', 'ana.rodriguez@email.com', 'Zone 4', 0, 4, '2025-08-08 18:10:03', '2025-08-08 18:46:58'),
-(5, '', 'councilor', NULL, 'Miguel', 'E.', 'Lopez', '1997-11-30', 'Male', '09777888999', 'miguel.lopez@email.com', 'Zone 5', 0, 5, '2025-08-08 18:10:03', '2025-08-08 18:47:05'),
-(6, '', 'councilor', NULL, 'Carmen', 'F.', 'Martinez', '2000-09-12', 'Female', '09123987456', 'carmen.martinez@email.com', 'Zone 6', 0, 6, '2025-08-08 18:10:03', '2025-08-08 18:47:00'),
-(7, '', 'councilor', NULL, 'Pedro', 'G.', 'Gonzalez', '1998-12-05', 'Male', '09654321987', 'pedro.gonzalez@email.com', 'Zone 7', 0, 7, '2025-08-08 18:10:03', '2025-08-08 18:47:07'),
-(8, '', 'councilor', NULL, 'Rosa', 'H.', 'Hernandez', '1999-04-18', 'Female', '09321654987', 'rosa.hernandez@email.com', 'Zone 8', 0, 8, '2025-08-08 18:10:03', '2025-08-08 18:47:09'),
-(9, '', 'chairman', '1754650080_s036012017.webp', 'Zues', 'Col', 'Cong', '2000-08-08', 'Male', '0998798778', 'awd@gmail.com', 'Zone 1', 1, NULL, '2025-08-08 18:48:10', '2025-08-08 18:48:10'),
-(10, '', 'councilor', '1754650080_s036012017.webp', 'Bread', 'Tug', 'Opes', '2000-06-20', 'Female', '09987987987', 'Wd@gmail.com', 'Zone 6', 1, NULL, '2025-08-08 18:48:54', '2025-08-08 18:48:54');
-
 -- --------------------------------------------------------
 
 --
@@ -570,11 +531,7 @@ ALTER TABLE `security_questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
---
--- Indexes for table `sk_officials`
---
-ALTER TABLE `sk_officials`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Indexes for table `system_info`
@@ -671,11 +628,7 @@ ALTER TABLE `record_list`
 ALTER TABLE `security_questions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `sk_officials`
---
-ALTER TABLE `sk_officials`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 
 --
 -- AUTO_INCREMENT for table `system_info`
