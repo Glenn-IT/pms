@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 31, 2025 at 11:38 AM
+-- Generation Time: Sep 25, 2025 at 10:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -190,12 +190,16 @@ CREATE TABLE `event_attendance` (
 --
 
 INSERT INTO `event_attendance` (`id`, `event_id`, `user_id`, `qr_code`, `scan_time`, `status`, `scanner_user_id`) VALUES
-(22, 16, 33, 'PMS-USER-00033-SAMPLE_F-a9336fa1', '2025-08-31 11:01:14', 'present', 1),
-(23, 16, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-08-31 11:01:20', 'present', 1),
-(24, 16, 31, 'PMS-USER-00031-SAMPLE D-177120fe', '2025-08-31 11:01:33', 'present', 1),
-(25, 16, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-08-31 11:01:39', 'present', 1),
-(26, 16, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-08-31 11:01:44', 'present', 1),
-(27, 16, 28, 'PMS-USER-00028-SAMPLE A-887fcc39', '2025-08-31 11:01:48', 'present', 1);
+(38, 27, 28, 'PMS-USER-00028-SAMPLE A-887fcc39', '2025-09-15 18:32:22', 'present', 1),
+(39, 27, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-09-15 18:32:26', 'present', 1),
+(40, 27, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-09-15 18:32:32', 'present', 1),
+(41, 26, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-09-15 18:32:55', 'present', 1),
+(42, 26, 33, 'PMS-USER-00033-SAMPLE_F-a9336fa1', '2025-09-15 18:33:00', 'present', 1),
+(43, 26, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-09-15 18:33:07', 'present', 1),
+(44, 26, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-09-15 18:33:10', 'present', 1),
+(45, 27, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:38', 'present', 1),
+(46, 26, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:46', 'present', 1),
+(47, 25, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:54', 'present', 1);
 
 -- --------------------------------------------------------
 
@@ -218,9 +222,9 @@ CREATE TABLE `event_list` (
 --
 
 INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
-(16, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/16_1756609199_0.png\",\"uploads\\/events\\/16_1756609199_1.png\",\"uploads\\/events\\/16_1756609199_2.png\",\"uploads\\/events\\/16_1756609199_3.png\"]', NULL, '2025-08-31 13:00:00'),
-(17, 'Sample B', 'Sample', NULL, '[\"uploads\\/events\\/17_1756609223_0.png\",\"uploads\\/events\\/17_1756609223_1.png\",\"uploads\\/events\\/17_1756609223_2.png\",\"uploads\\/events\\/17_1756609223_3.png\",\"uploads\\/events\\/17_1756609223_4.png\"]', NULL, '2025-08-31 14:00:00'),
-(18, 'Sample C', 'Sample', NULL, '[\"uploads\\/events\\/18_1756609246_0.png\",\"uploads\\/events\\/18_1756609246_1.png\",\"uploads\\/events\\/18_1756609246_2.png\"]', NULL, '2025-08-31 15:00:00');
+(25, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/25_1757932272_0.png\"]', NULL, '2025-09-15 18:31:00'),
+(26, 'Sample B', 'Sample B', NULL, '[\"uploads\\/events\\/26_1757932295_0.jpg\"]', NULL, '2025-09-15 18:31:00'),
+(27, 'Sample C', 'Sample C', NULL, '[\"uploads\\/events\\/27_1757932313_0.png\"]', NULL, '2025-09-15 18:31:00');
 
 -- --------------------------------------------------------
 
@@ -343,6 +347,37 @@ CREATE TABLE `security_questions` (
 
 -- --------------------------------------------------------
 
+--
+-- Table structure for table `sk_officials`
+--
+
+CREATE TABLE `sk_officials` (
+  `id` int(11) NOT NULL,
+  `position` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `contact` varchar(20) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `age` int(3) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sk_officials`
+--
+
+INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `start_date`, `status`, `date_created`, `date_updated`) VALUES
+(1, 'chairman', 'juju', '0917-123-4567', 'chairman@sk.gov.ph', 25, 'Barangay Hall, Main Street', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:20:10'),
+(2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', 23, 'Phase 1, Block 2, Lot 5', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
+(3, 'treasurer', 'Pedro Garcia', '0919-345-6789', 'treasurer@sk.gov.ph', 24, 'Purok 3, Sitio Maligaya', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
+(4, 'kagawad1', 'Anna Reyes', '0920-456-7890', 'anna@sk.gov.ph', 22, 'Phase 2, Block 1, Lot 10', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
+(5, 'kagawad2', 'Carlos Lopez', '0921-567-8901', 'carlos@sk.gov.ph', 26, 'Purok 1, Sitio Bagong Silang', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
+(6, 'kagawad3', 'Sofia Martinez', '0922-678-9012', 'sofia@sk.gov.ph', 21, 'Phase 3, Block 5, Lot 8', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
+(7, 'kagawad4', 'Miguel Torres', '0923-789-0123', 'miguel@sk.gov.ph', 27, 'Purok 2, Sitio San Roque', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44');
+
 -- --------------------------------------------------------
 
 --
@@ -408,9 +443,11 @@ INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `p
 (29, 'Kule', 'Lopus', 'Skuer', 'Sample B', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00029-SAMPLE B-365e407a', NULL, 2, 1, '2025-08-08 19:21:35', '2025-08-08 19:21:35', 2, '2001-01-05', 24, 'Female'),
 (30, 'Kuuso', 'Jute', 'Slop', 'Sample C', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00030-SAMPLE C-f5622689', NULL, 2, 1, '2025-08-08 19:22:17', '2025-08-08 19:22:17', 3, '2003-03-02', 22, 'Male'),
 (31, 'Lopeu', 'Kold', 'Suer', 'Sample D', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00031-SAMPLE_D-14423dce', NULL, 2, 1, '2025-08-08 19:23:06', '2025-08-31 11:06:00', 4, '1996-05-05', 29, 'Female'),
-(32, 'Kikusu', 'Kosp', 'Posi', 'Sample E', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00032-SAMPLE_E-d87f48da', NULL, 2, 1, '2025-08-08 19:37:54', '2025-08-08 19:37:54', 2, '2005-09-06', 19, 'Female'),
+(32, 'Kikusu', 'Kosp', 'Posi', 'Sample E', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'sample', NULL, 'PMS-USER-00032-SAMPLE_E-d87f48da', NULL, 2, 1, '2025-08-08 19:37:54', '2025-09-11 10:16:08', 2, '2005-09-06', 19, 'Female'),
 (33, 'Kkols', 'Iolw', 'Loper', 'Sample F', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00033-SAMPLE_F-a9336fa1', NULL, 2, 1, '2025-08-08 22:37:37', '2025-08-08 22:37:37', 5, '2008-05-30', 17, 'Female'),
-(34, 'Slowp', 'U', 'Soper', 'Sample X', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00034-SAMPLE_X-7288e467', NULL, 2, 0, '2025-08-10 19:44:07', '2025-08-15 17:55:01', 1, '1994-08-11', 30, 'Male');
+(34, 'Slowp', 'U', 'Soper', 'Sample X', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00034-SAMPLE_X-7288e467', NULL, 2, 0, '2025-08-10 19:44:07', '2025-09-12 11:36:49', 1, '1994-08-11', 30, 'Male'),
+(39, 'Cristel', 'Ldiwk', 'Pulig', 'Cristel', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample12345', 'uploads/avatars/39.png?v=1757931504', 'PMS-USER-00039-CRISTEL-85843dfb', NULL, 2, 1, '2025-09-12 11:53:58', '2025-09-15 18:18:24', 6, '2001-01-01', 24, 'Female'),
+(40, 'Sample ', 's', 'Uno', 'Sample Uno', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample12345', NULL, 'PMS-USER-00040-SAMPLE_U-e7fc386d', NULL, 2, 1, '2025-09-26 03:08:32', '2025-09-26 03:08:32', 1, '2001-01-01', 24, 'Male');
 
 -- --------------------------------------------------------
 
@@ -531,7 +568,12 @@ ALTER TABLE `security_questions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
-
+--
+-- Indexes for table `sk_officials`
+--
+ALTER TABLE `sk_officials`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_position` (`position`);
 
 --
 -- Indexes for table `system_info`
@@ -596,13 +638,13 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `event_attendance`
 --
 ALTER TABLE `event_attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `inmate_list`
@@ -628,7 +670,11 @@ ALTER TABLE `record_list`
 ALTER TABLE `security_questions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-
+--
+-- AUTO_INCREMENT for table `sk_officials`
+--
+ALTER TABLE `sk_officials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `system_info`
@@ -640,7 +686,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `visit_list`
