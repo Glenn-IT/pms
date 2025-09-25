@@ -315,6 +315,7 @@
         </div>
 
         <!-- Action Buttons -->
+        <?php if($_settings->userdata('login_type') == 1): ?>
         <div class="action-buttons">
             <button class="btn btn-custom" onclick="manage_official('chairman')">
                 <i class="fas fa-user-plus mr-2"></i>Manage Chairman
@@ -329,6 +330,7 @@
                 <i class="fas fa-users-cog mr-2"></i>Manage Kagawads
             </button>
         </div>
+        <?php endif; ?>
 
         <!-- Organizational Chart -->
         <div class="org-chart">
@@ -479,43 +481,10 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="officialEmail"><i class="fas fa-envelope mr-1"></i>Email Address</label>
                                 <input type="email" class="form-control" id="officialEmail" name="email">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="officialAge"><i class="fas fa-calendar mr-1"></i>Age</label>
-                                <input type="number" class="form-control" id="officialAge" name="age" min="15" max="30">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="officialAddress"><i class="fas fa-map-marker-alt mr-1"></i>Address</label>
-                                <textarea class="form-control" id="officialAddress" name="address" rows="2"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="officialStartDate"><i class="fas fa-calendar-check mr-1"></i>Start Date</label>
-                                <input type="date" class="form-control" id="officialStartDate" name="start_date">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="officialStatus"><i class="fas fa-check-circle mr-1"></i>Status</label>
-                                <select class="form-control" id="officialStatus" name="status">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -694,10 +663,6 @@ function manage_official(position) {
                 $('#officialName').val(data.name);
                 $('#officialContact').val(data.contact);
                 $('#officialEmail').val(data.email);
-                $('#officialAge').val(data.age);
-                $('#officialAddress').val(data.address);
-                $('#officialStartDate').val(data.start_date);
-                $('#officialStatus').val(data.status);
             }
         },
         error: function(err) {
