@@ -7,11 +7,18 @@ $sk_officials = $conn->query("SELECT sk.*, u.firstname as user_firstname, u.midd
                              LEFT JOIN `users` u ON sk.user_id = u.id 
                              WHERE sk.status = 1 
                              ORDER BY 
-                                CASE WHEN sk.position = 'chairman' THEN 1 ELSE 2 END, 
+                                CASE 
+                                    WHEN sk.position = 'chairman' THEN 1 
+                                    WHEN sk.position = 'secretary' THEN 2 
+                                    WHEN sk.position = 'treasurer' THEN 3 
+                                    ELSE 4 
+                                END, 
                                 sk.order_position ASC, sk.firstname ASC");
 
 $chairman = null;
-$councilors = [];
+$secretary = null;
+$treasurer = null;
+$kagawads = [];
 
 while($row = $sk_officials->fetch_assoc()) {
     // Use user data if available, fallback to SK officials data
@@ -22,8 +29,12 @@ while($row = $sk_officials->fetch_assoc()) {
 
     if($row['position'] == 'chairman') {
         $chairman = $row;
+    } elseif($row['position'] == 'secretary') {
+        $secretary = $row;
+    } elseif($row['position'] == 'treasurer') {
+        $treasurer = $row;
     } else {
-        $councilors[] = $row;
+        $kagawads[] = $row;
     }
 }
 ?>
@@ -38,11 +49,6 @@ while($row = $sk_officials->fetch_assoc()) {
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <h3 class="card-title mb-0">SK Officials Management</h3>
-            <?php if($_settings->userdata('type') == 1): ?>
-            <button class="btn btn-primary btn-sm" type="button" onclick="new_official()">
-                <i class="fa fa-plus"></i> Add New Official
-            </button>
-            <?php endif; ?>
         </div>
     </div>
     <div class="card-body">
@@ -124,10 +130,10 @@ while($row = $sk_officials->fetch_assoc()) {
                         <div class="official-details">Contact: <?php echo $chairman['contact'] ?></div>
                         <?php if($_settings->userdata('type') == 1): ?>
                         <div class="mt-2">
-                            <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $chairman['id'] ?>)">
+                            <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $chairman['id'] ?>, '<?php echo $chairman['position'] ?>')">
                                 <i class="fa fa-edit"></i> Edit
                             </button>
-                            <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $chairman['id'] ?>)">
+                            <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $chairman['id'] ?>, '<?php echo addslashes($full_name) ?>')">
                                 <i class="fa fa-trash"></i> Delete
                             </button>
                         </div>
@@ -140,9 +146,9 @@ while($row = $sk_officials->fetch_assoc()) {
                         <div class="official-name">No Chairman Assigned</div>
                         <?php if($_settings->userdata('type') == 1): ?>
                         <div class="mt-2">
-                            <!--<button class="btn btn-primary btn-xs" onclick="new_official('chairman')">
-                                <i class="fa fa-plus"></i> Add Chairman
-                            </button>-->
+                            <button class="btn btn-success btn-xs" onclick="assign_official('chairman')">
+                                <i class="fa fa-edit"></i> Assign
+                            </button>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -151,54 +157,154 @@ while($row = $sk_officials->fetch_assoc()) {
             </div>
         </div>
 
-        <!-- Councilors Section -->
-        <div class="row">
+        <!-- Secretary and Treasurer Section -->
+        <div class="row mb-4">
             <div class="col-12">
-                <h5 class="text-center mb-3">SK COUNCILORS</h5>
-                <div class="row">
-                    <?php 
-                    for($i = 0; $i < 7; $i++): 
-                        $councilor = isset($councilors[$i]) ? $councilors[$i] : null;
-                    ?>
+                <h5 class="text-center mb-3">SK OFFICERS</h5>
+                <div class="row justify-content-center">
+                    <!-- Secretary -->
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                         <div class="official-card">
-                            <?php if($councilor): ?>
+                            <?php if($secretary): ?>
                                 <?php 
                                 // Use user avatar if available, otherwise use SK official image, otherwise placeholder
-                                if(!empty($councilor['avatar'])) {
-                                    $image_path = 'uploads/avatars/' . $councilor['avatar'];
-                                } elseif(!empty($councilor['image_path'])) {
-                                    $image_path = 'uploads/sk_officials/' . $councilor['image_path'];
+                                if(!empty($secretary['avatar'])) {
+                                    $image_path = 'uploads/avatars/' . $secretary['avatar'];
+                                } elseif(!empty($secretary['image_path'])) {
+                                    $image_path = 'uploads/sk_officials/' . $secretary['image_path'];
                                 } else {
                                     $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
                                 }
                                 
-                                $full_name = trim($councilor['display_firstname'] . ' ' . $councilor['display_middlename'] . ' ' . $councilor['display_lastname']);
+                                $full_name = trim($secretary['display_firstname'] . ' ' . $secretary['display_middlename'] . ' ' . $secretary['display_lastname']);
                                 ?>
-                                <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Councilor Photo">
-                                <div class="position-title">Councilor</div>
+                                <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Secretary Photo">
+                                <div class="position-title">Secretary</div>
                                 <div class="official-name"><?php echo $full_name ?></div>
-                                <div class="official-details">   <?php echo $councilor['display_zone'] ?></div>
-                                <div class="official-details">Contact: <?php echo $councilor['contact'] ?></div>
+                                <div class="official-details"><?php echo $secretary['display_zone'] ?></div>
+                                <div class="official-details">Contact: <?php echo $secretary['contact'] ?></div>
                                 <?php if($_settings->userdata('type') == 1): ?>
                                 <div class="mt-2">
-                                    <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $councilor['id'] ?>)">
+                                    <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $secretary['id'] ?>, '<?php echo $secretary['position'] ?>')">
                                         <i class="fa fa-edit"></i> Edit
                                     </button>
-                                    <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $councilor['id'] ?>)">
+                                    <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $secretary['id'] ?>, '<?php echo addslashes($full_name) ?>')">
                                         <i class="fa fa-trash"></i> Delete
                                     </button>
                                 </div>
                                 <?php endif; ?>
                             <?php else: ?>
-                                <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Councilor">
-                                <div class="position-title">Councilor</div>
-                                <div class="official-name">No Councilor Assigned</div>
+                                <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Secretary">
+                                <div class="position-title">Secretary</div>
+                                <div class="official-name">No Secretary Assigned</div>
                                 <?php if($_settings->userdata('type') == 1): ?>
                                 <div class="mt-2">
-                                    <!--<button class="btn btn-primary btn-xs" onclick="new_official('councilor')">
-                                        <i class="fa fa-plus"></i> Add Councilor
-                                    </button>-->
+                                    <button class="btn btn-success btn-xs" onclick="assign_official('secretary')">
+                                        <i class="fa fa-edit"></i> Assign
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Treasurer -->
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="official-card">
+                            <?php if($treasurer): ?>
+                                <?php 
+                                // Use user avatar if available, otherwise use SK official image, otherwise placeholder
+                                if(!empty($treasurer['avatar'])) {
+                                    $image_path = 'uploads/avatars/' . $treasurer['avatar'];
+                                } elseif(!empty($treasurer['image_path'])) {
+                                    $image_path = 'uploads/sk_officials/' . $treasurer['image_path'];
+                                } else {
+                                    $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
+                                }
+                                
+                                $full_name = trim($treasurer['display_firstname'] . ' ' . $treasurer['display_middlename'] . ' ' . $treasurer['display_lastname']);
+                                ?>
+                                <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Treasurer Photo">
+                                <div class="position-title">Treasurer</div>
+                                <div class="official-name"><?php echo $full_name ?></div>
+                                <div class="official-details"><?php echo $treasurer['display_zone'] ?></div>
+                                <div class="official-details">Contact: <?php echo $treasurer['contact'] ?></div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $treasurer['id'] ?>, '<?php echo $treasurer['position'] ?>')">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $treasurer['id'] ?>, '<?php echo addslashes($full_name) ?>')">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Treasurer">
+                                <div class="position-title">Treasurer</div>
+                                <div class="official-name">No Treasurer Assigned</div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-success btn-xs" onclick="assign_official('treasurer')">
+                                        <i class="fa fa-edit"></i> Assign
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kagawads Section -->
+        <div class="row">
+            <div class="col-12">
+                <h5 class="text-center mb-3">SK KAGAWADS</h5>
+                <div class="row">
+                    <?php 
+                    for($i = 0; $i < 7; $i++): 
+                        $kagawad = isset($kagawads[$i]) ? $kagawads[$i] : null;
+                    ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <div class="official-card">
+                            <?php if($kagawad): ?>
+                                <?php 
+                                // Use user avatar if available, otherwise use SK official image, otherwise placeholder
+                                if(!empty($kagawad['avatar'])) {
+                                    $image_path = 'uploads/avatars/' . $kagawad['avatar'];
+                                } elseif(!empty($kagawad['image_path'])) {
+                                    $image_path = 'uploads/sk_officials/' . $kagawad['image_path'];
+                                } else {
+                                    $image_path = 'https://via.placeholder.com/80x80.png?text=Photo';
+                                }
+                                
+                                $full_name = trim($kagawad['display_firstname'] . ' ' . $kagawad['display_middlename'] . ' ' . $kagawad['display_lastname']);
+                                ?>
+                                <img class="official-photo" src="<?php echo base_url . $image_path ?>" alt="Kagawad Photo">
+                                <div class="position-title">Kagawad</div>
+                                <div class="official-name"><?php echo $full_name ?></div>
+                                <div class="official-details">   <?php echo $kagawad['display_zone'] ?></div>
+                                <div class="official-details">Contact: <?php echo $kagawad['contact'] ?></div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-primary btn-xs" onclick="edit_official(<?php echo $kagawad['id'] ?>, '<?php echo $kagawad['position'] ?>')">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-xs" onclick="delete_official(<?php echo $kagawad['id'] ?>, '<?php echo addslashes($full_name) ?>')">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <img class="official-photo" src="https://via.placeholder.com/80x80.png?text=No+Photo" alt="No Kagawad">
+                                <div class="position-title">Kagawad</div>
+                                <div class="official-name">No Kagawad Assigned</div>
+                                <?php if($_settings->userdata('type') == 1): ?>
+                                <div class="mt-2">
+                                    <button class="btn btn-success btn-xs" onclick="assign_official('kagawad')">
+                                        <i class="fa fa-edit"></i> Assign
+                                    </button>
                                 </div>
                                 <?php endif; ?>
                             <?php endif; ?>
@@ -212,26 +318,44 @@ while($row = $sk_officials->fetch_assoc()) {
 </div>
 
 <script>
-function new_official(position = '') {
-    uni_modal("Add New SK Official", "skofficials/manage_official.php" + (position ? "?position=" + position : ""), "large");
+function assign_official(position) {
+    let positionText = '';
+    switch(position) {
+        case 'chairman': positionText = 'SK Chairman'; break;
+        case 'secretary': positionText = 'SK Secretary'; break;
+        case 'treasurer': positionText = 'SK Treasurer'; break;
+        case 'kagawad': positionText = 'SK Kagawad'; break;
+        default: positionText = 'SK Official'; break;
+    }
+    
+    uni_modal("Assign " + positionText, "skofficials/assign_official.php?position=" + position, "large");
 }
 
-function edit_official(id) {
-    uni_modal("Edit SK Official", "skofficials/manage_official.php?id=" + id, "large");
+function edit_official(id, position) {
+    let positionText = '';
+    switch(position) {
+        case 'chairman': positionText = 'SK Chairman'; break;
+        case 'secretary': positionText = 'SK Secretary'; break;
+        case 'treasurer': positionText = 'SK Treasurer'; break;
+        case 'kagawad': positionText = 'SK Kagawad'; break;
+        default: positionText = 'SK Official'; break;
+    }
+    
+    uni_modal("Edit " + positionText, "skofficials/assign_official.php?id=" + id + "&position=" + position, "large");
 }
 
-function delete_official(id) {
-    _conf("Are you sure to delete this SK Official?", "delete_official_confirmed", [id]);
+function delete_official(id, name) {
+    _conf("Are you sure to delete <b>" + name + "</b> from SK Officials?", "delete_sk_official", [id]);
 }
 
-function delete_official_confirmed(id) {
+function delete_sk_official(id) {
     start_loader();
     $.ajax({
         url: _base_url_ + "classes/Master.php?f=delete_official",
         method: "POST",
         data: {id: id},
         dataType: "json",
-        error: err => {
+        error: function(err) {
             console.log(err);
             alert_toast("An error occurred.", 'error');
             end_loader();

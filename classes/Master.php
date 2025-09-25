@@ -1,4 +1,9 @@
 <?php
+// Start output buffering and set error handling for JSON responses
+ob_start();
+error_reporting(E_ERROR | E_PARSE); // Only show fatal errors
+ini_set('display_errors', 0); // Don't display errors in output
+
 require_once('../config.php');
 Class Master extends DBConnection {
 	private $settings;
@@ -1285,7 +1290,7 @@ function get_most_attended_events() {
 			return json_encode($resp);
 		}
 		
-		// Check position limits: 1 Chairman, max 7 Councilors
+		// Check position limits: 1 Chairman, 1 Secretary, 1 Treasurer, max 7 Kagawads
 		if($position == 'chairman'){
 			$check_chairman = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'chairman' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
 			if($check_chairman > 0){
@@ -1293,11 +1298,25 @@ function get_most_attended_events() {
 				$resp['msg'] = "There can only be one SK Chairman.";
 				return json_encode($resp);
 			}
-		} elseif($position == 'councilor'){
-			$check_councilor = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'councilor' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
-			if($check_councilor >= 7){
+		} elseif($position == 'secretary'){
+			$check_secretary = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'secretary' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
+			if($check_secretary > 0){
 				$resp['status'] = 'failed';
-				$resp['msg'] = "Maximum of 7 SK Councilors allowed.";
+				$resp['msg'] = "There can only be one SK Secretary.";
+				return json_encode($resp);
+			}
+		} elseif($position == 'treasurer'){
+			$check_treasurer = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'treasurer' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
+			if($check_treasurer > 0){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "There can only be one SK Treasurer.";
+				return json_encode($resp);
+			}
+		} elseif($position == 'kagawad'){
+			$check_kagawad = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'kagawad' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
+			if($check_kagawad >= 7){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Maximum of 7 SK Kagawads allowed.";
 				return json_encode($resp);
 			}
 		}
@@ -1391,6 +1410,186 @@ function get_most_attended_events() {
 			$resp['error'] = $this->conn->error;
 		}
 		return json_encode($resp);
+	}
+	
+	function assign_sk_official(){
+		// Clear any output that might interfere with JSON
+		if(ob_get_length()) ob_clean();
+		
+		$resp = array();
+		
+		try {
+			// Check if user is admin
+			if($this->settings->userdata('type') != 1){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
+				return json_encode($resp);
+			}
+			
+			extract($_POST);
+			$id = isset($id) ? $id : '';
+			$is_edit = !empty($id);
+			
+			// Validate required fields
+			if(empty($firstname) || empty($lastname) || empty($contact) || empty($zone) || empty($date_of_birth) || empty($sex) || empty($position)){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Please fill in all required fields.";
+				return json_encode($resp);
+			}
+			
+			// Check position limits (exclude current record if editing)
+			$exclude_condition = $is_edit ? " AND id != '{$id}'" : "";
+			
+			if($position == 'chairman'){
+				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'chairman' AND status = 1{$exclude_condition}");
+				$count = $check->fetch_assoc()['count'];
+				if($count > 0){
+					$resp['status'] = 'failed';
+					$resp['msg'] = "There can only be one SK Chairman.";
+					return json_encode($resp);
+				}
+			} elseif($position == 'secretary'){
+				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'secretary' AND status = 1{$exclude_condition}");
+				$count = $check->fetch_assoc()['count'];
+				if($count > 0){
+					$resp['status'] = 'failed';
+					$resp['msg'] = "There can only be one SK Secretary.";
+					return json_encode($resp);
+				}
+			} elseif($position == 'treasurer'){
+				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'treasurer' AND status = 1{$exclude_condition}");
+				$count = $check->fetch_assoc()['count'];
+				if($count > 0){
+					$resp['status'] = 'failed';
+					$resp['msg'] = "There can only be one SK Treasurer.";
+					return json_encode($resp);
+				}
+			} elseif($position == 'kagawad'){
+				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'kagawad' AND status = 1{$exclude_condition}");
+				$count = $check->fetch_assoc()['count'];
+				if($count >= 7){
+					$resp['status'] = 'failed';
+					$resp['msg'] = "Maximum of 7 SK Kagawads allowed.";
+					return json_encode($resp);
+				}
+			}
+			
+			// Validate age (SK officials must be 18-30 years old)
+			$birth_date = new DateTime($date_of_birth);
+			$today = new DateTime();
+			$age = $today->diff($birth_date)->y;
+			if($age < 18 || $age > 30){
+				$resp['status'] = 'failed';
+				$resp['msg'] = "SK Officials must be between 18-30 years old. Age calculated: {$age} years old.";
+				return json_encode($resp);
+			}
+			
+			// Sanitize input data
+			$firstname = $this->conn->real_escape_string(trim($firstname));
+			$middlename = !empty($middlename) ? $this->conn->real_escape_string(trim($middlename)) : '';
+			$lastname = $this->conn->real_escape_string(trim($lastname));
+			$contact = $this->conn->real_escape_string(trim($contact));
+			$zone = $this->conn->real_escape_string(trim($zone));
+			$position = $this->conn->real_escape_string(trim($position));
+			
+			// Handle email
+			$email_sql = 'NULL';
+			if(!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)){
+				$email_sql = "'" . $this->conn->real_escape_string(trim($email)) . "'";
+			}
+			
+			$full_name = trim($firstname . ' ' . $middlename . ' ' . $lastname);
+			
+			// Handle file upload
+			$uploaded_filename = null;
+			if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '' && $_FILES['image']['error'] == 0){
+				$allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+				if(in_array($_FILES['image']['type'], $allowed_types)){
+					$fname = time().'_'.basename($_FILES['image']['name']);
+					$upload_path = '../uploads/sk_officials/' . $fname;
+					
+					// Create directory if it doesn't exist
+					if(!file_exists('../uploads/sk_officials/')){
+						mkdir('../uploads/sk_officials/', 0777, true);
+					}
+					
+					if(move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)){
+						$uploaded_filename = $fname;
+						
+						// Delete old image if editing
+						if($is_edit){
+							$old_image_query = $this->conn->query("SELECT image_path FROM `sk_officials` WHERE id = '{$id}'");
+							if($old_image_query && $old_image_query->num_rows > 0){
+								$old_image = $old_image_query->fetch_assoc()['image_path'];
+								if(!empty($old_image) && file_exists('../uploads/sk_officials/' . $old_image)){
+									unlink('../uploads/sk_officials/' . $old_image);
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			// Build and execute SQL query
+			if($is_edit){
+				$image_part = $uploaded_filename ? ", `image_path` = '{$uploaded_filename}'" : '';
+				$sql = "UPDATE `sk_officials` SET 
+						`name` = '{$full_name}',
+						`firstname` = '{$firstname}',
+						`middlename` = '{$middlename}',
+						`lastname` = '{$lastname}',
+						`position` = '{$position}',
+						`date_of_birth` = '{$date_of_birth}',
+						`sex` = '{$sex}',
+						`contact` = '{$contact}',
+						`email` = {$email_sql},
+						`zone` = '{$zone}'
+						{$image_part}
+						WHERE id = '{$id}'";
+			} else {
+				$image_sql = $uploaded_filename ? "'{$uploaded_filename}'" : 'NULL';
+				$sql = "INSERT INTO `sk_officials` 
+						(`user_id`, `name`, `firstname`, `middlename`, `lastname`, `position`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `image_path`, `status`) 
+						VALUES 
+						(NULL, '{$full_name}', '{$firstname}', '{$middlename}', '{$lastname}', '{$position}', '{$date_of_birth}', '{$sex}', '{$contact}', {$email_sql}, '{$zone}', {$image_sql}, 1)";
+			}
+			
+			$save = $this->conn->query($sql);
+			
+			if($save){
+				$resp['status'] = 'success';
+				if($is_edit){
+					$resp['msg'] = "SK Official successfully updated.";
+					$this->settings->set_flashdata('success', "SK Official successfully updated.");
+				} else {
+					$resp['msg'] = "SK Official successfully assigned.";
+					$this->settings->set_flashdata('success', "SK Official successfully assigned.");
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Database error: " . $this->conn->error;
+			}
+			
+		} catch (Exception $e) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Error: " . $e->getMessage();
+		}
+		
+		return json_encode($resp);
+	}
+	
+	private function update_position_enum(){
+		// Check if the position enum includes all needed positions
+		$result = $this->conn->query("SHOW COLUMNS FROM sk_officials LIKE 'position'");
+		if($result && $result->num_rows > 0){
+			$row = $result->fetch_assoc();
+			$type = $row['Type'];
+			
+			// If it doesn't include secretary, treasurer, kagawad, update it
+			if(strpos($type, 'secretary') === false || strpos($type, 'treasurer') === false || strpos($type, 'kagawad') === false){
+				$this->conn->query("ALTER TABLE `sk_officials` MODIFY `position` ENUM('chairman','secretary','treasurer','kagawad','councilor') NOT NULL");
+			}
+		}
 	}
 
 //End Event Code
@@ -1513,6 +1712,10 @@ switch ($action) {
 	break;
 	case 'save_official':
 		echo $Master->save_official();
+	break;
+	case 'assign_sk_official':
+		header('Content-Type: application/json');
+		echo $Master->assign_sk_official();
 	break;
 	case 'delete_official':
 		echo $Master->delete_official();
