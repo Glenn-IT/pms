@@ -134,12 +134,25 @@
 
                 <?php if($_settings->userdata('type') != 1): ?>
                 // Load content automatically on page load
+                loadSkOfficials();
                 loadAboutUs();
                 loadDevelopers();
                 <?php endif; ?>
             });
 
 
+function loadSkOfficials() {
+                $.ajax({
+                    url: 'skofficials/dashboard_content.php',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#sk_officials_content').html(data);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#sk_officials_content').html('<div class="alert alert-danger">Failed to load SK Officials.</div>');
+                    }
+                });
+            }
 
             function loadAboutUs() {
                 $.ajax({
