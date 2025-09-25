@@ -315,7 +315,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <?php if($_settings->userdata('login_type') == 1): ?>
+        <?php if($_settings->userdata('type') == 1): ?>
         <div class="action-buttons">
             <button class="btn btn-custom" onclick="manage_official('chairman')">
                 <i class="fas fa-user-plus mr-2"></i>Manage Chairman

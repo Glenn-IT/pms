@@ -93,7 +93,9 @@ require_once('../../config.php');
                     <i class="fas fa-crown"></i>
                 </div>
                 <div class="dashboard-org-title">SK CHAIRMAN</div>
-                <div class="dashboard-org-name" id="dash-chairman-name">Juan Dela Cruz</div>
+                <div class="dashboard-org-name" id="dash-chairman-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -104,7 +106,9 @@ require_once('../../config.php');
                     <i class="fas fa-clipboard-list"></i>
                 </div>
                 <div class="dashboard-org-title">SK SECRETARY</div>
-                <div class="dashboard-org-name" id="dash-secretary-name">Maria Santos</div>
+                <div class="dashboard-org-name" id="dash-secretary-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -114,7 +118,9 @@ require_once('../../config.php');
                     <i class="fas fa-coins"></i>
                 </div>
                 <div class="dashboard-org-title">SK TREASURER</div>
-                <div class="dashboard-org-name" id="dash-treasurer-name">Pedro Garcia</div>
+                <div class="dashboard-org-name" id="dash-treasurer-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -125,7 +131,9 @@ require_once('../../config.php');
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="dashboard-org-title">KAGAWAD</div>
-                <div class="dashboard-org-name" id="dash-kagawad1-name">Anna Reyes</div>
+                <div class="dashboard-org-name" id="dash-kagawad1-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -135,7 +143,9 @@ require_once('../../config.php');
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="dashboard-org-title">KAGAWAD</div>
-                <div class="dashboard-org-name" id="dash-kagawad2-name">Carlos Lopez</div>
+                <div class="dashboard-org-name" id="dash-kagawad2-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -145,7 +155,9 @@ require_once('../../config.php');
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="dashboard-org-title">KAGAWAD</div>
-                <div class="dashboard-org-name" id="dash-kagawad3-name">Sofia Martinez</div>
+                <div class="dashboard-org-name" id="dash-kagawad3-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
         
@@ -155,7 +167,9 @@ require_once('../../config.php');
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="dashboard-org-title">KAGAWAD</div>
-                <div class="dashboard-org-name" id="dash-kagawad4-name">Miguel Torres</div>
+                <div class="dashboard-org-name" id="dash-kagawad4-name">
+                    <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                </div>
             </div>
         </div>
     </div>
@@ -174,14 +188,72 @@ function viewFullChart() {
     window.location.href = '?page=skofficials';
 }
 
+// Load SK Officials data from database
+function loadDashboardOfficials() {
+    $.ajax({
+        url: 'skofficials/manage_officials.php?f=get_all_officials',
+        method: 'GET',
+        dataType: 'json',
+        success: function(resp) {
+            if(resp.status === 'success') {
+                const officials = resp.data;
+                
+                // Update Chairman
+                if(officials.chairman) {
+                    $('#dash-chairman-name').text(officials.chairman.name);
+                } else {
+                    $('#dash-chairman-name').text('Not assigned');
+                }
+                
+                // Update Secretary
+                if(officials.secretary) {
+                    $('#dash-secretary-name').text(officials.secretary.name);
+                } else {
+                    $('#dash-secretary-name').text('Not assigned');
+                }
+                
+                // Update Treasurer
+                if(officials.treasurer) {
+                    $('#dash-treasurer-name').text(officials.treasurer.name);
+                } else {
+                    $('#dash-treasurer-name').text('Not assigned');
+                }
+                
+                // Update Kagawads
+                for(let i = 1; i <= 4; i++) {
+                    const kagawadKey = 'kagawad' + i;
+                    if(officials[kagawadKey]) {
+                        $('#dash-kagawad' + i + '-name').text(officials[kagawadKey].name);
+                    } else {
+                        $('#dash-kagawad' + i + '-name').text('Not assigned');
+                    }
+                }
+            } else {
+                // If no data, show default message
+                $('.dashboard-org-name').text('Not assigned');
+            }
+        },
+        error: function(err) {
+            console.log('Error loading dashboard officials:', err);
+            // Show error state
+            $('.dashboard-org-name').html('<i class="fas fa-exclamation-triangle text-warning mr-1"></i>Error loading');
+        }
+    });
+}
+
 // Add click handlers to cards for quick info
 $(document).ready(function() {
+    // Load officials data when the dashboard content is loaded
+    loadDashboardOfficials();
+    
     $('.dashboard-org-card').click(function() {
         var title = $(this).find('.dashboard-org-title').text();
         var name = $(this).find('.dashboard-org-name').text();
         
-        // You can show a modal or tooltip with more info
-        alert('Quick Contact: ' + name + ' (' + title + ')');
+        // Only show alert if name is loaded and not loading/error state
+        if(name && !name.includes('Loading') && !name.includes('Error') && name !== 'Not assigned') {
+            alert('Quick Contact: ' + name + ' (' + title + ')');
+        }
     });
 });
 </script>
