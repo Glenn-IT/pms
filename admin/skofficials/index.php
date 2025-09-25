@@ -665,34 +665,32 @@ function manage_official(position) {
     $('#officialModalLabel').html('<i class="fas fa-user-edit mr-2"></i>Manage SK ' + position.charAt(0).toUpperCase() + position.slice(1));
     $('#officialPosition').val(position);
     
-    // Load current data based on position
-    let currentName = '';
-    let currentContact = '';
-    let currentEmail = '';
+    // Clear form first
+    $('#officialForm')[0].reset();
+    $('#officialPosition').val(position);
     
-    switch(position) {
-        case 'chairman':
-            currentName = $('#chairman-name').text();
-            currentContact = $('#chairman-contact').text();
-            currentEmail = $('#chairman-email').text();
-            break;
-        case 'secretary':
-            currentName = $('#secretary-name').text();
-            currentContact = $('#secretary-contact').text();
-            currentEmail = $('#secretary-email').text();
-            break;
-        case 'treasurer':
-            currentName = $('#treasurer-name').text();
-            currentContact = $('#treasurer-contact').text();
-            currentEmail = $('#treasurer-email').text();
-            break;
-    }
-    
-    // Populate form with current data
-    $('#officialName').val(currentName);
-    $('#officialContact').val(currentContact);
-    $('#officialEmail').val(currentEmail);
-    $('#officialStatus').val('active');
+    // Load current data from database
+    $.ajax({
+        url: 'skofficials/manage_officials.php?f=get_official&position=' + position,
+        method: 'GET',
+        dataType: 'json',
+        success: function(resp) {
+            if(resp.status === 'success') {
+                const data = resp.data;
+                $('#officialName').val(data.name);
+                $('#officialContact').val(data.contact);
+                $('#officialEmail').val(data.email);
+                $('#officialAge').val(data.age);
+                $('#officialAddress').val(data.address);
+                $('#officialStartDate').val(data.start_date);
+                $('#officialStatus').val(data.status);
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            // Still show modal even if loading fails (for new entries)
+        }
+    });
     
     // Show modal
     $('#officialModal').modal('show');
@@ -709,57 +707,53 @@ function goBackToDashboard() {
 
 function saveOfficial() {
     const form = $('#officialForm');
-    const position = $('#officialPosition').val();
-    const name = $('#officialName').val();
-    const contact = $('#officialContact').val();
-    const email = $('#officialEmail').val();
+    const formData = new FormData(form[0]);
     
     // Validate required fields
-    if (!name || !contact) {
+    if (!formData.get('name') || !formData.get('contact')) {
         showErrorToast('Please fill in all required fields (Name and Contact).');
         return;
     }
     
-    let targetCard;
+    // Show loading state
+    const saveBtn = $('.modal-footer .btn-primary');
+    const originalText = saveBtn.html();
+    saveBtn.html('<i class="fas fa-spinner fa-spin mr-1"></i>Saving...').prop('disabled', true);
     
-    // Update the display based on position
-    switch(position) {
-        case 'chairman':
-            $('#chairman-name').text(name);
-            $('#chairman-contact').text(contact);
-            $('#chairman-email').text(email);
-            targetCard = $('.chairman-card');
-            break;
-        case 'secretary':
-            $('#secretary-name').text(name);
-            $('#secretary-contact').text(contact);
-            $('#secretary-email').text(email);
-            targetCard = $('.secretary-card');
-            break;
-        case 'treasurer':
-            $('#treasurer-name').text(name);
-            $('#treasurer-contact').text(contact);
-            $('#treasurer-email').text(email);
-            targetCard = $('.treasurer-card');
-            break;
-    }
-    
-    // Close modal
-    $('#officialModal').modal('hide');
-    
-    // Add animation to updated card
-    if (targetCard) {
-        targetCard.addClass('card-updated');
-        setTimeout(() => {
-            targetCard.removeClass('card-updated');
-        }, 600);
-    }
-    
-    // Show success toast
-    showSuccessToast(`SK ${position.charAt(0).toUpperCase() + position.slice(1)} information updated successfully!`);
-    
-    // Reset form
-    form[0].reset();
+    // Send AJAX request
+    $.ajax({
+        url: 'skofficials/manage_officials.php?f=save_official',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(resp) {
+            if(resp.status === 'success') {
+                // Close modal
+                $('#officialModal').modal('hide');
+                
+                // Reload officials data
+                loadAllOfficials();
+                
+                // Show success toast
+                showSuccessToast(resp.msg);
+                
+                // Reset form
+                form[0].reset();
+            } else {
+                showErrorToast(resp.msg);
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            showErrorToast('An error occurred while saving the information.');
+        },
+        complete: function() {
+            // Restore button state
+            saveBtn.html(originalText).prop('disabled', false);
+        }
+    });
 }
 
 function saveKagawad(kagawadNumber) {
@@ -773,21 +767,47 @@ function saveKagawad(kagawadNumber) {
         return;
     }
     
-    // Update the display in the organizational chart
-    $('#kagawad' + kagawadNumber + '-name').text(name);
-    $('#kagawad' + kagawadNumber + '-contact').text(contact);
+    // Show loading state
+    const saveBtn = $(`#kagawadForm${kagawadNumber} .btn-primary`);
+    const originalText = saveBtn.html();
+    saveBtn.html('<i class="fas fa-spinner fa-spin mr-1"></i>Updating...').prop('disabled', true);
     
-    // Find and animate the specific kagawad card
-    const targetCard = $(`.kagawad-grid .org-card:nth-child(${kagawadNumber})`);
-    if (targetCard.length) {
-        targetCard.addClass('card-updated');
-        setTimeout(() => {
-            targetCard.removeClass('card-updated');
-        }, 600);
-    }
+    // Prepare data
+    const formData = new FormData();
+    formData.append('position', 'kagawad' + kagawadNumber);
+    formData.append('name', name);
+    formData.append('contact', contact);
+    formData.append('email', email);
+    formData.append('status', 'active');
     
-    // Show success toast
-    showSuccessToast(`Kagawad ${kagawadNumber} information updated successfully!`);
+    // Send AJAX request
+    $.ajax({
+        url: 'skofficials/manage_officials.php?f=save_official',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(resp) {
+            if(resp.status === 'success') {
+                // Reload officials data
+                loadAllOfficials();
+                
+                // Show success toast
+                showSuccessToast(`Kagawad ${kagawadNumber} information updated successfully!`);
+            } else {
+                showErrorToast(resp.msg);
+            }
+        },
+        error: function(err) {
+            console.log(err);
+            showErrorToast('An error occurred while updating the information.');
+        },
+        complete: function() {
+            // Restore button state
+            saveBtn.html(originalText).prop('disabled', false);
+        }
+    });
 }
 
 // Toast Notification Functions
@@ -907,8 +927,72 @@ function showContactInfo(title, name, contact, email) {
     });
 }
 
+// Load all officials from database
+function loadAllOfficials() {
+    $.ajax({
+        url: 'skofficials/manage_officials.php?f=get_all_officials',
+        method: 'GET',
+        dataType: 'json',
+        success: function(resp) {
+            if(resp.status === 'success') {
+                const officials = resp.data;
+                
+                // Update Chairman
+                if(officials.chairman) {
+                    $('#chairman-name').text(officials.chairman.name);
+                    $('#chairman-contact').text(officials.chairman.contact);
+                    $('#chairman-email').text(officials.chairman.email || '');
+                }
+                
+                // Update Secretary
+                if(officials.secretary) {
+                    $('#secretary-name').text(officials.secretary.name);
+                    $('#secretary-contact').text(officials.secretary.contact);
+                    $('#secretary-email').text(officials.secretary.email || '');
+                }
+                
+                // Update Treasurer
+                if(officials.treasurer) {
+                    $('#treasurer-name').text(officials.treasurer.name);
+                    $('#treasurer-contact').text(officials.treasurer.contact);
+                    $('#treasurer-email').text(officials.treasurer.email || '');
+                }
+                
+                // Update Kagawads
+                for(let i = 1; i <= 4; i++) {
+                    const kagawadKey = 'kagawad' + i;
+                    if(officials[kagawadKey]) {
+                        $('#kagawad' + i + '-name').text(officials[kagawadKey].name);
+                        $('#kagawad' + i + '-contact').text(officials[kagawadKey].contact);
+                        
+                        // Also update the form values in kagawad modal
+                        $('#kagawad' + i + 'Name').val(officials[kagawadKey].name);
+                        $('#kagawad' + i + 'Contact').val(officials[kagawadKey].contact);
+                        $('#kagawad' + i + 'Email').val(officials[kagawadKey].email || '');
+                        
+                        // Add animation to updated card
+                        const targetCard = $(`.kagawad-grid .org-card:nth-child(${i})`);
+                        if (targetCard.length) {
+                            targetCard.addClass('card-updated');
+                            setTimeout(() => {
+                                targetCard.removeClass('card-updated');
+                            }, 600);
+                        }
+                    }
+                }
+            }
+        },
+        error: function(err) {
+            console.log('Error loading officials:', err);
+        }
+    });
+}
+
 // Add some interactive effects
 $(document).ready(function() {
+    // Load officials data when page loads
+    loadAllOfficials();
+    
     // Initialize tooltips
     $('[data-toggle="tooltip"]').tooltip();
     
