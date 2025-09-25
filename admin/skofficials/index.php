@@ -339,10 +339,12 @@
                         <i class="fas fa-crown"></i>
                     </div>
                     <div class="org-title">SK CHAIRMAN</div>
-                    <div class="org-name" id="chairman-name">Juan Dela Cruz</div>
+                    <div class="org-name" id="chairman-name">
+                        <i class="fas fa-spinner fa-spin mr-2"></i>Loading...
+                    </div>
                     <div class="org-contact">
-                        <i class="fas fa-phone mr-1"></i><span id="chairman-contact">0917-123-4567</span><br>
-                        <i class="fas fa-envelope mr-1"></i><span id="chairman-email">chairman@sk.gov.ph</span>
+                        <i class="fas fa-phone mr-1"></i><span id="chairman-contact">...</span><br>
+                        <i class="fas fa-envelope mr-1"></i><span id="chairman-email">...</span>
                     </div>
                 </div>
             </div>
@@ -356,10 +358,12 @@
                         <i class="fas fa-clipboard-list"></i>
                     </div>
                     <div class="org-title">SK SECRETARY</div>
-                    <div class="org-name" id="secretary-name">Maria Santos</div>
+                    <div class="org-name" id="secretary-name">
+                        <i class="fas fa-spinner fa-spin mr-2"></i>Loading...
+                    </div>
                     <div class="org-contact">
-                        <i class="fas fa-phone mr-1"></i><span id="secretary-contact">0918-234-5678</span><br>
-                        <i class="fas fa-envelope mr-1"></i><span id="secretary-email">secretary@sk.gov.ph</span>
+                        <i class="fas fa-phone mr-1"></i><span id="secretary-contact">...</span><br>
+                        <i class="fas fa-envelope mr-1"></i><span id="secretary-email">...</span>
                     </div>
                 </div>
 
@@ -368,10 +372,12 @@
                         <i class="fas fa-coins"></i>
                     </div>
                     <div class="org-title">SK TREASURER</div>
-                    <div class="org-name" id="treasurer-name">Pedro Garcia</div>
+                    <div class="org-name" id="treasurer-name">
+                        <i class="fas fa-spinner fa-spin mr-2"></i>Loading...
+                    </div>
                     <div class="org-contact">
-                        <i class="fas fa-phone mr-1"></i><span id="treasurer-contact">0919-345-6789</span><br>
-                        <i class="fas fa-envelope mr-1"></i><span id="treasurer-email">treasurer@sk.gov.ph</span>
+                        <i class="fas fa-phone mr-1"></i><span id="treasurer-contact">...</span><br>
+                        <i class="fas fa-envelope mr-1"></i><span id="treasurer-email">...</span>
                     </div>
                 </div>
             </div>
@@ -389,9 +395,11 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="org-title">KAGAWAD</div>
-                        <div class="org-name" id="kagawad1-name">Anna Reyes</div>
+                        <div class="org-name" id="kagawad1-name">
+                            <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                        </div>
                         <div class="org-contact">
-                            <i class="fas fa-phone mr-1"></i><span id="kagawad1-contact">0920-456-7890</span>
+                            <i class="fas fa-phone mr-1"></i><span id="kagawad1-contact">...</span>
                         </div>
                     </div>
 
@@ -400,9 +408,11 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="org-title">KAGAWAD</div>
-                        <div class="org-name" id="kagawad2-name">Carlos Lopez</div>
+                        <div class="org-name" id="kagawad2-name">
+                            <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                        </div>
                         <div class="org-contact">
-                            <i class="fas fa-phone mr-1"></i><span id="kagawad2-contact">0921-567-8901</span>
+                            <i class="fas fa-phone mr-1"></i><span id="kagawad2-contact">...</span>
                         </div>
                     </div>
 
@@ -411,9 +421,11 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="org-title">KAGAWAD</div>
-                        <div class="org-name" id="kagawad3-name">Sofia Martinez</div>
+                        <div class="org-name" id="kagawad3-name">
+                            <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                        </div>
                         <div class="org-contact">
-                            <i class="fas fa-phone mr-1"></i><span id="kagawad3-contact">0922-678-9012</span>
+                            <i class="fas fa-phone mr-1"></i><span id="kagawad3-contact">...</span>
                         </div>
                     </div>
 
@@ -422,9 +434,11 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div class="org-title">KAGAWAD</div>
-                        <div class="org-name" id="kagawad4-name">Miguel Torres</div>
+                        <div class="org-name" id="kagawad4-name">
+                            <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                        </div>
                         <div class="org-contact">
-                            <i class="fas fa-phone mr-1"></i><span id="kagawad4-contact">0923-789-0123</span>
+                            <i class="fas fa-phone mr-1"></i><span id="kagawad4-contact">...</span>
                         </div>
                     </div>
                 </div>
@@ -544,15 +558,15 @@
                                     <input type="hidden" name="kagawad_number" value="1">
                                     <div class="form-group">
                                         <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad1Name" name="name" value="Anna Reyes">
+                                        <input type="text" class="form-control" id="kagawad1Name" name="name" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad1Contact" name="contact" value="0920-456-7890">
+                                        <input type="text" class="form-control" id="kagawad1Contact" name="contact" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad1Email" name="email" value="anna@sk.gov.ph">
+                                        <input type="email" class="form-control" id="kagawad1Email" name="email" placeholder="Loading...">
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(1)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -573,15 +587,15 @@
                                     <input type="hidden" name="kagawad_number" value="2">
                                     <div class="form-group">
                                         <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad2Name" name="name" value="Carlos Lopez">
+                                        <input type="text" class="form-control" id="kagawad2Name" name="name" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad2Contact" name="contact" value="0921-567-8901">
+                                        <input type="text" class="form-control" id="kagawad2Contact" name="contact" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad2Email" name="email" value="carlos@sk.gov.ph">
+                                        <input type="email" class="form-control" id="kagawad2Email" name="email" placeholder="Loading...">
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(2)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -602,15 +616,15 @@
                                     <input type="hidden" name="kagawad_number" value="3">
                                     <div class="form-group">
                                         <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad3Name" name="name" value="Sofia Martinez">
+                                        <input type="text" class="form-control" id="kagawad3Name" name="name" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad3Contact" name="contact" value="0922-678-9012">
+                                        <input type="text" class="form-control" id="kagawad3Contact" name="contact" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad3Email" name="email" value="sofia@sk.gov.ph">
+                                        <input type="email" class="form-control" id="kagawad3Email" name="email" placeholder="Loading...">
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(3)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -631,15 +645,15 @@
                                     <input type="hidden" name="kagawad_number" value="4">
                                     <div class="form-group">
                                         <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad4Name" name="name" value="Miguel Torres">
+                                        <input type="text" class="form-control" id="kagawad4Name" name="name" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad4Contact" name="contact" value="0923-789-0123">
+                                        <input type="text" class="form-control" id="kagawad4Contact" name="contact" placeholder="Loading...">
                                     </div>
                                     <div class="form-group">
                                         <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad4Email" name="email" value="miguel@sk.gov.ph">
+                                        <input type="email" class="form-control" id="kagawad4Email" name="email" placeholder="Loading...">
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(4)">
                                         <i class="fas fa-save mr-1"></i>Update
