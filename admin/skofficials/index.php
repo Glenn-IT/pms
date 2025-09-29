@@ -1068,57 +1068,7 @@ function hideToast(toastId) {
     }, 400);
 }
 
-function showContactInfo(title, name, contact, email) {
-    const contactModal = $(`
-        <div class="modal fade" id="contactInfoModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-info text-white">
-                        <h5 class="modal-title">
-                            <i class="fas fa-address-card mr-2"></i>Contact Information
-                        </h5>
-                        <button type="button" class="close text-white" data-dismiss="modal">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <div class="mb-3">
-                            <i class="fas fa-user-circle" style="font-size: 3em; color: #17a2b8;"></i>
-                        </div>
-                        <h5 class="text-primary">${title}</h5>
-                        <h4 class="mb-3">${name}</h4>
-                        <p class="mb-2">
-                            <i class="fas fa-phone text-success mr-2"></i>
-                            <a href="tel:${contact}" class="text-decoration-none">${contact}</a>
-                        </p>
-                        ${email ? `
-                        <p class="mb-0">
-                            <i class="fas fa-envelope text-info mr-2"></i>
-                            <a href="mailto:${email}" class="text-decoration-none">${email}</a>
-                        </p>
-                        ` : ''}
-                    </div>
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal">
-                            <i class="fas fa-times mr-1"></i>Close
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `);
-    
-    // Remove any existing contact modal
-    $('#contactInfoModal').remove();
-    
-    $('body').append(contactModal);
-    $('#contactInfoModal').modal('show');
-    
-    // Remove modal from DOM when hidden
-    $('#contactInfoModal').on('hidden.bs.modal', function() {
-        $(this).remove();
-    });
-}
+// Contact info modal function removed - click functionality disabled
 
 // Load all officials from database
 function loadAllOfficials() {
@@ -1204,26 +1154,15 @@ $(document).ready(function() {
     // Initialize tooltips
     $('[data-toggle="tooltip"]').tooltip();
     
+    // Removed click functionality for org cards to prevent modal popup
     $('.org-card').hover(
         function() {
-            $(this).css('cursor', 'pointer');
+            $(this).css('cursor', 'default');
         },
         function() {
             $(this).css('cursor', 'default');
         }
     );
-    
-    $('.org-card').click(function() {
-        const title = $(this).find('.org-title').text();
-        const name = $(this).find('.org-name').text();
-        const contactElement = $(this).find('.org-contact span').first();
-        const emailElement = $(this).find('.org-contact span').eq(1);
-        
-        const contact = contactElement.length ? contactElement.text() : '';
-        const email = emailElement.length ? emailElement.text() : '';
-        
-        showContactInfo(title, name, contact, email);
-    });
     
     // Show a brief hint about the close button
     setTimeout(function() {
