@@ -276,6 +276,87 @@
         to { width: 0%; }
     }
     
+    /* Image Upload Styles */
+    .image-upload-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .image-preview {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .image-preview:hover {
+        transform: scale(1.05);
+    }
+    
+    .upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-placeholder:hover {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    
+    .org-image {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
+    }
+    
+    .org-image img {
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .org-image img:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    /* Kagawad Modal Image Styles */
+    .kagawad-image-preview {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+    }
+    
+    .kagawad-image-preview:hover {
+        transform: scale(1.05);
+    }
+    
+    .kagawad-upload-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        min-height: 100px;
+    }
+    
+    .kagawad-upload-placeholder:hover {
+        border-color: #007bff;
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    
     @media (max-width: 768px) {
         .org-level {
             flex-direction: column;
@@ -294,6 +375,11 @@
             right: 10px;
             left: 10px;
             min-width: auto;
+        }
+        
+        .org-image img {
+            width: 60px !important;
+            height: 60px !important;
         }
     }
 </style>
@@ -337,8 +423,11 @@
             <!-- Chairman Level -->
             <div class="org-level">
                 <div class="org-card chairman-card">
-                    <div class="org-icon">
-                        <i class="fas fa-crown"></i>
+                    <div class="org-image">
+                        <img id="chairman-image" src="" alt="Chairman" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                        <div id="chairman-icon" class="org-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
                     </div>
                     <div class="org-title">SK CHAIRMAN</div>
                     <div class="org-name" id="chairman-name">
@@ -356,8 +445,11 @@
             <!-- Secretary & Treasurer Level -->
             <div class="org-level">
                 <div class="org-card secretary-card">
-                    <div class="org-icon">
-                        <i class="fas fa-clipboard-list"></i>
+                    <div class="org-image">
+                        <img id="secretary-image" src="" alt="Secretary" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                        <div id="secretary-icon" class="org-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
                     </div>
                     <div class="org-title">SK SECRETARY</div>
                     <div class="org-name" id="secretary-name">
@@ -370,8 +462,11 @@
                 </div>
 
                 <div class="org-card treasurer-card">
-                    <div class="org-icon">
-                        <i class="fas fa-coins"></i>
+                    <div class="org-image">
+                        <img id="treasurer-image" src="" alt="Treasurer" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                        <div id="treasurer-icon" class="org-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
                     </div>
                     <div class="org-title">SK TREASURER</div>
                     <div class="org-name" id="treasurer-name">
@@ -393,8 +488,11 @@
                 </h4>
                 <div class="kagawad-grid">
                     <div class="org-card kagawad-card">
-                        <div class="org-icon">
-                            <i class="fas fa-user-tie"></i>
+                        <div class="org-image">
+                            <img id="kagawad1-image" src="" alt="Kagawad 1" style="display: none; width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                            <div id="kagawad1-icon" class="org-icon" style="font-size: 2.5em;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
                         </div>
                         <div class="org-title">KAGAWAD</div>
                         <div class="org-name" id="kagawad1-name">
@@ -406,8 +504,11 @@
                     </div>
 
                     <div class="org-card kagawad-card">
-                        <div class="org-icon">
-                            <i class="fas fa-user-tie"></i>
+                        <div class="org-image">
+                            <img id="kagawad2-image" src="" alt="Kagawad 2" style="display: none; width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                            <div id="kagawad2-icon" class="org-icon" style="font-size: 2.5em;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
                         </div>
                         <div class="org-title">KAGAWAD</div>
                         <div class="org-name" id="kagawad2-name">
@@ -419,8 +520,11 @@
                     </div>
 
                     <div class="org-card kagawad-card">
-                        <div class="org-icon">
-                            <i class="fas fa-user-tie"></i>
+                        <div class="org-image">
+                            <img id="kagawad3-image" src="" alt="Kagawad 3" style="display: none; width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                            <div id="kagawad3-icon" class="org-icon" style="font-size: 2.5em;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
                         </div>
                         <div class="org-title">KAGAWAD</div>
                         <div class="org-name" id="kagawad3-name">
@@ -432,8 +536,11 @@
                     </div>
 
                     <div class="org-card kagawad-card">
-                        <div class="org-icon">
-                            <i class="fas fa-user-tie"></i>
+                        <div class="org-image">
+                            <img id="kagawad4-image" src="" alt="Kagawad 4" style="display: none; width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 3px solid white; margin-bottom: 10px;">
+                            <div id="kagawad4-icon" class="org-icon" style="font-size: 2.5em;">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
                         </div>
                         <div class="org-title">KAGAWAD</div>
                         <div class="org-name" id="kagawad4-name">
@@ -462,29 +569,54 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="officialForm">
+                <form id="officialForm" enctype="multipart/form-data">
                     <input type="hidden" id="officialPosition" name="position">
                     
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="officialName"><i class="fas fa-user mr-1"></i>Full Name</label>
-                                <input type="text" class="form-control" id="officialName" name="name" required>
+                        <div class="col-md-4">
+                            <div class="form-group text-center">
+                                <label><i class="fas fa-camera mr-1"></i>Profile Picture</label>
+                                <div class="image-upload-container">
+                                    <div class="image-preview" id="imagePreview">
+                                        <img id="previewImg" src="" alt="Preview" style="display: none; width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #ddd;">
+                                        <div class="upload-placeholder" id="uploadPlaceholder">
+                                            <i class="fas fa-user-circle" style="font-size: 8em; color: #ddd;"></i>
+                                            <p class="mt-2 text-muted">Click to upload image</p>
+                                        </div>
+                                    </div>
+                                    <input type="file" class="form-control-file mt-2" id="officialImage" name="image" accept="image/*" style="display: none;">
+                                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="$('#officialImage').click()">
+                                        <i class="fas fa-upload mr-1"></i>Choose Image
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm mt-2" id="removeImageBtn" onclick="removeImage()" style="display: none;">
+                                        <i class="fas fa-trash mr-1"></i>Remove
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="officialContact"><i class="fas fa-phone mr-1"></i>Contact Number</label>
-                                <input type="text" class="form-control" id="officialContact" name="contact" required>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="officialName"><i class="fas fa-user mr-1"></i>Full Name</label>
+                                        <input type="text" class="form-control" id="officialName" name="name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="officialContact"><i class="fas fa-phone mr-1"></i>Contact Number</label>
+                                        <input type="text" class="form-control" id="officialContact" name="contact" required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="officialEmail"><i class="fas fa-envelope mr-1"></i>Email Address</label>
-                                <input type="email" class="form-control" id="officialEmail" name="email">
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="officialEmail"><i class="fas fa-envelope mr-1"></i>Email Address</label>
+                                        <input type="email" class="form-control" id="officialEmail" name="email">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -523,19 +655,38 @@
                                 <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 1</h6>
                             </div>
                             <div class="card-body">
-                                <form id="kagawadForm1">
+                                <form id="kagawadForm1" enctype="multipart/form-data">
                                     <input type="hidden" name="kagawad_number" value="1">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad1Name" name="name" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad1Contact" name="contact" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad1Email" name="email" placeholder="Loading...">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label>Profile Picture</label>
+                                                <div class="kagawad-image-preview" id="kagawadImagePreview1">
+                                                    <img id="kagawadPreviewImg1" src="" alt="Preview" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                                                    <div class="kagawad-upload-placeholder" id="kagawadUploadPlaceholder1">
+                                                        <i class="fas fa-user-circle" style="font-size: 4em; color: #ddd;"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="form-control-file mt-1" id="kagawadImage1" name="image" accept="image/*" style="display: none;">
+                                                <button type="button" class="btn btn-outline-primary btn-sm mt-1" onclick="$('#kagawadImage1').click()">
+                                                    <i class="fas fa-upload mr-1"></i>Choose
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Full Name</label>
+                                                <input type="text" class="form-control" id="kagawad1Name" name="name" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" id="kagawad1Contact" name="contact" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email Address</label>
+                                                <input type="email" class="form-control" id="kagawad1Email" name="email" placeholder="Loading...">
+                                            </div>
+                                        </div>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(1)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -552,19 +703,38 @@
                                 <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 2</h6>
                             </div>
                             <div class="card-body">
-                                <form id="kagawadForm2">
+                                <form id="kagawadForm2" enctype="multipart/form-data">
                                     <input type="hidden" name="kagawad_number" value="2">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad2Name" name="name" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad2Contact" name="contact" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad2Email" name="email" placeholder="Loading...">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label>Profile Picture</label>
+                                                <div class="kagawad-image-preview" id="kagawadImagePreview2">
+                                                    <img id="kagawadPreviewImg2" src="" alt="Preview" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                                                    <div class="kagawad-upload-placeholder" id="kagawadUploadPlaceholder2">
+                                                        <i class="fas fa-user-circle" style="font-size: 4em; color: #ddd;"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="form-control-file mt-1" id="kagawadImage2" name="image" accept="image/*" style="display: none;">
+                                                <button type="button" class="btn btn-outline-primary btn-sm mt-1" onclick="$('#kagawadImage2').click()">
+                                                    <i class="fas fa-upload mr-1"></i>Choose
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Full Name</label>
+                                                <input type="text" class="form-control" id="kagawad2Name" name="name" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" id="kagawad2Contact" name="contact" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email Address</label>
+                                                <input type="email" class="form-control" id="kagawad2Email" name="email" placeholder="Loading...">
+                                            </div>
+                                        </div>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(2)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -581,19 +751,38 @@
                                 <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 3</h6>
                             </div>
                             <div class="card-body">
-                                <form id="kagawadForm3">
+                                <form id="kagawadForm3" enctype="multipart/form-data">
                                     <input type="hidden" name="kagawad_number" value="3">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad3Name" name="name" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad3Contact" name="contact" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad3Email" name="email" placeholder="Loading...">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label>Profile Picture</label>
+                                                <div class="kagawad-image-preview" id="kagawadImagePreview3">
+                                                    <img id="kagawadPreviewImg3" src="" alt="Preview" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                                                    <div class="kagawad-upload-placeholder" id="kagawadUploadPlaceholder3">
+                                                        <i class="fas fa-user-circle" style="font-size: 4em; color: #ddd;"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="form-control-file mt-1" id="kagawadImage3" name="image" accept="image/*" style="display: none;">
+                                                <button type="button" class="btn btn-outline-primary btn-sm mt-1" onclick="$('#kagawadImage3').click()">
+                                                    <i class="fas fa-upload mr-1"></i>Choose
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Full Name</label>
+                                                <input type="text" class="form-control" id="kagawad3Name" name="name" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" id="kagawad3Contact" name="contact" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email Address</label>
+                                                <input type="email" class="form-control" id="kagawad3Email" name="email" placeholder="Loading...">
+                                            </div>
+                                        </div>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(3)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -610,19 +799,38 @@
                                 <h6 class="mb-0"><i class="fas fa-user-tie mr-1"></i>Kagawad 4</h6>
                             </div>
                             <div class="card-body">
-                                <form id="kagawadForm4">
+                                <form id="kagawadForm4" enctype="multipart/form-data">
                                     <input type="hidden" name="kagawad_number" value="4">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control" id="kagawad4Name" name="name" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="text" class="form-control" id="kagawad4Contact" name="contact" placeholder="Loading...">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email Address</label>
-                                        <input type="email" class="form-control" id="kagawad4Email" name="email" placeholder="Loading...">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            <div class="form-group">
+                                                <label>Profile Picture</label>
+                                                <div class="kagawad-image-preview" id="kagawadImagePreview4">
+                                                    <img id="kagawadPreviewImg4" src="" alt="Preview" style="display: none; width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                                                    <div class="kagawad-upload-placeholder" id="kagawadUploadPlaceholder4">
+                                                        <i class="fas fa-user-circle" style="font-size: 4em; color: #ddd;"></i>
+                                                    </div>
+                                                </div>
+                                                <input type="file" class="form-control-file mt-1" id="kagawadImage4" name="image" accept="image/*" style="display: none;">
+                                                <button type="button" class="btn btn-outline-primary btn-sm mt-1" onclick="$('#kagawadImage4').click()">
+                                                    <i class="fas fa-upload mr-1"></i>Choose
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Full Name</label>
+                                                <input type="text" class="form-control" id="kagawad4Name" name="name" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Contact Number</label>
+                                                <input type="text" class="form-control" id="kagawad4Contact" name="contact" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Email Address</label>
+                                                <input type="email" class="form-control" id="kagawad4Email" name="email" placeholder="Loading...">
+                                            </div>
+                                        </div>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm" onclick="saveKagawad(4)">
                                         <i class="fas fa-save mr-1"></i>Update
@@ -652,6 +860,9 @@ function manage_official(position) {
     $('#officialForm')[0].reset();
     $('#officialPosition').val(position);
     
+    // Reset image preview
+    resetImagePreview();
+    
     // Load current data from database
     $.ajax({
         url: 'skofficials/manage_officials.php?f=get_official&position=' + position,
@@ -663,6 +874,15 @@ function manage_official(position) {
                 $('#officialName').val(data.name);
                 $('#officialContact').val(data.contact);
                 $('#officialEmail').val(data.email);
+                
+                // Load existing image if available
+                if(data.image) {
+                    let fullPath = data.image.startsWith('uploads/') ? '/pms/' + data.image : '/pms/uploads/sk_officials/' + data.image;
+                    // console.log('Loading modal image: ' + fullPath); // Debug log
+                    $('#previewImg').attr('src', fullPath).show();
+                    $('#uploadPlaceholder').hide();
+                    $('#removeImageBtn').show();
+                }
             }
         },
         error: function(err) {
@@ -718,8 +938,9 @@ function saveOfficial() {
                 // Show success toast
                 showSuccessToast(resp.msg);
                 
-                // Reset form
+                // Reset form and image preview
                 form[0].reset();
+                resetImagePreview();
             } else {
                 showErrorToast(resp.msg);
             }
@@ -736,12 +957,13 @@ function saveOfficial() {
 }
 
 function saveKagawad(kagawadNumber) {
-    const name = $('#kagawad' + kagawadNumber + 'Name').val();
-    const contact = $('#kagawad' + kagawadNumber + 'Contact').val();
-    const email = $('#kagawad' + kagawadNumber + 'Email').val();
+    const form = $('#kagawadForm' + kagawadNumber);
+    const formData = new FormData(form[0]);
+    formData.append('position', 'kagawad' + kagawadNumber);
+    formData.append('status', 'active');
     
     // Validate required fields
-    if (!name || !contact) {
+    if (!formData.get('name') || !formData.get('contact')) {
         showErrorToast(`Please fill in Name and Contact for Kagawad ${kagawadNumber}`);
         return;
     }
@@ -750,14 +972,6 @@ function saveKagawad(kagawadNumber) {
     const saveBtn = $(`#kagawadForm${kagawadNumber} .btn-primary`);
     const originalText = saveBtn.html();
     saveBtn.html('<i class="fas fa-spinner fa-spin mr-1"></i>Updating...').prop('disabled', true);
-    
-    // Prepare data
-    const formData = new FormData();
-    formData.append('position', 'kagawad' + kagawadNumber);
-    formData.append('name', name);
-    formData.append('contact', contact);
-    formData.append('email', email);
-    formData.append('status', 'active');
     
     // Send AJAX request
     $.ajax({
@@ -921,6 +1135,7 @@ function loadAllOfficials() {
                     $('#chairman-name').text(officials.chairman.name);
                     $('#chairman-contact').text(officials.chairman.contact);
                     $('#chairman-email').text(officials.chairman.email || '');
+                    updateOfficialImage('chairman', officials.chairman.image);
                 }
                 
                 // Update Secretary
@@ -928,6 +1143,7 @@ function loadAllOfficials() {
                     $('#secretary-name').text(officials.secretary.name);
                     $('#secretary-contact').text(officials.secretary.contact);
                     $('#secretary-email').text(officials.secretary.email || '');
+                    updateOfficialImage('secretary', officials.secretary.image);
                 }
                 
                 // Update Treasurer
@@ -935,6 +1151,7 @@ function loadAllOfficials() {
                     $('#treasurer-name').text(officials.treasurer.name);
                     $('#treasurer-contact').text(officials.treasurer.contact);
                     $('#treasurer-email').text(officials.treasurer.email || '');
+                    updateOfficialImage('treasurer', officials.treasurer.image);
                 }
                 
                 // Update Kagawads
@@ -943,11 +1160,23 @@ function loadAllOfficials() {
                     if(officials[kagawadKey]) {
                         $('#kagawad' + i + '-name').text(officials[kagawadKey].name);
                         $('#kagawad' + i + '-contact').text(officials[kagawadKey].contact);
+                        updateOfficialImage('kagawad' + i, officials[kagawadKey].image);
                         
                         // Also update the form values in kagawad modal
                         $('#kagawad' + i + 'Name').val(officials[kagawadKey].name);
                         $('#kagawad' + i + 'Contact').val(officials[kagawadKey].contact);
                         $('#kagawad' + i + 'Email').val(officials[kagawadKey].email || '');
+                        
+                        // Update kagawad image in modal
+                        if(officials[kagawadKey].image) {
+                            let fullPath = officials[kagawadKey].image.startsWith('uploads/') ? '/pms/' + officials[kagawadKey].image : '/pms/uploads/sk_officials/' + officials[kagawadKey].image;
+                            // console.log('Loading kagawad ' + i + ' modal image: ' + fullPath); // Debug log
+                            $('#kagawadPreviewImg' + i).attr('src', fullPath).show();
+                            $('#kagawadUploadPlaceholder' + i).hide();
+                        } else {
+                            $('#kagawadPreviewImg' + i).hide();
+                            $('#kagawadUploadPlaceholder' + i).show();
+                        }
                         
                         // Add animation to updated card
                         const targetCard = $(`.kagawad-grid .org-card:nth-child(${i})`);
@@ -1005,5 +1234,123 @@ $(document).ready(function() {
             }, 3000);
         }
     }, 1000);
+    
+    // Image upload preview functionality
+    $('#officialImage').change(function() {
+        const file = this.files[0];
+        if (file) {
+            // Validate file type
+            if (!file.type.match('image.*')) {
+                showErrorToast('Please select a valid image file.');
+                return;
+            }
+            
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showErrorToast('Image size must be less than 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#previewImg').attr('src', e.target.result).show();
+                $('#uploadPlaceholder').hide();
+                $('#removeImageBtn').show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Make image preview clickable
+    $('#imagePreview').click(function() {
+        $('#officialImage').click();
+    });
+    
+    // Kagawad image upload handlers
+    for(let i = 1; i <= 4; i++) {
+        $(`#kagawadImage${i}`).change(function() {
+            const file = this.files[0];
+            if (file) {
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    showErrorToast('Please select a valid image file.');
+                    return;
+                }
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showErrorToast('Image size must be less than 5MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $(`#kagawadPreviewImg${i}`).attr('src', e.target.result).show();
+                    $(`#kagawadUploadPlaceholder${i}`).hide();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Make kagawad image preview clickable
+        $(`#kagawadImagePreview${i}`).click(function() {
+            $(`#kagawadImage${i}`).click();
+        });
+    }
 });
+
+// Helper function to update official images in the organizational chart
+function updateOfficialImage(position, imagePath) {
+    const imageElement = $('#' + position + '-image');
+    const iconElement = $('#' + position + '-icon');
+    
+    if (imagePath) {
+        // Use absolute path from website root
+        let fullPath;
+        if (imagePath.startsWith('uploads/')) {
+            fullPath = '/pms/' + imagePath;
+        } else if (imagePath.startsWith('/')) {
+            fullPath = imagePath;
+        } else {
+            fullPath = '/pms/uploads/sk_officials/' + imagePath;
+        }
+        
+        // console.log('Loading image for ' + position + ': ' + fullPath); // Debug log
+        
+        imageElement.attr('src', fullPath)
+            .show()
+            .on('error', function() {
+                console.error('Failed to load image: ' + fullPath);
+                // Try alternative path
+                let altPath = '../../' + (imagePath.startsWith('uploads/') ? imagePath : 'uploads/sk_officials/' + imagePath);
+                // console.log('Trying alternative path: ' + altPath);
+                $(this).attr('src', altPath).one('error', function() {
+                    console.error('Alternative path also failed: ' + altPath);
+                    // Fallback to icon if both paths fail
+                    $(this).hide();
+                    iconElement.show();
+                });
+            })
+            .on('load', function() {
+                // console.log('Successfully loaded image: ' + fullPath);
+                iconElement.hide();
+            });
+    } else {
+        imageElement.hide();
+        iconElement.show();
+    }
+}
+
+// Helper function to reset image preview in modal
+function resetImagePreview() {
+    $('#previewImg').hide();
+    $('#uploadPlaceholder').show();
+    $('#removeImageBtn').hide();
+    $('#officialImage').val('');
+}
+
+// Function to remove selected image
+function removeImage() {
+    resetImagePreview();
+}
 </script>

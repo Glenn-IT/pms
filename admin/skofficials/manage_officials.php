@@ -32,6 +32,15 @@ class SKOfficials {
                 return json_encode(array('status' => 'error', 'msg' => 'Invalid position.'));
             }
             
+            // Handle image upload
+            $image_path = null;
+            if(isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+                $image_path = $this->handleImageUpload($_FILES['image'], $position);
+                if($image_path === false) {
+                    return json_encode(array('status' => 'error', 'msg' => 'Failed to upload image. Please check file type and size.'));
+                }
+            }
+            
             // Escape data to prevent SQL injection
             $name = $this->conn->real_escape_string($name);
             $contact = $this->conn->real_escape_string($contact);
@@ -48,6 +57,9 @@ class SKOfficials {
             $data .= ", email = " . ($email ? "'$email'" : "NULL");
             $data .= ", age = " . ($age !== null ? $age : "NULL");
             $data .= ", address = " . ($address ? "'$address'" : "NULL");
+            if($image_path) {
+                $data .= ", image = '$image_path' ";
+            }
             $data .= ", start_date = " . ($start_date ? "'$start_date'" : "NULL");
             $data .= ", status = '$status' ";
             
@@ -137,6 +149,53 @@ class SKOfficials {
             return json_encode(array('status' => 'success', 'msg' => 'SK Official removed successfully.'));
         } else {
             return json_encode(array('status' => 'error', 'msg' => 'Failed to remove official: ' . $this->conn->error));
+        }
+    }
+    
+    private function handleImageUpload($file, $position) {
+        $upload_dir = '../../uploads/sk_officials/';
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        
+        // Validate file type
+        $allowed_types = array('image/jpeg', 'image/jpg', 'image/png', 'image/gif');
+        if (!in_array($file['type'], $allowed_types)) {
+            return false;
+        }
+        
+        // Validate file size (max 5MB)
+        if ($file['size'] > 5 * 1024 * 1024) {
+            return false;
+        }
+        
+        // Get file extension
+        $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        
+        // Generate unique filename
+        $filename = $position . '_' . time() . '.' . $file_extension;
+        $upload_path = $upload_dir . $filename;
+        
+        // Delete old image if exists
+        $this->deleteOldImage($position);
+        
+        // Move uploaded file
+        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            return 'uploads/sk_officials/' . $filename;
+        }
+        
+        return false;
+    }
+    
+    private function deleteOldImage($position) {
+        $qry = $this->conn->query("SELECT image FROM `sk_officials` WHERE `position` = '$position'");
+        if($qry && $qry->num_rows > 0) {
+            $row = $qry->fetch_assoc();
+            if($row['image'] && file_exists('../../' . $row['image'])) {
+                unlink('../../' . $row['image']);
+            }
         }
     }
     
