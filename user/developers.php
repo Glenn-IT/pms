@@ -9,7 +9,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title><?php echo $_settings->info('name') ?> - SK Officials</title>
+    <title><?php echo $_settings->info('name') ?> - Developers</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php echo base_url ?>plugins/fontawesome-free/css/all.min.css">
     <!-- Bootstrap Icons -->
@@ -196,157 +196,178 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 2rem;
         }
         
-        /* SK Officials Organizational Chart */
-        .org-chart {
+        /* Team Stats */
+        .team-stats {
+            background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
             text-align: center;
-            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0,31,63,0.2);
         }
         
-        .org-level {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
+        .team-stats h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
         }
         
-        .org-card {
-            background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
+        .stat-item h5 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .stat-item small {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Developer Cards */
+        .dev-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dev-card {
+            background: white;
             border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 32px rgba(0,31,63,0.2);
-            color: white;
-            min-width: 200px;
-            max-width: 250px;
-            transition: all 0.3s ease;
-            position: relative;
             overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            transition: all 0.3s;
         }
         
-        .org-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,31,63,0.3);
+        .dev-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
         }
         
-        .org-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-            pointer-events: none;
+        .dev-card.kim {
+            border-top: 5px solid #17a2b8;
         }
         
-        .chairman-card {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            min-width: 280px;
-            max-width: 300px;
+        .dev-card.cristel {
+            border-top: 5px solid #ffc107;
         }
         
-        .secretary-card {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        .dev-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem;
+            text-align: center;
         }
         
-        .treasurer-card {
-            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-        }
-        
-        .kagawad-card {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-            min-width: 180px;
-            max-width: 220px;
-        }
-        
-        .org-icon {
-            width: 80px;
-            height: 80px;
+        .dev-avatar {
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             margin: 0 auto 1rem;
-            border: 3px solid rgba(255,255,255,0.3);
             overflow: hidden;
-            background: rgba(255,255,255,0.1);
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
-        .org-icon img {
+        .dev-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .org-icon i {
-            font-size: 2.5rem;
-            line-height: 74px;
-            color: white;
+        .dev-avatar i {
+            font-size: 3rem;
+            line-height: 92px;
+            color: #001f3f;
         }
         
-        .org-title {
-            font-size: 1.3em;
+        .dev-name {
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.75rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #001f3f;
+            margin-bottom: 0.5rem;
         }
         
-        .org-name {
-            font-size: 1.1em;
+        .dev-body {
+            padding: 2rem;
+        }
+        
+        .dev-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .dev-detail i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .dev-detail span {
+            flex: 1;
+            color: #333;
+        }
+        
+        /* Technologies Section */
+        .tech-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .tech-section h4 {
+            color: #001f3f;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tech-item {
+            padding: 1rem;
+        }
+        
+        .tech-item i {
+            font-size: 3rem;
             margin-bottom: 0.5rem;
+        }
+        
+        .tech-item small {
+            display: block;
+            color: #666;
             font-weight: 600;
         }
         
-        .org-contact {
-            font-size: 0.85em;
-            opacity: 0.9;
-            margin-bottom: 0.25rem;
-        }
-        
-        .org-email {
-            font-size: 0.8em;
-            opacity: 0.8;
-            word-break: break-all;
-        }
-        
-        .connection-line {
-            height: 3px;
-            background: linear-gradient(to right, transparent, #001f3f, transparent);
-            margin: 1.5rem auto;
-            width: 80%;
-            position: relative;
-        }
-        
-        .section-title {
+        /* Quote Section */
+        .quote-section {
+            background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+            border-left: 4px solid #001f3f;
+            border-radius: 8px;
+            padding: 1.5rem;
             text-align: center;
-            color: #001f3f;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            position: relative;
-            padding-bottom: 1rem;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, #001f3f, #003d7a);
-            border-radius: 2px;
-        }
-        
-        .loading-spinner {
-            text-align: center;
-            padding: 3rem;
-            color: #001f3f;
-        }
-        
-        .loading-spinner i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .quote-section p {
+            color: #666;
+            font-style: italic;
+            margin: 0;
+            font-size: 1rem;
         }
         
         /* Footer */
@@ -454,14 +475,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 padding: 1.5rem 1rem;
             }
             
-            .org-level {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .org-card {
-                max-width: 100%;
-                width: 100%;
+            .dev-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -498,10 +513,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="sk_officials.php" class="active"><i class="fas fa-user-tie"></i> SK Officials</a></li>
+                <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
                 <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
                 <li><a href="about_us.php"><i class="fas fa-info-circle"></i> About Us</a></li>
-                <li><a href="developers.php"><i class="fas fa-code"></i> Developers</a></li>
+                <li><a href="developers.php" class="active"><i class="fas fa-code"></i> Developers</a></li>
             </ul>
             
             <div class="user-menu">
@@ -522,18 +537,123 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     <!-- Main Panel -->
     <div class="main-panel">
         <div class="panel-header">
-            <h2><i class="fas fa-user-tie"></i> SK Officials</h2>
+            <h2><i class="fas fa-code"></i> Development Team</h2>
             <a href="index.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
         </div>
         
         <div class="panel-body">
-            <div class="org-chart" id="skOfficialsChart">
-                <div class="loading-spinner">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading SK Officials...</p>
+            <!-- Team Stats -->
+            <div class="team-stats">
+                <h4><i class="fas fa-users-cog"></i> Our Development Team</h4>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <h5>2</h5>
+                        <small>Developers</small>
+                    </div>
+                    <div class="stat-item">
+                        <h5>BSIT</h5>
+                        <small>Program</small>
+                    </div>
+                    <div class="stat-item">
+                        <h5>CSU</h5>
+                        <small>University</small>
+                    </div>
                 </div>
+            </div>
+            
+            <!-- Developer Cards -->
+            <div class="dev-grid">
+                <!-- Kimberly Agustin -->
+                <div class="dev-card kim">
+                    <div class="dev-header">
+                        <div class="dev-avatar">
+                            <img src="<?= base_url ?>Kim.jpg" alt="Kimberly Agustin" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <i class="fas fa-user" style="display:none;"></i>
+                        </div>
+                        <div class="dev-name">Kimberly Agustin</div>
+                    </div>
+                    <div class="dev-body">
+                        <div class="dev-detail">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                            <span>BS Information Technology</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-university text-success"></i>
+                            <span>CSU - Piat Campus</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-phone text-info"></i>
+                            <span>09359505884</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-envelope text-danger"></i>
+                            <span>agustinkimberly27@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cristel Pulig -->
+                <div class="dev-card cristel">
+                    <div class="dev-header">
+                        <div class="dev-avatar">
+                            <img src="<?= base_url ?>Cristel.jpg" alt="Cristel Pulig" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <i class="fas fa-user" style="display:none;"></i>
+                        </div>
+                        <div class="dev-name">Cristel Pulig</div>
+                    </div>
+                    <div class="dev-body">
+                        <div class="dev-detail">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                            <span>BS Information Technology</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-university text-success"></i>
+                            <span>CSU - Piat Campus</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-phone text-info"></i>
+                            <span>09674513768</span>
+                        </div>
+                        <div class="dev-detail">
+                            <i class="fas fa-envelope text-danger"></i>
+                            <span>cristelpulig770@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technologies Used -->
+            <div class="tech-section">
+                <h4><i class="fas fa-tools"></i> Technologies Used</h4>
+                <div class="tech-grid">
+                    <div class="tech-item">
+                        <i class="fab fa-php text-primary"></i>
+                        <small>PHP</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-js-square text-warning"></i>
+                        <small>JavaScript</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fab fa-bootstrap" style="color: #7952b3;"></i>
+                        <small>Bootstrap</small>
+                    </div>
+                    <div class="tech-item">
+                        <i class="fas fa-database text-success"></i>
+                        <small>MySQL</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quote -->
+            <div class="quote-section">
+                <p>
+                    <i class="fas fa-quote-left"></i>
+                    Dedicated to creating innovative solutions for community management and youth engagement.
+                    <i class="fas fa-quote-right"></i>
+                </p>
             </div>
         </div>
     </div>
@@ -569,7 +689,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 
     $(document).ready(function(){
         end_loader();
-        loadSKOfficials();
     });
 
     function logout(){
@@ -587,125 +706,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     
     function toggleMobileMenu(){
         $('#navMenu').toggleClass('active');
-    }
-    
-    function loadSKOfficials() {
-        $.ajax({
-            url: '<?= base_url ?>admin/skofficials/manage_officials.php?f=get_all_officials',
-            method: 'GET',
-            dataType: 'json',
-            success: function(resp) {
-                if(resp.status === 'success') {
-                    displaySKOfficials(resp.data);
-                } else {
-                    $('#skOfficialsChart').html(`
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i> 
-                            No SK Officials data available at the moment.
-                        </div>
-                    `);
-                }
-            },
-            error: function() {
-                $('#skOfficialsChart').html(`
-                    <div class="alert alert-danger">
-                        <i class="fas fa-times-circle"></i> 
-                        Failed to load SK Officials data.
-                    </div>
-                `);
-            }
-        });
-    }
-    
-    function displaySKOfficials(officials) {
-        let html = '';
-        
-        // Chairman Section
-        if(officials.chairman) {
-            html += `
-                <div class="section-title">
-                    <i class="fas fa-crown"></i> SK Chairman
-                </div>
-                <div class="org-level">
-                    ${renderOfficialCard(officials.chairman, 'chairman', 'SK Chairman')}
-                </div>
-                <div class="connection-line"></div>
-            `;
-        }
-        
-        // Secretary and Treasurer
-        html += `
-            <div class="section-title">
-                <i class="fas fa-users"></i> Executive Officers
-            </div>
-            <div class="org-level">
-        `;
-        
-        if(officials.secretary) {
-            html += renderOfficialCard(officials.secretary, 'secretary', 'Secretary');
-        }
-        
-        if(officials.treasurer) {
-            html += renderOfficialCard(officials.treasurer, 'treasurer', 'Treasurer');
-        }
-        
-        html += '</div><div class="connection-line"></div>';
-        
-        // Kagawads
-        const kagawadCount = [1, 2, 3, 4].filter(i => officials['kagawad' + i]).length;
-        
-        if(kagawadCount > 0) {
-            html += `
-                <div class="section-title">
-                    <i class="fas fa-user-friends"></i> SK Kagawads
-                </div>
-                <div class="org-level">
-            `;
-            
-            for(let i = 1; i <= 4; i++) {
-                if(officials['kagawad' + i]) {
-                    html += renderOfficialCard(officials['kagawad' + i], 'kagawad', 'Kagawad ' + i);
-                }
-            }
-            
-            html += '</div>';
-        }
-        
-        $('#skOfficialsChart').html(html);
-    }
-    
-    function renderOfficialCard(official, type, title) {
-        const imageUrl = official.image 
-            ? `<?= base_url ?>${official.image.startsWith('uploads/') ? official.image : 'uploads/sk_officials/' + official.image}`
-            : null;
-        
-        let iconClass = 'fa-user';
-        if(type === 'chairman') iconClass = 'fa-crown';
-        else if(type === 'secretary') iconClass = 'fa-file-alt';
-        else if(type === 'treasurer') iconClass = 'fa-coins';
-        else if(type === 'kagawad') iconClass = 'fa-user-friends';
-        
-        return `
-            <div class="org-card ${type}-card">
-                <div class="org-icon">
-                    ${imageUrl 
-                        ? `<img src="${imageUrl}" alt="${official.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                           <i class="fas ${iconClass}" style="display:none;"></i>`
-                        : `<i class="fas ${iconClass}"></i>`
-                    }
-                </div>
-                <div class="org-title">${title}</div>
-                <div class="org-name">${official.name}</div>
-                <div class="org-contact">
-                    <i class="fas fa-phone"></i> ${official.contact}
-                </div>
-                ${official.email ? `
-                    <div class="org-email">
-                        <i class="fas fa-envelope"></i> ${official.email}
-                    </div>
-                ` : ''}
-            </div>
-        `;
     }
 </script>
 

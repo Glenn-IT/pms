@@ -9,7 +9,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title><?php echo $_settings->info('name') ?> - SK Officials</title>
+    <title><?php echo $_settings->info('name') ?> - About Us</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php echo base_url ?>plugins/fontawesome-free/css/all.min.css">
     <!-- Bootstrap Icons -->
@@ -196,157 +196,130 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 2rem;
         }
         
-        /* SK Officials Organizational Chart */
-        .org-chart {
-            text-align: center;
-            padding: 1rem;
-        }
-        
-        .org-level {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            gap: 1.5rem;
-        }
-        
-        .org-card {
+        /* About Us Specific Styles */
+        .mission-vision-card {
             background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
+            color: white;
             border-radius: 15px;
-            padding: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
             box-shadow: 0 8px 32px rgba(0,31,63,0.2);
-            color: white;
-            min-width: 200px;
-            max-width: 250px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
         
-        .org-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(0,31,63,0.3);
+        .mission-vision-card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
-        .org-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-            pointer-events: none;
+        .mission-vision-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
         }
         
-        .chairman-card {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            min-width: 280px;
-            max-width: 300px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        .secretary-card {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
         
-        .treasurer-card {
-            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
-        .kagawad-card {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-            min-width: 180px;
-            max-width: 220px;
-        }
-        
-        .org-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            border: 3px solid rgba(255,255,255,0.3);
-            overflow: hidden;
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .org-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .org-icon i {
+        .stat-number {
             font-size: 2.5rem;
-            line-height: 74px;
-            color: white;
-        }
-        
-        .org-title {
-            font-size: 1.3em;
             font-weight: 700;
-            margin-bottom: 0.75rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #001f3f;
+            margin-bottom: 0.5rem;
         }
         
-        .org-name {
-            font-size: 1.1em;
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border-left: 4px solid #007bff;
+            transition: all 0.3s;
+        }
+        
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,123,255,0.2);
+        }
+        
+        .feature-box i {
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-box h5 {
+            color: #001f3f;
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
         
-        .org-contact {
-            font-size: 0.85em;
-            opacity: 0.9;
-            margin-bottom: 0.25rem;
+        .feature-box p {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0;
         }
         
-        .org-email {
-            font-size: 0.8em;
-            opacity: 0.8;
-            word-break: break-all;
-        }
-        
-        .connection-line {
-            height: 3px;
-            background: linear-gradient(to right, transparent, #001f3f, transparent);
-            margin: 1.5rem auto;
-            width: 80%;
-            position: relative;
-        }
-        
-        .section-title {
+        .contact-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 2rem;
             text-align: center;
+        }
+        
+        .contact-card h5 {
             color: #001f3f;
-            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
             font-weight: 700;
-            margin-bottom: 2rem;
-            position: relative;
-            padding-bottom: 1rem;
         }
         
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, #001f3f, #003d7a);
-            border-radius: 2px;
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
         }
         
-        .loading-spinner {
-            text-align: center;
-            padding: 3rem;
-            color: #001f3f;
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #333;
         }
         
-        .loading-spinner i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .contact-item i {
+            font-size: 1.2rem;
         }
         
         /* Footer */
@@ -453,16 +426,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             .panel-body {
                 padding: 1.5rem 1rem;
             }
-            
-            .org-level {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .org-card {
-                max-width: 100%;
-                width: 100%;
-            }
         }
         
         @media (max-width: 480px) {
@@ -498,9 +461,9 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="sk_officials.php" class="active"><i class="fas fa-user-tie"></i> SK Officials</a></li>
+                <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
                 <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
-                <li><a href="about_us.php"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="about_us.php" class="active"><i class="fas fa-info-circle"></i> About Us</a></li>
                 <li><a href="developers.php"><i class="fas fa-code"></i> Developers</a></li>
             </ul>
             
@@ -522,17 +485,92 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     <!-- Main Panel -->
     <div class="main-panel">
         <div class="panel-header">
-            <h2><i class="fas fa-user-tie"></i> SK Officials</h2>
+            <h2><i class="fas fa-info-circle"></i> About Us</h2>
             <a href="index.php" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </a>
         </div>
         
         <div class="panel-body">
-            <div class="org-chart" id="skOfficialsChart">
-                <div class="loading-spinner">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <p>Loading SK Officials...</p>
+            <!-- Mission & Vision -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="mission-vision-card">
+                        <h4><i class="fas fa-bullseye"></i> Our Mission</h4>
+                        <p>To empower the youth of our community through innovative programs, leadership development, and technology-driven solutions that foster growth, engagement, and positive change.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mission-vision-card">
+                        <h4><i class="fas fa-eye"></i> Our Vision</h4>
+                        <p>A vibrant, connected community where every young person has the opportunity to thrive, lead, and contribute to a better future for all.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Youth Served</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Programs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+            </div>
+            
+            <!-- Key Features -->
+            <h3 style="color: #001f3f; margin-bottom: 1.5rem; text-align: center;">
+                <i class="fas fa-star"></i> What We Offer
+            </h3>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <i class="fas fa-users"></i>
+                    <h5>Community Engagement</h5>
+                    <p>Building stronger connections within our community</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-laptop-code"></i>
+                    <h5>Digital Innovation</h5>
+                    <p>Leveraging technology for better service delivery</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h5>Education & Training</h5>
+                    <p>Providing skills development and learning opportunities</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-heart"></i>
+                    <h5>Youth Empowerment</h5>
+                    <p>Supporting young leaders in making positive change</p>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="contact-card">
+                <h5><i class="fas fa-phone-alt"></i> Get In Touch</h5>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt text-danger"></i>
+                        <span>Maguilling, Piat, Cagayan</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone text-success"></i>
+                        <span>Contact SK Office</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope text-primary"></i>
+                        <span>info@skpiat.gov</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -569,7 +607,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 
     $(document).ready(function(){
         end_loader();
-        loadSKOfficials();
     });
 
     function logout(){
@@ -587,125 +624,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     
     function toggleMobileMenu(){
         $('#navMenu').toggleClass('active');
-    }
-    
-    function loadSKOfficials() {
-        $.ajax({
-            url: '<?= base_url ?>admin/skofficials/manage_officials.php?f=get_all_officials',
-            method: 'GET',
-            dataType: 'json',
-            success: function(resp) {
-                if(resp.status === 'success') {
-                    displaySKOfficials(resp.data);
-                } else {
-                    $('#skOfficialsChart').html(`
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle"></i> 
-                            No SK Officials data available at the moment.
-                        </div>
-                    `);
-                }
-            },
-            error: function() {
-                $('#skOfficialsChart').html(`
-                    <div class="alert alert-danger">
-                        <i class="fas fa-times-circle"></i> 
-                        Failed to load SK Officials data.
-                    </div>
-                `);
-            }
-        });
-    }
-    
-    function displaySKOfficials(officials) {
-        let html = '';
-        
-        // Chairman Section
-        if(officials.chairman) {
-            html += `
-                <div class="section-title">
-                    <i class="fas fa-crown"></i> SK Chairman
-                </div>
-                <div class="org-level">
-                    ${renderOfficialCard(officials.chairman, 'chairman', 'SK Chairman')}
-                </div>
-                <div class="connection-line"></div>
-            `;
-        }
-        
-        // Secretary and Treasurer
-        html += `
-            <div class="section-title">
-                <i class="fas fa-users"></i> Executive Officers
-            </div>
-            <div class="org-level">
-        `;
-        
-        if(officials.secretary) {
-            html += renderOfficialCard(officials.secretary, 'secretary', 'Secretary');
-        }
-        
-        if(officials.treasurer) {
-            html += renderOfficialCard(officials.treasurer, 'treasurer', 'Treasurer');
-        }
-        
-        html += '</div><div class="connection-line"></div>';
-        
-        // Kagawads
-        const kagawadCount = [1, 2, 3, 4].filter(i => officials['kagawad' + i]).length;
-        
-        if(kagawadCount > 0) {
-            html += `
-                <div class="section-title">
-                    <i class="fas fa-user-friends"></i> SK Kagawads
-                </div>
-                <div class="org-level">
-            `;
-            
-            for(let i = 1; i <= 4; i++) {
-                if(officials['kagawad' + i]) {
-                    html += renderOfficialCard(officials['kagawad' + i], 'kagawad', 'Kagawad ' + i);
-                }
-            }
-            
-            html += '</div>';
-        }
-        
-        $('#skOfficialsChart').html(html);
-    }
-    
-    function renderOfficialCard(official, type, title) {
-        const imageUrl = official.image 
-            ? `<?= base_url ?>${official.image.startsWith('uploads/') ? official.image : 'uploads/sk_officials/' + official.image}`
-            : null;
-        
-        let iconClass = 'fa-user';
-        if(type === 'chairman') iconClass = 'fa-crown';
-        else if(type === 'secretary') iconClass = 'fa-file-alt';
-        else if(type === 'treasurer') iconClass = 'fa-coins';
-        else if(type === 'kagawad') iconClass = 'fa-user-friends';
-        
-        return `
-            <div class="org-card ${type}-card">
-                <div class="org-icon">
-                    ${imageUrl 
-                        ? `<img src="${imageUrl}" alt="${official.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                           <i class="fas ${iconClass}" style="display:none;"></i>`
-                        : `<i class="fas ${iconClass}"></i>`
-                    }
-                </div>
-                <div class="org-title">${title}</div>
-                <div class="org-name">${official.name}</div>
-                <div class="org-contact">
-                    <i class="fas fa-phone"></i> ${official.contact}
-                </div>
-                ${official.email ? `
-                    <div class="org-email">
-                        <i class="fas fa-envelope"></i> ${official.email}
-                    </div>
-                ` : ''}
-            </div>
-        `;
     }
 </script>
 
