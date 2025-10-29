@@ -58,25 +58,31 @@ class Login extends DBConnection {
     public function user_login(){
         extract($_POST);
         
-        // Use BINARY to make the email and password comparison case-sensitive
-        $stmt = $this->conn->prepare("SELECT * from individual_list where BINARY `email` = ? and BINARY password = ? and `status` != 3 ");
+        // Use BINARY to make the username and password comparison case-sensitive
+        // Login for type 2 users only
+        $stmt = $this->conn->prepare("SELECT * from users where BINARY username = ? and BINARY password = ? and `type` = 2 ");
         $password = md5($password);  // Assuming password is still hashed with MD5
-        $stmt->bind_param('ss', $email, $password);
+        $stmt->bind_param('ss', $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
         
         if ($result->num_rows > 0) {
-            $data = $result->fetch_array();
-            foreach ($data as $k => $v) {
+            $user_data = $result->fetch_array();
+            
+            // Check if user status is active (1)
+            if (isset($user_data['status']) && $user_data['status'] == 0) {
+                return json_encode(array('status' => 'inactive', 'msg' => 'Your account has been deactivated. Please contact support.'));
+            }
+            
+            foreach ($user_data as $k => $v) {
                 if (!is_numeric($k) && $k != 'password') {
                     $this->settings->set_userdata($k, $v);
                 }
             }
-            $this->settings->set_userdata('status', $data['status']);
-            $this->settings->set_userdata('login_type', 3);
+            $this->settings->set_userdata('login_type', 2);
             return json_encode(array('status' => 'success'));
         } else {
-            return json_encode(array('status' => 'incorrect', 'last_qry' => "SELECT * from individual_list where BINARY `email` = '$email' and BINARY password = md5('$password') "));
+            return json_encode(array('status' => 'incorrect', 'last_qry' => "SELECT * from users where BINARY username = '$username' and BINARY password = md5('$password') and type = 2"));
         }
     }
 

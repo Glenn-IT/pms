@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 25, 2025 at 10:37 PM
+-- Generation Time: Sep 29, 2025 at 11:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -359,7 +359,9 @@ CREATE TABLE `sk_officials` (
   `email` varchar(100) DEFAULT NULL,
   `age` int(3) DEFAULT NULL,
   `address` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -369,14 +371,14 @@ CREATE TABLE `sk_officials` (
 -- Dumping data for table `sk_officials`
 --
 
-INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `start_date`, `status`, `date_created`, `date_updated`) VALUES
-(1, 'chairman', 'juju', '0917-123-4567', 'chairman@sk.gov.ph', 25, 'Barangay Hall, Main Street', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:20:10'),
-(2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', 23, 'Phase 1, Block 2, Lot 5', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
-(3, 'treasurer', 'Pedro Garcia', '0919-345-6789', 'treasurer@sk.gov.ph', 24, 'Purok 3, Sitio Maligaya', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
-(4, 'kagawad1', 'Anna Reyes', '0920-456-7890', 'anna@sk.gov.ph', 22, 'Phase 2, Block 1, Lot 10', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
-(5, 'kagawad2', 'Carlos Lopez', '0921-567-8901', 'carlos@sk.gov.ph', 26, 'Purok 1, Sitio Bagong Silang', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
-(6, 'kagawad3', 'Sofia Martinez', '0922-678-9012', 'sofia@sk.gov.ph', 21, 'Phase 3, Block 5, Lot 8', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44'),
-(7, 'kagawad4', 'Miguel Torres', '0923-789-0123', 'miguel@sk.gov.ph', 27, 'Purok 2, Sitio San Roque', '2024-01-15', 'active', '2025-09-26 04:15:44', '2025-09-26 04:15:44');
+INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `image`, `start_date`, `image_path`, `status`, `date_created`, `date_updated`) VALUES
+(1, 'chairman', 'juju', '0917-123-4567', 'chairman@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/chairman_1759135217.jpg', NULL, '../../uploads/sk_officials/sk_official_68da3e082365b.jpg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:40:17'),
+(2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/secretary_1759135974.jpg', NULL, '../../assets/images/sk_officials/secretary.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:52:54'),
+(3, 'treasurer', 'Pedro Garcia', '0919-345-6789', 'treasurer@sk.gov.ph', 24, 'Purok 3, Sitio Maligaya', NULL, '2024-01-15', '../../assets/images/sk_officials/treasurer.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(4, 'kagawad1', 'Anna Reyes', '0920-456-7890', 'anna@sk.gov.ph', 22, 'Phase 2, Block 1, Lot 10', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(5, 'kagawad2', 'Carlos Lopez', '0921-567-8901', 'carlos@sk.gov.ph', 26, 'Purok 1, Sitio Bagong Silang', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(6, 'kagawad3', 'Sofia Martinez', '0922-678-9012', 'sofia@sk.gov.ph', 21, 'Phase 3, Block 5, Lot 8', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(7, 'kagawad4', 'Miguel Torres', '0923-789-0123', 'miguel@sk.gov.ph', 27, 'Purok 2, Sitio San Roque', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24');
 
 -- --------------------------------------------------------
 
