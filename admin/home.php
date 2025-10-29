@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <!-- SK Officials Panel -->
+<!-- SK Officials Panel -->
             <div class="card card-outline card-warning mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0"><i class="fa fa-users mr-2"></i>SK Officials</h4>
@@ -108,22 +108,7 @@
                 </div>
             </div>
 
-            <!-- SK Officials Modal -->
-            <div class="modal fade" id="skOfficialsModal" tabindex="-1" role="dialog" aria-labelledby="skOfficialsModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="skOfficialsModalLabel"><i class="fa fa-users mr-2"></i>SK Officials Management</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" id="skOfficialsModalBody" style="min-height:400px;">
-                            <div class="text-center text-muted py-5"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading...</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <script>
             $(document).ready(function(){
@@ -148,14 +133,15 @@
                 });
 
                 <?php if($_settings->userdata('type') != 1): ?>
-                // Load SK Officials automatically on page load
-                loadSKOfficials();
+                // Load content automatically on page load
+                loadSkOfficials();
                 loadAboutUs();
                 loadDevelopers();
                 <?php endif; ?>
             });
 
-            function loadSKOfficials() {
+
+function loadSkOfficials() {
                 $.ajax({
                     url: 'skofficials/dashboard_content.php',
                     type: 'GET',

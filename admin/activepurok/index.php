@@ -156,13 +156,44 @@ $overall_stats = $overall_stats_qry->fetch_assoc();
         margin-bottom: 0.5rem;
         border-left: 3px solid #007bff;
     }
+    
+    @media print {
+        .no-print { display: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .card-header { border: none !important; padding: 0 !important; }
+        .card-body { padding: 0 !important; }
+        .stats-card { background: none !important; color: #000 !important; box-shadow: none !important; border: 1px solid #ddd !important; page-break-inside: avoid; }
+        .chart-card { display: none !important; }
+        .print-header { display: block !important; text-align: center; margin-bottom: 2rem; }
+        .print-header h1 { font-size: 1.3rem; font-weight: bold; margin-bottom: 0.3rem; }
+        .print-header h2 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: bold; }
+        .print-header p { font-size: 0.9rem; color: #666; }
+        .table { font-size: 0.9rem; page-break-inside: auto; }
+        .table thead { background: #f8f9fa !important; -webkit-print-color-adjust: exact; }
+        .table th, .table td { padding: 0.4rem !important; border: 1px solid #dee2e6 !important; }
+        .badge { border: 1px solid #333 !important; -webkit-print-color-adjust: exact; }
+        .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate { display: none !important; }
+        .dataTables_wrapper { padding: 0 !important; }
+    }
 </style>
 
 <div class="card card-outline card-primary">
 	<div class="card-header">
 		<h3 class="card-title">Active Purok - Event Attendance Analysis</h3>
+		<!--<div class="card-tools no-print">
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>-->
 	</div>
 	<div class="card-body">
+        <!-- Print Header (only visible when printing) -->
+        <div class="print-header" style="display: none;">
+            <h1>YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN</h1>
+            <h2>Active Purok - Event Attendance Analysis Report</h2>
+            <p>Generated on: <?php echo date("F d, Y h:i A") ?></p>
+        </div>
+        
         <!-- Overview Statistics -->
         <div class="row mb-4">
             <div class="col-lg-3 col-md-6">

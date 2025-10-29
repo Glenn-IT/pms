@@ -25,7 +25,7 @@
             <div class="card h-100 border-0 shadow-sm hover-card">
                 <div class="card-header bg-info text-white text-center">
                     <div class="developer-avatar mb-2">
-                        <i class="fas fa-user-circle fa-4x"></i>
+                        <img src="/pms/Kim.jpg" alt="Kimberly Agustin" class="developer-image">
                     </div>
                     <h4 class="font-weight-bold mb-0">Kimberly Agustin</h4>
                 </div>
@@ -72,7 +72,7 @@
             <div class="card h-100 border-0 shadow-sm hover-card">
                 <div class="card-header bg-warning text-dark text-center">
                     <div class="developer-avatar mb-2">
-                        <i class="fas fa-user-circle fa-4x"></i>
+                        <img src="/pms/Cristel.jpg" alt="Cristel Pulig" class="developer-image">
                     </div>
                     <h4 class="font-weight-bold mb-0">Cristel Pulig</h4>
                 </div>
@@ -177,6 +177,15 @@
     animation: pulse 2s infinite;
 }
 
+.developer-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -240,16 +249,6 @@
 
 <script>
 $(document).ready(function(){
-    // Add some interactive effects
-    $('.hover-card').hover(
-        function() {
-            $(this).find('.card-header i').addClass('fa-spin');
-        },
-        function() {
-            $(this).find('.card-header i').removeClass('fa-spin');
-        }
-    );
-    
     // Add tooltip to contact links
     $('[data-toggle="tooltip"]').tooltip();
 });
