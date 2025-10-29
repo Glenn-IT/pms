@@ -698,7 +698,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 url: '<?= base_url ?>classes/Login.php?f=user_logout',
                 method: 'POST',
                 success: function(resp){
-                    location.href = '<?= base_url ?>user/login.php';
+                    location.href = '<?= base_url ?>user/guest.php';
                 }
             });
         }
