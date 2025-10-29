@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2025 at 08:54 AM
+-- Generation Time: Oct 29, 2025 at 06:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,8 +41,7 @@ CREATE TABLE `announcement_list` (
 --
 
 INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `images`, `description`, `date_created`) VALUES
-(10, 'Sample A', 'uploads/announcements/10_1.png', '[\"uploads/announcements/10_1.png\",\"uploads/announcements/10_2.png\",\"uploads/announcements/10_3.png\",\"uploads/announcements/10_4.png\",\"uploads/announcements/10_5.png\"]', 'qwewqe', '2025-08-15 11:54:31'),
-(11, 'Sample B', 'uploads/announcements/11_1.jpg', '[\"uploads/announcements/11_1.jpg\",\"uploads/announcements/11_2.jpg\",\"uploads/announcements/11_3.jpg\",\"uploads/announcements/11_4.jpg\",\"uploads/announcements/11_5.jpg\"]', 'Sample', '2025-08-15 11:54:58');
+(12, 'Sample Announcement', 'uploads/announcements/12_1.jpg', '[\"uploads/announcements/12_1.jpg\",\"uploads/announcements/12_2.jpg\",\"uploads/announcements/12_3.jpg\",\"uploads/announcements/12_4.jpg\",\"uploads/announcements/12_5.jpg\"]', 'awdawd', '2025-10-30 00:45:41');
 
 -- --------------------------------------------------------
 
@@ -112,9 +111,21 @@ CREATE TABLE `event_list` (
 --
 
 INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
-(25, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/25_1757932272_0.png\"]', NULL, '2025-09-15 18:31:00'),
-(26, 'Sample B', 'Sample B', NULL, '[\"uploads\\/events\\/26_1757932295_0.jpg\"]', NULL, '2025-09-15 18:31:00'),
-(27, 'Sample C', 'Sample C', NULL, '[\"uploads\\/events\\/27_1757932313_0.png\"]', NULL, '2025-09-15 18:31:00');
+(31, 'Sample', 'Sample', NULL, '[\"uploads\\/events\\/31_1761756295_0.jpg\",\"uploads\\/events\\/31_1761756295_1.jpg\",\"uploads\\/events\\/31_1761756295_2.jpg\",\"uploads\\/events\\/31_1761756295_3.jpg\",\"uploads\\/events\\/31_1761756295_4.jpg\"]', NULL, '2025-10-31 14:44:00'),
+(32, 'awdqweqwe', 'ewqeq', NULL, '[\"uploads\\/events\\/32_1761756421_0.jpeg\"]', NULL, '2025-10-30 00:46:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forum_messages`
+--
+
+CREATE TABLE `forum_messages` (
+  `id` int(11) NOT NULL,
+  `user_id` int(50) NOT NULL,
+  `message` text NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -156,7 +167,7 @@ CREATE TABLE `sk_officials` (
 --
 
 INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `image`, `start_date`, `image_path`, `status`, `date_created`, `date_updated`) VALUES
-(1, 'chairman', 'juju', '0917-123-4567', 'chairman@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/chairman_1759135217.jpg', NULL, '../../uploads/sk_officials/sk_official_68da3e082365b.jpg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:40:17'),
+(1, 'chairman', 'Chaer U kiwoe', '0917-123-4567', 'chairman@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/chairman_1759135217.jpg', NULL, '../../uploads/sk_officials/sk_official_68da3e082365b.jpg', 'active', '2025-09-26 04:15:44', '2025-10-29 23:49:41'),
 (2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/secretary_1759135974.jpg', NULL, '../../assets/images/sk_officials/secretary.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:52:54'),
 (3, 'treasurer', 'Pedro Garcia', '0919-345-6789', 'treasurer@sk.gov.ph', 24, 'Purok 3, Sitio Maligaya', NULL, '2024-01-15', '../../assets/images/sk_officials/treasurer.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
 (4, 'kagawad1', 'Anna Reyes', '0920-456-7890', 'anna@sk.gov.ph', 22, 'Phase 2, Block 1, Lot 10', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
@@ -224,8 +235,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `qr_code`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
-(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male'),
-(43, 'Juan', 'A', 'Uno', 'Juan', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample12345', NULL, 'PMS-USER-00043-JUAN-bd7fbd6d', NULL, 2, 1, '2025-10-29 15:48:42', '2025-10-29 15:48:42', 1, '2001-01-01', 24, 'Male');
+(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male');
 
 --
 -- Indexes for dumped tables
@@ -269,6 +279,13 @@ ALTER TABLE `event_list`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `forum_messages`
+--
+ALTER TABLE `forum_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `security_questions`
 --
 ALTER TABLE `security_questions`
@@ -302,7 +319,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `attendance`
@@ -320,13 +337,19 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `event_attendance`
 --
 ALTER TABLE `event_attendance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `forum_messages`
+--
+ALTER TABLE `forum_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `security_questions`
@@ -350,7 +373,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- Constraints for dumped tables
@@ -363,6 +386,12 @@ ALTER TABLE `event_attendance`
   ADD CONSTRAINT `event_attendance_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `event_list` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `event_attendance_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `event_attendance_ibfk_3` FOREIGN KEY (`scanner_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `forum_messages`
+--
+ALTER TABLE `forum_messages`
+  ADD CONSTRAINT `forum_messages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `security_questions`

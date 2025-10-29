@@ -903,11 +903,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                     <p>View your attendance and participation</p>
                 </div>
             </div>
-            
-            <!-- Info Alert -->
-            <div class="alert alert-info" style="border-radius: 10px; border-left: 4px solid #007bff;">
-                <i class="fas fa-info-circle"></i> <strong>Coming Soon:</strong> More features are being developed to enhance your experience with the SK Youth Information System.
-            </div>
         </div>
     </main>
 </div>
