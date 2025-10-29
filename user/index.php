@@ -377,6 +377,246 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             box-shadow: 0 5px 15px rgba(255,255,255,0.3);
         }
         
+        /* Events Modal Styles */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .event-card-modal {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .event-card-modal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .event-img-modal {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        
+        .event-body-modal {
+            padding: 1.25rem;
+        }
+        
+        .event-title-modal {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #001f3f;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .event-date-modal {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-date-modal i {
+            color: #007bff;
+        }
+        
+        .event-desc-modal {
+            font-size: 0.95rem;
+            color: #555;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+        
+        .event-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .event-details-content {
+            padding: 1rem;
+            max-height: 70vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .event-details-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .event-details-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .event-details-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .event-details-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .event-details-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .event-details-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        .event-details-gallery img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .event-details-gallery img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Announcements Modal Styles (same as events) */
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .announcement-card-modal {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .announcement-card-modal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .announcement-img-modal {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        
+        .announcement-body-modal {
+            padding: 1.25rem;
+        }
+        
+        .announcement-title-modal {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #001f3f;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .announcement-date-modal {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .announcement-date-modal i {
+            color: #28a745;
+        }
+        
+        .announcement-desc-modal {
+            font-size: 0.95rem;
+            color: #555;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+        
+        .announcement-details-content {
+            padding: 1rem;
+            max-height: 70vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .announcement-details-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .announcement-details-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .announcement-details-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .announcement-details-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .announcement-details-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .announcement-details-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        
+        .announcement-details-gallery img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .announcement-details-gallery img:hover {
+            transform: scale(1.05);
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 992px) {
             .mobile-menu-toggle {
@@ -546,13 +786,13 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             <!-- Features Grid -->
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card" onclick="showEvents()">
                     <i class="fas fa-calendar-alt"></i>
                     <h5>Events</h5>
                     <p>View upcoming SK events and activities</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="feature-card" onclick="showAnnouncements()">
                     <i class="fas fa-bullhorn"></i>
                     <h5>Announcements</h5>
                     <p>Stay updated with latest announcements</p>
@@ -617,6 +857,88 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                     <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
                     <p class="mt-2">Loading QR Code...</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Events Modal -->
+<div class="modal fade" id="eventsModal" tabindex="-1" role="dialog" aria-labelledby="eventsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="eventsModalLabel">
+                    <i class="fas fa-calendar-alt"></i> SK Events & Activities
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4" id="eventsModalBody">
+                <div class="text-center py-3">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                    <p class="mt-2">Loading Events...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="eventDetailsModalLabel">
+                    <i class="fas fa-info-circle"></i> Event Details
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4" id="eventDetailsBody">
+                <!-- Event details will load here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcements Modal -->
+<div class="modal fade" id="announcementsModal" tabindex="-1" role="dialog" aria-labelledby="announcementsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="announcementsModalLabel">
+                    <i class="fas fa-bullhorn"></i> SK Announcements
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4" id="announcementsModalBody">
+                <div class="text-center py-3">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                    <p class="mt-2">Loading Announcements...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcement Details Modal -->
+<div class="modal fade" id="announcementDetailsModal" tabindex="-1" role="dialog" aria-labelledby="announcementDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="announcementDetailsModalLabel">
+                    <i class="fas fa-info-circle"></i> Announcement Details
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4" id="announcementDetailsBody">
+                <!-- Announcement details will load here -->
             </div>
         </div>
     </div>
@@ -739,6 +1061,331 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         }
         
         document.body.removeChild(textarea);
+    }
+    
+    function showEvents(){
+        $('#eventsModal').modal('show');
+        
+        // Load events via AJAX
+        $.ajax({
+            url: '<?= base_url ?>classes/Master.php?f=get_all_events',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp){
+                if(resp.status === 'success' && resp.data.length > 0){
+                    displayEvents(resp.data);
+                } else {
+                    $('#eventsModalBody').html(`
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No events available at the moment</p>
+                        </div>
+                    `);
+                }
+            },
+            error: function(){
+                $('#eventsModalBody').html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times-circle"></i> Failed to load events
+                    </div>
+                `);
+            }
+        });
+    }
+    
+    function displayEvents(events){
+        // Sort events by date (newest first)
+        events.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+        
+        let html = '<div class="events-grid">';
+        
+        events.forEach(event => {
+            const images = event.images || [];
+            const primaryImage = images[0] || event.image_path || '<?= base_url ?>assets/images/placeholder.jpg';
+            const imageCount = images.length || (event.image_path ? 1 : 0);
+            
+            // Format date
+            const eventDate = new Date(event.date_created || event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Check if event is upcoming
+            const today = new Date();
+            const isUpcoming = eventDate > today;
+            const isPast = eventDate < today;
+            
+            html += `
+                <div class="event-card-modal" onclick="showEventDetails(${event.id})">
+                    <img src="<?= base_url ?>${primaryImage}" class="event-img-modal" alt="${event.title}">
+                    <div class="event-body-modal">
+                        <div class="event-title-modal">${event.title}</div>
+                        <div class="event-date-modal">
+                            <i class="fas fa-calendar-alt"></i> ${formattedDate}
+                        </div>
+                        <div class="event-desc-modal">${event.description}</div>
+                        <div>
+                            ${isUpcoming ? '<span class="event-badge bg-primary text-white">Upcoming</span>' : ''}
+                            ${isPast ? '<span class="event-badge bg-secondary text-white">Past Event</span>' : ''}
+                            ${imageCount > 1 ? `<span class="event-badge bg-info text-white ml-2"><i class="fas fa-images"></i> ${imageCount} photos</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        $('#eventsModalBody').html(html);
+    }
+    
+    function showEventDetails(eventId){
+        // Close events modal and open details modal
+        $('#eventsModal').modal('hide');
+        $('#eventDetailsModal').modal('show');
+        $('#eventDetailsBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+        
+        // Load event details
+        $.ajax({
+            url: '<?= base_url ?>classes/Master.php?f=get_all_events',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp){
+                if(resp.status === 'success'){
+                    const event = resp.data.find(e => e.id == eventId);
+                    if(event){
+                        displayEventDetails(event);
+                    } else {
+                        $('#eventDetailsBody').html('<div class="alert alert-danger">Event not found</div>');
+                    }
+                }
+            },
+            error: function(){
+                $('#eventDetailsBody').html('<div class="alert alert-danger">Failed to load event details</div>');
+            }
+        });
+        
+        // When details modal is hidden, show events modal again
+        $('#eventDetailsModal').off('hidden.bs.modal').on('hidden.bs.modal', function() {
+            $('#eventsModal').modal('show');
+        });
+    }
+    
+    function displayEventDetails(event){
+        const images = event.images || [];
+        const primaryImage = images[0] || event.image_path;
+        
+        // Format date
+        const eventDate = new Date(event.date_created || event.date);
+        const formattedDate = eventDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        let html = '<div class="event-details-content">';
+        
+        // Main image
+        if(primaryImage){
+            html += `<img src="<?= base_url ?>${primaryImage}" class="event-details-img" alt="${event.title}">`;
+        }
+        
+        // Event info
+        html += `
+            <h4 style="color: #001f3f; margin-bottom: 1rem;">${event.title}</h4>
+            <p style="color: #666; margin-bottom: 1rem;">
+                <i class="fas fa-calendar-alt text-primary"></i> <strong>Date:</strong> ${formattedDate}
+            </p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <h6 style="color: #001f3f; margin-bottom: 0.5rem;"><i class="fas fa-info-circle"></i> Description</h6>
+                <p style="color: #333; margin: 0;">${event.description}</p>
+            </div>
+        `;
+        
+        // Image gallery
+        if(images.length > 1){
+            html += `
+                <h6 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-images"></i> Event Gallery (${images.length} photos)</h6>
+                <div class="event-details-gallery">
+            `;
+            
+            images.forEach(img => {
+                html += `<img src="<?= base_url ?>${img}" alt="Event photo" onclick="window.open('<?= base_url ?>${img}', '_blank')">`;
+            });
+            
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        
+        $('#eventDetailsBody').html(html);
+    }
+    
+    function showAnnouncements(){
+        $('#announcementsModal').modal('show');
+        
+        // Load announcements via AJAX
+        $.ajax({
+            url: '<?= base_url ?>classes/Master.php?f=get_all_announcements',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp){
+                if(resp.status === 'success' && resp.data.length > 0){
+                    displayAnnouncements(resp.data);
+                } else {
+                    $('#announcementsModalBody').html(`
+                        <div class="text-center py-5">
+                            <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No announcements available at the moment</p>
+                        </div>
+                    `);
+                }
+            },
+            error: function(){
+                $('#announcementsModalBody').html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times-circle"></i> Failed to load announcements
+                    </div>
+                `);
+            }
+        });
+    }
+    
+    function displayAnnouncements(announcements){
+        // Sort announcements by date (newest first)
+        announcements.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+        
+        let html = '<div class="announcements-grid">';
+        
+        announcements.forEach(announcement => {
+            const images = announcement.images || [];
+            const primaryImage = images[0] || announcement.image_path || '<?= base_url ?>assets/images/placeholder.jpg';
+            const imageCount = images.length || (announcement.image_path ? 1 : 0);
+            
+            // Format date
+            const announcementDate = new Date(announcement.date_created || announcement.date);
+            const formattedDate = announcementDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Check if announcement is new (within last 7 days)
+            const today = new Date();
+            const daysDiff = Math.floor((today - announcementDate) / (1000 * 60 * 60 * 24));
+            const isNew = daysDiff <= 7;
+            
+            html += `
+                <div class="announcement-card-modal" onclick="showAnnouncementDetails(${announcement.id})">
+                    <img src="<?= base_url ?>${primaryImage}" class="announcement-img-modal" alt="${announcement.title}">
+                    <div class="announcement-body-modal">
+                        <div class="announcement-title-modal">${announcement.title}</div>
+                        <div class="announcement-date-modal">
+                            <i class="fas fa-calendar-alt"></i> ${formattedDate}
+                        </div>
+                        <div class="announcement-desc-modal">${announcement.description}</div>
+                        <div>
+                            ${isNew ? '<span class="event-badge bg-success text-white">New</span>' : ''}
+                            ${imageCount > 1 ? `<span class="event-badge bg-info text-white ml-2"><i class="fas fa-images"></i> ${imageCount} photos</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        $('#announcementsModalBody').html(html);
+    }
+    
+    function showAnnouncementDetails(announcementId){
+        // Close announcements modal and open details modal
+        $('#announcementsModal').modal('hide');
+        $('#announcementDetailsModal').modal('show');
+        $('#announcementDetailsBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+        
+        // Load announcement details
+        $.ajax({
+            url: '<?= base_url ?>classes/Master.php?f=get_all_announcements',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp){
+                if(resp.status === 'success'){
+                    const announcement = resp.data.find(a => a.id == announcementId);
+                    if(announcement){
+                        displayAnnouncementDetails(announcement);
+                    } else {
+                        $('#announcementDetailsBody').html('<div class="alert alert-danger">Announcement not found</div>');
+                    }
+                }
+            },
+            error: function(){
+                $('#announcementDetailsBody').html('<div class="alert alert-danger">Failed to load announcement details</div>');
+            }
+        });
+        
+        // When details modal is hidden, show announcements modal again
+        $('#announcementDetailsModal').off('hidden.bs.modal').on('hidden.bs.modal', function() {
+            $('#announcementsModal').modal('show');
+        });
+    }
+    
+    function displayAnnouncementDetails(announcement){
+        const images = announcement.images || [];
+        const primaryImage = images[0] || announcement.image_path;
+        
+        // Format date
+        const announcementDate = new Date(announcement.date_created || announcement.date);
+        const formattedDate = announcementDate.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        let html = '<div class="announcement-details-content">';
+        
+        // Main image
+        if(primaryImage){
+            html += `<img src="<?= base_url ?>${primaryImage}" class="announcement-details-img" alt="${announcement.title}">`;
+        }
+        
+        // Announcement info
+        html += `
+            <h4 style="color: #001f3f; margin-bottom: 1rem;">${announcement.title}</h4>
+            <p style="color: #666; margin-bottom: 1rem;">
+                <i class="fas fa-calendar-alt text-success"></i> <strong>Posted:</strong> ${formattedDate}
+            </p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <h6 style="color: #001f3f; margin-bottom: 0.5rem;"><i class="fas fa-info-circle"></i> Description</h6>
+                <p style="color: #333; margin: 0; white-space: pre-wrap;">${announcement.description}</p>
+            </div>
+        `;
+        
+        // Image gallery
+        if(images.length > 1){
+            html += `
+                <h6 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-images"></i> Gallery (${images.length} photos)</h6>
+                <div class="announcement-details-gallery">
+            `;
+            
+            images.forEach(img => {
+                html += `<img src="<?= base_url ?>${img}" alt="Announcement photo" onclick="window.open('<?= base_url ?>${img}', '_blank')">`;
+            });
+            
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        
+        $('#announcementDetailsBody').html(html);
     }
 </script>
 
