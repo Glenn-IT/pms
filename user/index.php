@@ -694,6 +694,48 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         .rank-3 { background: #cd7f32; color: white; }
         .rank-other { background: #007bff; color: white; }
         
+        /* Sort Controls */
+        .sort-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .sort-label {
+            font-weight: 600;
+            color: #001f3f;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #001f3f;
+            border-radius: 8px;
+            background: white;
+            color: #001f3f;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        
+        .sort-select:hover {
+            background: #001f3f;
+            color: white;
+        }
+        
+        .sort-select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.2);
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 992px) {
             .mobile-menu-toggle {
@@ -758,6 +800,15 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .sort-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .sort-select {
+                width: 100%;
             }
         }
         
@@ -1034,6 +1085,14 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     // Define base_url
     var _base_url_ = '<?php echo base_url ?>';
     
+    // Store current sort preferences
+    var eventSortBy = 'newest';
+    var announcementSortBy = 'newest';
+    
+    // Store all events and announcements for sorting
+    var allEvents = [];
+    var allAnnouncements = [];
+    
     // Loader functions
     window.start_loader = function(){
         $('body').append('<div id="preloader"><div class="loader-holder"><div></div><div></div><div></div><div></div></div></div>');
@@ -1154,7 +1213,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             dataType: 'json',
             success: function(resp){
                 if(resp.status === 'success' && resp.data.length > 0){
-                    displayEvents(resp.data);
+                    allEvents = resp.data;
+                    displayEvents(allEvents);
                 } else {
                     $('#eventsModalBody').html(`
                         <div class="text-center py-5">
@@ -1174,13 +1234,49 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         });
     }
     
+    function sortEvents(sortBy) {
+        eventSortBy = sortBy;
+        displayEvents(allEvents);
+    }
+    
     function displayEvents(events){
-        // Sort events by date (newest first)
-        events.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+        // Create a copy to avoid modifying original array
+        let sortedEvents = [...events];
         
-        let html = '<div class="events-grid">';
+        // Sort events based on selected option
+        switch(eventSortBy) {
+            case 'newest':
+                sortedEvents.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+                break;
+            case 'oldest':
+                sortedEvents.sort((a, b) => new Date(a.date_created || a.date) - new Date(b.date_created || b.date));
+                break;
+            case 'title-asc':
+                sortedEvents.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'title-desc':
+                sortedEvents.sort((a, b) => b.title.localeCompare(a.title));
+                break;
+        }
         
-        events.forEach(event => {
+        // Add sort controls
+        let html = `
+            <div class="sort-controls">
+                <span class="sort-label">
+                    <i class="fas fa-sort"></i> Sort By:
+                </span>
+                <select class="sort-select" onchange="sortEvents(this.value)" id="eventSortSelect">
+                    <option value="newest" ${eventSortBy === 'newest' ? 'selected' : ''}>Newest First</option>
+                    <option value="oldest" ${eventSortBy === 'oldest' ? 'selected' : ''}>Oldest First</option>
+                    <option value="title-asc" ${eventSortBy === 'title-asc' ? 'selected' : ''}>Title (A-Z)</option>
+                    <option value="title-desc" ${eventSortBy === 'title-desc' ? 'selected' : ''}>Title (Z-A)</option>
+                </select>
+            </div>
+        `;
+        
+        html += '<div class="events-grid">';
+        
+        sortedEvents.forEach(event => {
             const images = event.images || [];
             const primaryImage = images[0] || event.image_path || '<?= base_url ?>assets/images/placeholder.jpg';
             const imageCount = images.length || (event.image_path ? 1 : 0);
@@ -1317,7 +1413,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             dataType: 'json',
             success: function(resp){
                 if(resp.status === 'success' && resp.data.length > 0){
-                    displayAnnouncements(resp.data);
+                    allAnnouncements = resp.data;
+                    displayAnnouncements(allAnnouncements);
                 } else {
                     $('#announcementsModalBody').html(`
                         <div class="text-center py-5">
@@ -1337,13 +1434,49 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         });
     }
     
+    function sortAnnouncements(sortBy) {
+        announcementSortBy = sortBy;
+        displayAnnouncements(allAnnouncements);
+    }
+    
     function displayAnnouncements(announcements){
-        // Sort announcements by date (newest first)
-        announcements.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+        // Create a copy to avoid modifying original array
+        let sortedAnnouncements = [...announcements];
         
-        let html = '<div class="announcements-grid">';
+        // Sort announcements based on selected option
+        switch(announcementSortBy) {
+            case 'newest':
+                sortedAnnouncements.sort((a, b) => new Date(b.date_created || b.date) - new Date(a.date_created || a.date));
+                break;
+            case 'oldest':
+                sortedAnnouncements.sort((a, b) => new Date(a.date_created || a.date) - new Date(b.date_created || b.date));
+                break;
+            case 'title-asc':
+                sortedAnnouncements.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'title-desc':
+                sortedAnnouncements.sort((a, b) => b.title.localeCompare(a.title));
+                break;
+        }
         
-        announcements.forEach(announcement => {
+        // Add sort controls
+        let html = `
+            <div class="sort-controls">
+                <span class="sort-label">
+                    <i class="fas fa-sort"></i> Sort By:
+                </span>
+                <select class="sort-select" onchange="sortAnnouncements(this.value)" id="announcementSortSelect">
+                    <option value="newest" ${announcementSortBy === 'newest' ? 'selected' : ''}>Newest First</option>
+                    <option value="oldest" ${announcementSortBy === 'oldest' ? 'selected' : ''}>Oldest First</option>
+                    <option value="title-asc" ${announcementSortBy === 'title-asc' ? 'selected' : ''}>Title (A-Z)</option>
+                    <option value="title-desc" ${announcementSortBy === 'title-desc' ? 'selected' : ''}>Title (Z-A)</option>
+                </select>
+            </div>
+        `;
+        
+        html += '<div class="announcements-grid">';
+        
+        sortedAnnouncements.forEach(announcement => {
             const images = announcement.images || [];
             const primaryImage = images[0] || announcement.image_path || '<?= base_url ?>assets/images/placeholder.jpg';
             const imageCount = images.length || (announcement.image_path ? 1 : 0);
