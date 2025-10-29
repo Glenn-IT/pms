@@ -487,8 +487,25 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 height: calc(100vh - 260px);
             }
             
+            .forum-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .forum-header h2 {
+                font-size: 1.25rem;
+            }
+            
+            .forum-header p {
+                font-size: 0.85rem;
+            }
+            
+            .messages-area {
+                padding: 1rem;
+            }
+            
             .message-bubble {
                 gap: 0.75rem;
+                margin-bottom: 1rem;
             }
             
             .message-avatar {
@@ -497,14 +514,94 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 font-size: 1rem;
             }
             
+            .message-content {
+                padding: 0.85rem 1rem;
+            }
+            
+            .message-user {
+                font-size: 0.9rem;
+            }
+            
+            .message-zone {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.5rem;
+            }
+            
+            .message-text {
+                font-size: 0.9rem;
+            }
+            
+            .input-area {
+                padding: 1rem;
+            }
+            
             .input-form {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 0.75rem;
+                align-items: stretch;
+            }
+            
+            .input-wrapper {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            #messageInput {
+                padding: 0.85rem 1rem;
+                font-size: 0.95rem;
+                min-height: 44px;
             }
             
             .btn-send {
-                width: 100%;
-                justify-content: center;
+                flex-shrink: 0;
+                padding: 0.85rem 1.25rem;
+                min-width: 70px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-send span {
+                display: none;
+            }
+            
+            .btn-send i {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+            
+            .forum-container {
+                border-radius: 10px;
+            }
+            
+            .forum-header {
+                padding: 0.85rem 1rem;
+            }
+            
+            .messages-area {
+                padding: 0.75rem;
+            }
+            
+            .message-content {
+                padding: 0.75rem 0.85rem;
+            }
+            
+            .input-area {
+                padding: 0.75rem;
+            }
+            
+            #messageInput {
+                padding: 0.75rem 0.85rem;
+                font-size: 0.9rem;
+            }
+            
+            .btn-send {
+                padding: 0.75rem 1rem;
+                min-width: 60px;
             }
         }
     </style>

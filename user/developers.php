@@ -1,8 +1,6 @@
 <?php
 require_once('../config.php');
-if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
-    redirect('user/login.php');
-}
+// No authentication required - accessible to everyone
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,6 +125,49 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             background: white;
             color: #001f3f;
             transform: translateY(-2px);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: 1rem;
+        }
+        
+        .btn-login, .btn-register {
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-login {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-login:hover {
+            background: white;
+            color: #001f3f;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        
+        .btn-register {
+            background: #28a745;
+            color: white;
+            border: 2px solid #28a745;
+        }
+        
+        .btn-register:hover {
+            background: #218838;
+            border-color: #218838;
+            transform: translateY(-2px);
+            text-decoration: none;
         }
         
         /* Mobile Menu Toggle */
@@ -458,6 +499,12 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 justify-content: center;
                 margin: 1rem 0 0 0;
             }
+            
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+                margin: 1rem 0 0 0;
+            }
         }
         
         @media (max-width: 768px) {
@@ -512,22 +559,37 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             </button>
             
             <ul class="nav-menu" id="navMenu">
-                <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
-                <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
+                <?php if($_settings->userdata('id') > 0 && $_settings->userdata('type') == 2): ?>
+                    <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
+                    <li><a href="forum.php"><i class="fas fa-comments"></i> Forum</a></li>
+                <?php else: ?>
+                    <li><a href="guest.php"><i class="fas fa-newspaper"></i> News & Updates</a></li>
+                <?php endif; ?>
                 <li><a href="about_us.php"><i class="fas fa-info-circle"></i> About Us</a></li>
                 <li><a href="developers.php" class="active"><i class="fas fa-code"></i> Developers</a></li>
             </ul>
             
-            <div class="user-menu">
-                <span class="user-name">
-                    <i class="fas fa-user-circle"></i>
-                    <?php echo $_settings->userdata('firstname') ?>
-                </span>
-                <button class="btn-logout-header" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
+            <?php if($_settings->userdata('id') > 0 && $_settings->userdata('type') == 2): ?>
+                <div class="user-menu">
+                    <span class="user-name">
+                        <i class="fas fa-user-circle"></i>
+                        <?php echo $_settings->userdata('firstname') ?>
+                    </span>
+                    <button class="btn-logout-header" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            <?php else: ?>
+                <div class="auth-buttons">
+                    <a href="login.php" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="register.php" class="btn-register">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </div>
+            <?php endif; ?>
         </nav>
     </div>
 </header>
@@ -538,9 +600,15 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     <div class="main-panel">
         <div class="panel-header">
             <h2><i class="fas fa-code"></i> Development Team</h2>
-            <a href="index.php" class="back-btn">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
+            <?php if($_settings->userdata('id') > 0 && $_settings->userdata('type') == 2): ?>
+                <a href="index.php" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            <?php else: ?>
+                <a href="guest.php" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to News
+                </a>
+            <?php endif; ?>
         </div>
         
         <div class="panel-body">

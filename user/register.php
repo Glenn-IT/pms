@@ -103,6 +103,8 @@ require_once('../config.php');
             padding: 0.75rem 1rem;
             transition: all 0.3s;
             font-size: 0.95rem;
+            height: 48px;
+            min-height: 48px;
         }
         
         .form-control:focus, .custom-select:focus{
@@ -117,6 +119,9 @@ require_once('../config.php');
             border-radius: 0 10px 10px 0;
             cursor: pointer;
             transition: all 0.3s;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
         }
         
         .input-group-text:hover{
@@ -200,6 +205,8 @@ require_once('../config.php');
             border-radius: 10px;
             border: 2px solid #e0e0e0;
             padding: 0.75rem 1rem;
+            height: 48px;
+            line-height: 1.5;
         }
         
         .custom-file-label::after{
@@ -330,7 +337,7 @@ require_once('../config.php');
                         <div class="form-group">
                             <label for="sex">Sex <span class="text-danger">*</span></label>
                             <select name="sex" id="sex" class="form-control custom-select" required>
-                                <option value="" disabled selected>Select Sex</option>
+                                <option value="" disabled selected hidden>Select Sex</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
@@ -340,7 +347,7 @@ require_once('../config.php');
                         <div class="form-group">
                             <label for="zone">Zone/Purok <span class="text-danger">*</span></label>
                             <select name="zone" id="zone" class="form-control custom-select" required>
-                                <option value="" disabled selected>Select Zone</option>
+                                <option value="" disabled selected hidden>Select Zone</option>
                                 <option value="1">Zone 1</option>
                                 <option value="2">Zone 2</option>
                                 <option value="3">Zone 3</option>
@@ -412,7 +419,7 @@ require_once('../config.php');
                 <div class="form-group">
                     <label for="security_question">Security Question <span class="text-danger">*</span></label>
                     <select name="security_question" id="security_question" class="form-control custom-select" required>
-                        <option value="" disabled selected>Select a security question</option>
+                        <option value="" disabled selected hidden>Select a security question</option>
                         <option value="pet">What is the name of your first pet?</option>
                         <option value="school">What was the name of your elementary school?</option>
                         <option value="mother_maiden">What is your mother's maiden name?</option>
