@@ -91,7 +91,45 @@ while($row = $age_groups->fetch_assoc()) {
         color: #333;
         text-align: center;
     }
+    
+    @media print {
+        .no-print { display: none !important; }
+        .stats-card { background: none !important; color: #000 !important; box-shadow: none !important; border: 1px solid #ddd !important; page-break-inside: avoid; }
+        .stats-card .stats-number { font-size: 1.5rem; }
+        .stats-card .stats-label { font-size: 0.9rem; }
+        .chart-card { display: none !important; }
+        .print-header { display: block !important; text-align: center; margin-bottom: 2rem; }
+        .print-header h1 { font-size: 1.3rem; font-weight: bold; margin-bottom: 0.3rem; }
+        .print-header h2 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: bold; }
+        .print-header p { font-size: 0.9rem; color: #666; }
+        .print-only { display: block !important; }
+        .print-only h4 { font-size: 1rem; font-weight: bold; margin-bottom: 0.5rem; margin-top: 1rem; }
+        .print-only .table { font-size: 0.85rem; page-break-inside: auto; }
+        .print-only .table thead { background: #f8f9fa !important; -webkit-print-color-adjust: exact; }
+        .print-only .table th, .print-only .table td { padding: 0.4rem !important; border: 1px solid #dee2e6 !important; }
+        body { padding: 20px; }
+    }
+    
+    .print-header { display: none; }
+    .print-only { display: none; }
 </style>
+
+<div class="container-fluid no-print">
+    <div class="row mb-3">
+        <div class="col-12 text-right">
+            <button type="button" class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Print Header (only visible when printing) -->
+<div class="print-header">
+    <h1>YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN</h1>
+    <h2>Population Statistics Report</h2>
+    <p>Generated on: <?php echo date("F d, Y h:i A") ?></p>
+</div>
 
 <div class="container-fluid">
     <!-- Summary Statistics Row -->
@@ -153,6 +191,106 @@ while($row = $age_groups->fetch_assoc()) {
                 <div class="chart-container">
                     <canvas id="ageChart"></canvas>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Print-only Summary Tables -->
+    <div class="print-only">
+        <div class="row">
+            <div class="col-6">
+                <h4>Population by Gender</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Gender</th>
+                            <th>Count</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $total = array_sum(array_column($sex_data, 'count'));
+                        foreach($sex_data as $sex): 
+                            $percentage = $total > 0 ? round(($sex['count'] / $total) * 100, 1) : 0;
+                        ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($sex['sex']) ?></td>
+                            <td><?php echo $sex['count'] ?></td>
+                            <td><?php echo $percentage ?>%</td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr class="font-weight-bold">
+                            <td>Total</td>
+                            <td><?php echo $total ?></td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="col-6">
+                <h4>Population by Zone</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Zone</th>
+                            <th>Count</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $total_zone = array_sum(array_column($zone_data, 'count'));
+                        foreach($zone_data as $zone): 
+                            $percentage = $total_zone > 0 ? round(($zone['count'] / $total_zone) * 100, 1) : 0;
+                        ?>
+                        <tr>
+                            <td>Zone <?php echo htmlspecialchars($zone['zone']) ?></td>
+                            <td><?php echo $zone['count'] ?></td>
+                            <td><?php echo $percentage ?>%</td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr class="font-weight-bold">
+                            <td>Total</td>
+                            <td><?php echo $total_zone ?></td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4>Population by Age Group</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Age Group</th>
+                            <th>Count</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $total_age = array_sum(array_column($age_group_data, 'count'));
+                        foreach($age_group_data as $age): 
+                            $percentage = $total_age > 0 ? round(($age['count'] / $total_age) * 100, 1) : 0;
+                        ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($age['age_group']) ?></td>
+                            <td><?php echo $age['count'] ?></td>
+                            <td><?php echo $percentage ?>%</td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <tr class="font-weight-bold">
+                            <td>Total</td>
+                            <td><?php echo $total_age ?></td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

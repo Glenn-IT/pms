@@ -104,10 +104,29 @@ $absent_users_qry = $conn->query("
     
     @media print {
         .no-print { display: none !important; }
-        .card { border: none !important; box-shadow: none !important; }
-        .report-header { background: #333 !important; -webkit-print-color-adjust: exact; }
+        .print-only { display: block !important; }
+        .card { border: none !important; box-shadow: none !important; page-break-inside: avoid; }
+        .card-header { display: none !important; }
+        .report-header { background: none !important; color: #000 !important; padding: 0 !important; margin-bottom: 1.5rem !important; border-radius: 0 !important; }
+        .report-header h1 { font-size: 1.3rem; margin-bottom: 0.5rem; font-weight: bold; }
+        .report-header h3 { font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: bold; }
+        .report-header p { display: none !important; }
+        .stat-card, .row.mb-4, .alert { display: none !important; }
         .print-section { display: none !important; }
         .print-section.print-active { display: block !important; }
+        .hide-on-print { display: none !important; }
+        .simple-print-list thead th:not(:nth-child(1)):not(:nth-child(2)) { display: none !important; }
+        .simple-print-list tbody td:not(:nth-child(1)):not(:nth-child(2)) { display: none !important; }
+        .table { font-size: 0.95rem; border-collapse: collapse !important; }
+        .table thead { background: none !important; }
+        .table thead th { background: none !important; border: none !important; border-bottom: 2px solid #000 !important; font-weight: bold; padding: 0.5rem 0.3rem !important; text-align: left; }
+        .table tbody tr { border: none !important; }
+        .table tbody td { border: none !important; border-bottom: 1px solid #ddd !important; padding: 0.4rem 0.3rem !important; }
+        .table tbody td:first-child { width: 40px; text-align: center; }
+        .table tbody td:nth-child(2) { text-align: left; }
+        .badge { display: none !important; }
+        .container-fluid { padding: 0 !important; }
+        .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate { display: none !important; }
     }
 </style>
 
@@ -132,7 +151,7 @@ $absent_users_qry = $conn->query("
     </div>
     
     <div class="report-header text-center">
-        <h1 class="mb-3">Attendance Report</h1>
+        <h1 class="mb-3">YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN</h1>
         <h3><?= htmlspecialchars($event['title']) ?></h3>
         <p class="mb-0">Generated on: <?= date("M d, Y h:i A") ?></p>
     </div>
@@ -171,7 +190,7 @@ $absent_users_qry = $conn->query("
             </h4>
         </div>
         <div class="card-body print-section" id="presentSection">
-            <div class="row mb-3">
+            <div class="row mb-3 no-print">
                 <div class="col-md-6">
                     <strong>Event:</strong> <?= htmlspecialchars($event['title']) ?>
                 </div>
@@ -179,8 +198,9 @@ $absent_users_qry = $conn->query("
                     <strong>Date of Event:</strong> <?= date("M d, Y h:i A", strtotime($event['date_created'])) ?>
                 </div>
             </div>
+            <h4 class="print-only" style="display: none; margin-bottom: 1rem; font-size: 1.1rem; font-weight: bold;">Present List</h4>
             
-            <div class="alert alert-info">
+            <div class="alert alert-info no-print">
                 <i class="fas fa-info-circle"></i>
                 <strong>Report Overview:</strong> 
                 <ul class="mb-0 mt-2">
@@ -193,7 +213,7 @@ $absent_users_qry = $conn->query("
             
             <?php if($total_attendees > 0): ?>
             <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="reportTable">
+                <table class="table table-striped table-bordered simple-print-list" id="reportTable">
                     <thead class="thead-dark">
                         <tr>
                             <th width="5%">#</th>
@@ -212,16 +232,16 @@ $absent_users_qry = $conn->query("
                         <tr>
                             <td><?= $i++ ?></td>
                             <td><?= htmlspecialchars($row['attendee_name']) ?></td>
-                            <td><?= !empty($row['attendee_zone']) ? htmlspecialchars($row['attendee_zone']) : '<span class="text-muted">N/A</span>' ?></td>
-                            <td><?= date("M d, Y h:i:s A", strtotime($row['scan_time'])) ?></td>
-                            <td class="text-center">
+                            <td class="hide-on-print"><?= !empty($row['attendee_zone']) ? htmlspecialchars($row['attendee_zone']) : '<span class="text-muted">N/A</span>' ?></td>
+                            <td class="hide-on-print"><?= date("M d, Y h:i:s A", strtotime($row['scan_time'])) ?></td>
+                            <td class="text-center hide-on-print">
                                 <?php if($row['status'] == 'present'): ?>
                                     <span class="badge badge-success">Present</span>
                                 <?php else: ?>
                                     <span class="badge badge-danger">Absent</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?= !empty($row['scanner_name']) ? htmlspecialchars($row['scanner_name']) : '<em class="text-muted">Auto-scan</em>' ?></td>
+                            <td class="hide-on-print"><?= !empty($row['scanner_name']) ? htmlspecialchars($row['scanner_name']) : '<em class="text-muted">Auto-scan</em>' ?></td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -245,14 +265,15 @@ $absent_users_qry = $conn->query("
         </h4>
     </div>
     <div class="card-body print-section" id="absentSection">
-        <div class="alert alert-warning">
+        <h4 class="print-only" style="display: none; margin-bottom: 1rem; margin-top: 2rem; font-size: 1.1rem; font-weight: bold;">Absent List</h4>
+        <div class="alert alert-warning no-print">
             <i class="fas fa-exclamation-triangle"></i>
             <strong>Note:</strong> These are active SK who did not scan their QR code for this event.
         </div>
         
         <?php if($absent_count > 0): ?>
         <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="absentTable">
+            <table class="table table-striped table-bordered simple-print-list" id="absentTable">
                 <thead class="thead-dark">
                     <tr>
                         <th width="5%">#</th>
@@ -269,8 +290,8 @@ $absent_users_qry = $conn->query("
                     <tr>
                         <td><?= $j++ ?></td>
                         <td><?= htmlspecialchars($absent_row['full_name']) ?></td>
-                        <td><?= !empty($absent_row['zone']) ? htmlspecialchars($absent_row['zone']) : '<span class="text-muted">N/A</span>' ?></td>
-                        <td><?= htmlspecialchars($absent_row['username']) ?></td>
+                        <td class="hide-on-print"><?= !empty($absent_row['zone']) ? htmlspecialchars($absent_row['zone']) : '<span class="text-muted">N/A</span>' ?></td>
+                        <td class="hide-on-print"><?= htmlspecialchars($absent_row['username']) ?></td>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -309,8 +330,13 @@ $(document).ready(function(){
 // Print functions
 function printAll() {
     // Show all sections for printing
-    $('.print-section').removeClass('print-active');
+    $('.print-section').addClass('print-active');
     window.print();
+    
+    // Remove the class after printing
+    setTimeout(function() {
+        $('.print-section').removeClass('print-active');
+    }, 1000);
 }
 
 function printPresent() {
