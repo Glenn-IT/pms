@@ -617,6 +617,83 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             transform: scale(1.05);
         }
         
+        /* Statistics Modal Styles */
+        .stats-card-modal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .stats-progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .stats-progress-bar {
+            background: white;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #001f3f;
+            transition: width 0.5s ease;
+        }
+        
+        .recent-attendance-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recent-attendance-item {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .recent-attendance-item h6 {
+            color: #001f3f;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+        
+        .recent-attendance-item small {
+            color: #666;
+        }
+        
+        .zone-rank-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+        
+        .rank-1 { background: #ffd700; color: #333; }
+        .rank-2 { background: #c0c0c0; color: #333; }
+        .rank-3 { background: #cd7f32; color: white; }
+        .rank-other { background: #007bff; color: white; }
+        
         /* Mobile Responsive */
         @media (max-width: 992px) {
             .mobile-menu-toggle {
@@ -717,7 +794,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#"><i class="fas fa-user-tie"></i> SK Officials</a></li>
+                <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
                 <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
                 <li><a href="#"><i class="fas fa-info-circle"></i> About Us</a></li>
                 <li><a href="#"><i class="fas fa-code"></i> Developers</a></li>
@@ -777,8 +854,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                         <span>SK Member</span>
                     </div>
                 </div>
-                <div class="text-center mt-3">
-                    <button class="btn btn-light btn-lg" onclick="showQRCode()" style="border: 2px solid white; font-weight: 600;">
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button class="btn btn-light btn-lg" onclick="showQRCode()" style="padding: 0.75rem 2rem; font-weight: 600;">
                         <i class="fas fa-qrcode"></i> Show My QR Code
                     </button>
                 </div>
@@ -798,28 +875,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                     <p>Stay updated with latest announcements</p>
                 </div>
                 
-                <div class="feature-card">
-                    <i class="fas fa-qrcode"></i>
-                    <h5>QR Code</h5>
-                    <p>Your unique QR code for attendance</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-user-edit"></i>
-                    <h5>Profile</h5>
-                    <p>Update your personal information</p>
-                </div>
-                
-                <div class="feature-card">
+                <div class="feature-card" onclick="showStatistics()">
                     <i class="fas fa-chart-bar"></i>
                     <h5>Statistics</h5>
                     <p>View your attendance and participation</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-envelope"></i>
-                    <h5>Messages</h5>
-                    <p>Check your inbox and notifications</p>
                 </div>
             </div>
             
@@ -939,6 +998,28 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             </div>
             <div class="modal-body py-4" id="announcementDetailsBody">
                 <!-- Announcement details will load here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Modal -->
+<div class="modal fade" id="statisticsModal" tabindex="-1" role="dialog" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="statisticsModalLabel">
+                    <i class="fas fa-chart-bar"></i> My Attendance Statistics
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4" id="statisticsModalBody">
+                <div class="text-center py-3">
+                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
+                    <p class="mt-2">Loading Statistics...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1386,6 +1467,186 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         html += '</div>';
         
         $('#announcementDetailsBody').html(html);
+    }
+    
+    function showStatistics(){
+        $('#statisticsModal').modal('show');
+        
+        // Load statistics via AJAX
+        $.ajax({
+            url: '<?= base_url ?>classes/Master.php?f=get_user_statistics',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp){
+                if(resp.status === 'success'){
+                    displayStatistics(resp.data);
+                } else {
+                    $('#statisticsModalBody').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-times-circle"></i> Failed to load statistics
+                        </div>
+                    `);
+                }
+            },
+            error: function(){
+                $('#statisticsModalBody').html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-times-circle"></i> Error loading statistics
+                    </div>
+                `);
+            }
+        });
+    }
+    
+    function displayStatistics(stats){
+        let html = '<div class="container-fluid">';
+        
+        // Overview Stats Cards
+        html += '<div class="row mb-4">';
+        
+        // Total Events Attended
+        html += `
+            <div class="col-md-4">
+                <div class="stats-card-modal" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                    <div class="stats-number">${stats.total_attended}</div>
+                    <div class="stats-label">Events Attended</div>
+                </div>
+            </div>
+        `;
+        
+        // Total Events Available
+        html += `
+            <div class="col-md-4">
+                <div class="stats-card-modal" style="background: linear-gradient(135deg, #28a745, #1e7e34);">
+                    <div class="stats-number">${stats.total_events}</div>
+                    <div class="stats-label">Total Events</div>
+                </div>
+            </div>
+        `;
+        
+        // Attendance Rate
+        html += `
+            <div class="col-md-4">
+                <div class="stats-card-modal" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
+                    <div class="stats-number">${stats.attendance_rate}%</div>
+                    <div class="stats-label">Attendance Rate</div>
+                    <div class="stats-progress">
+                        <div class="stats-progress-bar" style="width: ${stats.attendance_rate}%;">
+                            ${stats.attendance_rate}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        html += '</div>';
+        
+        // Zone Ranking (if available)
+        if(stats.zone_rank && stats.zone_rank > 0){
+            html += '<div class="row mb-4">';
+            html += '<div class="col-12">';
+            html += `
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 1.5rem; text-align: center;">
+                    <h5 style="color: #001f3f; margin-bottom: 1rem;">
+                        <i class="fas fa-trophy"></i> Your Zone Performance
+                    </h5>
+                    <p style="color: #666; margin-bottom: 1rem;">
+                        Zone <?= $_settings->userdata('zone') ?> ranks 
+                        <span class="zone-rank-badge ${stats.zone_rank === 1 ? 'rank-1' : stats.zone_rank === 2 ? 'rank-2' : stats.zone_rank === 3 ? 'rank-3' : 'rank-other'}">
+                            #${stats.zone_rank}
+                        </span>
+                        out of ${stats.total_zones} zones
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p style="margin: 0.5rem 0; color: #333;">
+                                <i class="fas fa-users text-primary"></i> 
+                                <strong>${stats.zone_members || 0}</strong> active members
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p style="margin: 0.5rem 0; color: #333;">
+                                <i class="fas fa-calendar-check text-success"></i> 
+                                <strong>${stats.zone_attendance || 0}</strong> total attendances
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            html += '</div>';
+            html += '</div>';
+        }
+        
+        // Two Column Layout for Lists
+        html += '<div class="row">';
+        
+        // Recent Attendance Column
+        html += '<div class="col-md-6">';
+        html += `
+            <h5 style="color: #001f3f; margin-bottom: 1rem;">
+                <i class="fas fa-history"></i> Recent Attendance
+            </h5>
+        `;
+        
+        if(stats.recent_attendance && stats.recent_attendance.length > 0){
+            html += '<ul class="recent-attendance-list">';
+            stats.recent_attendance.forEach(function(item){
+                html += `
+                    <li class="recent-attendance-item">
+                        <h6>${item.title}</h6>
+                        <small>
+                            <i class="fas fa-calendar text-primary"></i> Event Date: ${item.event_date}<br>
+                            <i class="fas fa-clock text-success"></i> Scanned: ${item.scan_time}
+                        </small>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        } else {
+            html += `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No attendance records yet. Start attending events to build your history!
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+        
+        // Upcoming/Not Attended Events Column
+        html += '<div class="col-md-6">';
+        html += `
+            <h5 style="color: #001f3f; margin-bottom: 1rem;">
+                <i class="fas fa-calendar-plus"></i> Events Not Attended
+            </h5>
+        `;
+        
+        if(stats.upcoming_events && stats.upcoming_events.length > 0){
+            html += '<ul class="recent-attendance-list">';
+            stats.upcoming_events.forEach(function(item){
+                html += `
+                    <li class="recent-attendance-item" style="border-left-color: #dc3545;">
+                        <h6>${item.title}</h6>
+                        <small>
+                            <i class="fas fa-calendar text-danger"></i> Event Date: ${item.date}
+                        </small>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        } else {
+            html += `
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> Congratulations! You've attended all available events!
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+        html += '</div>';
+        
+        html += '</div>';
+        
+        $('#statisticsModalBody').html(html);
     }
 </script>
 

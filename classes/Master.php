@@ -1251,6 +1251,110 @@ function get_most_attended_events() {
 }
 
 //End Event Code
+
+function get_user_statistics() {
+    $user_id = $this->settings->userdata('id');
+    
+    if(empty($user_id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'User not logged in']);
+    }
+    
+    $stats = [];
+    
+    // Get total events attended
+    $attended_qry = $this->conn->query("
+        SELECT COUNT(*) as total_attended 
+        FROM event_attendance 
+        WHERE user_id = '{$user_id}' AND status = 'present'
+    ");
+    $stats['total_attended'] = $attended_qry ? (int)$attended_qry->fetch_assoc()['total_attended'] : 0;
+    
+    // Get total events available
+    $total_events_qry = $this->conn->query("SELECT COUNT(*) as total FROM event_list");
+    $stats['total_events'] = $total_events_qry ? (int)$total_events_qry->fetch_assoc()['total'] : 0;
+    
+    // Calculate attendance rate
+    $stats['attendance_rate'] = $stats['total_events'] > 0 
+        ? round(($stats['total_attended'] / $stats['total_events']) * 100, 1) 
+        : 0;
+    
+    // Get recent attendance (last 5 events attended)
+    $recent_qry = $this->conn->query("
+        SELECT el.title, el.date_created, ea.scan_time 
+        FROM event_attendance ea 
+        JOIN event_list el ON ea.event_id = el.id 
+        WHERE ea.user_id = '{$user_id}' AND ea.status = 'present' 
+        ORDER BY ea.scan_time DESC 
+        LIMIT 5
+    ");
+    
+    $stats['recent_attendance'] = [];
+    if($recent_qry) {
+        while($row = $recent_qry->fetch_assoc()) {
+            $stats['recent_attendance'][] = [
+                'title' => $row['title'],
+                'event_date' => date("M j, Y", strtotime($row['date_created'])),
+                'scan_time' => date("M j, Y g:i A", strtotime($row['scan_time']))
+            ];
+        }
+    }
+    
+    // Get upcoming events (not yet attended)
+    $upcoming_qry = $this->conn->query("
+        SELECT el.id, el.title, el.date_created 
+        FROM event_list el 
+        WHERE el.id NOT IN (
+            SELECT event_id FROM event_attendance WHERE user_id = '{$user_id}'
+        )
+        ORDER BY el.date_created DESC 
+        LIMIT 5
+    ");
+    
+    $stats['upcoming_events'] = [];
+    if($upcoming_qry) {
+        while($row = $upcoming_qry->fetch_assoc()) {
+            $stats['upcoming_events'][] = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'date' => date("M j, Y", strtotime($row['date_created']))
+            ];
+        }
+    }
+    
+    // Get user's zone/purok ranking
+    $user_zone = $this->settings->userdata('zone');
+    if($user_zone) {
+        $zone_rank_qry = $this->conn->query("
+            SELECT 
+                u.zone,
+                COUNT(ea.id) as attendance_count,
+                COUNT(DISTINCT ea.user_id) as unique_members
+            FROM event_attendance ea
+            JOIN users u ON ea.user_id = u.id
+            WHERE u.status = 1 AND u.type != 1 AND u.zone IS NOT NULL
+            GROUP BY u.zone
+            ORDER BY attendance_count DESC
+        ");
+        
+        $rank = 0;
+        $total_zones = 0;
+        if($zone_rank_qry) {
+            while($row = $zone_rank_qry->fetch_assoc()) {
+                $total_zones++;
+                if($row['zone'] == $user_zone) {
+                    $rank = $total_zones;
+                    $stats['zone_attendance'] = (int)$row['attendance_count'];
+                    $stats['zone_members'] = (int)$row['unique_members'];
+                }
+            }
+        }
+        $stats['zone_rank'] = $rank;
+        $stats['total_zones'] = $total_zones;
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $stats]);
+}
+
 }
 
 $Master = new Master();
@@ -1368,7 +1472,9 @@ switch ($action) {
 	case 'get_all_events_with_attendance':
 		echo $Master->get_all_events_with_attendance();
 	break;
-
+	case 'get_user_statistics':
+		echo $Master->get_user_statistics();
+	break;
 	
 		
 	default:
