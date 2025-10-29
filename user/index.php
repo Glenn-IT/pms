@@ -148,20 +148,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             width: 100%;
             margin: 2rem auto;
             padding: 0 1rem;
-            display: flex;
-            gap: 2rem;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 80px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 15px;
-            padding: 1.5rem 0.5rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            height: fit-content;
-            position: sticky;
-            top: 100px;
         }
         
         /* Main Panel */
@@ -763,18 +749,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 justify-content: center;
                 margin: 1rem 0 0 0;
             }
-            
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                position: static;
-                display: flex;
-                justify-content: space-around;
-                padding: 1rem;
-            }
         }
         
         @media (max-width: 768px) {
@@ -866,11 +840,6 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 
 <!-- Main Container -->
 <div class="main-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <!-- Sidebar content can be added here -->
-    </aside>
-    
     <!-- Main Panel -->
     <main class="main-panel">
         <div class="panel-header">
