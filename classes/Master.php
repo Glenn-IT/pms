@@ -1355,6 +1355,135 @@ function get_user_statistics() {
     return json_encode(['status' => 'success', 'data' => $stats]);
 }
 
+// Forum Functions
+function send_forum_message() {
+    extract($_POST);
+    
+    $user_id = $this->settings->userdata('id');
+    if(empty($user_id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'User not logged in']);
+    }
+    
+    if(empty($message)) {
+        return json_encode(['status' => 'failed', 'msg' => 'Message cannot be empty']);
+    }
+    
+    $message = $this->conn->real_escape_string(htmlspecialchars(trim($message)));
+    
+    $sql = "INSERT INTO forum_messages (user_id, message) VALUES ('{$user_id}', '{$message}')";
+    $save = $this->conn->query($sql);
+    
+    if($save) {
+        // Get the inserted message with user details
+        $message_id = $this->conn->insert_id;
+        $get_message = $this->conn->query("
+            SELECT fm.*, u.firstname, u.lastname, u.username, u.avatar 
+            FROM forum_messages fm 
+            JOIN users u ON fm.user_id = u.id 
+            WHERE fm.id = '{$message_id}'
+        ");
+        
+        if($get_message && $get_message->num_rows > 0) {
+            $msg_data = $get_message->fetch_assoc();
+            return json_encode([
+                'status' => 'success',
+                'msg' => 'Message sent successfully',
+                'data' => $msg_data
+            ]);
+        } else {
+            return json_encode(['status' => 'success', 'msg' => 'Message sent successfully']);
+        }
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+function get_forum_messages() {
+    $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 50;
+    $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+    
+    $messages = [];
+    $sql = "SELECT fm.*, u.firstname, u.lastname, u.username, u.avatar, u.zone 
+            FROM forum_messages fm 
+            JOIN users u ON fm.user_id = u.id 
+            ORDER BY fm.date_created DESC 
+            LIMIT {$limit} OFFSET {$offset}";
+    
+    $qry = $this->conn->query($sql);
+    
+    if($qry) {
+        while($row = $qry->fetch_assoc()) {
+            $row['date'] = date("M j, Y g:i A", strtotime($row['date_created']));
+            $row['time_ago'] = $this->time_ago($row['date_created']);
+            $messages[] = $row;
+        }
+        
+        // Get total count
+        $count_qry = $this->conn->query("SELECT COUNT(*) as total FROM forum_messages");
+        $total = $count_qry ? (int)$count_qry->fetch_assoc()['total'] : 0;
+        
+        return json_encode([
+            'status' => 'success',
+            'data' => $messages,
+            'total' => $total
+        ]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+function delete_forum_message() {
+    extract($_POST);
+    
+    $user_id = $this->settings->userdata('id');
+    $user_type = $this->settings->userdata('type');
+    
+    if(empty($id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'Message ID is required']);
+    }
+    
+    // Check if user owns this message or is admin
+    $check = $this->conn->query("SELECT user_id FROM forum_messages WHERE id = '{$id}'");
+    if($check && $check->num_rows > 0) {
+        $msg = $check->fetch_assoc();
+        
+        // Allow deletion if user owns message or is admin (type = 1)
+        if($msg['user_id'] == $user_id || $user_type == 1) {
+            $del = $this->conn->query("DELETE FROM forum_messages WHERE id = '{$id}'");
+            
+            if($del) {
+                return json_encode(['status' => 'success', 'msg' => 'Message deleted successfully']);
+            } else {
+                return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+            }
+        } else {
+            return json_encode(['status' => 'failed', 'msg' => 'You can only delete your own messages']);
+        }
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => 'Message not found']);
+    }
+}
+
+function time_ago($datetime) {
+    $timestamp = strtotime($datetime);
+    $difference = time() - $timestamp;
+    
+    $periods = array("second", "minute", "hour", "day", "week", "month", "year");
+    $lengths = array("60", "60", "24", "7", "4.35", "12");
+    
+    for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
+        $difference /= $lengths[$j];
+    }
+    
+    $difference = round($difference);
+    
+    if($difference != 1) {
+        $periods[$j].= "s";
+    }
+    
+    return "$difference $periods[$j] ago";
+}
+
 }
 
 $Master = new Master();
@@ -1474,6 +1603,15 @@ switch ($action) {
 	break;
 	case 'get_user_statistics':
 		echo $Master->get_user_statistics();
+	break;
+	case 'send_forum_message':
+		echo $Master->send_forum_message();
+	break;
+	case 'get_forum_messages':
+		echo $Master->get_forum_messages();
+	break;
+	case 'delete_forum_message':
+		echo $Master->delete_forum_message();
 	break;
 	
 		

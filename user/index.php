@@ -822,7 +822,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="sk_officials.php"><i class="fas fa-user-tie"></i> SK Officials</a></li>
-                <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
+                <li><a href="forum.php"><i class="fas fa-comments"></i> Forum</a></li>
                 <li><a href="about_us.php"><i class="fas fa-info-circle"></i> About Us</a></li>
                 <li><a href="developers.php"><i class="fas fa-code"></i> Developers</a></li>
             </ul>
