@@ -148,11 +148,13 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             width: 100%;
             margin: 2rem auto;
             padding: 0 1rem;
+            display: flex;
+            justify-content: center;
         }
         
         /* Main Panel */
         .main-panel {
-            flex: 1;
+            width: 100%;
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
