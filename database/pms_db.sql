@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 15, 2025 at 12:48 PM
+-- Generation Time: Oct 29, 2025 at 06:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,31 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `pms_db`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `action_list`
---
-
-CREATE TABLE `action_list` (
-  `id` int(30) NOT NULL,
-  `name` text NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `action_list`
---
-
-INSERT INTO `action_list` (`id`, `name`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 'Solitary Confinement', 1, 0, '2022-05-31 11:56:31', '2022-05-31 11:56:31'),
-(2, 'Infirmary Confinement', 1, 0, '2022-05-31 11:58:03', '2022-05-31 11:58:03'),
-(3, 'Transported for Trial', 1, 0, '2022-05-31 11:59:14', '2022-05-31 11:59:14'),
-(4, 'test - updated', 1, 1, '2022-05-31 11:59:34', '2022-05-31 11:59:49');
 
 -- --------------------------------------------------------
 
@@ -66,8 +41,7 @@ CREATE TABLE `announcement_list` (
 --
 
 INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `images`, `description`, `date_created`) VALUES
-(10, 'Sample A', 'uploads/announcements/10_1.png', '[\"uploads/announcements/10_1.png\",\"uploads/announcements/10_2.png\",\"uploads/announcements/10_3.png\",\"uploads/announcements/10_4.png\",\"uploads/announcements/10_5.png\"]', 'qwewqe', '2025-08-15 11:54:31'),
-(11, 'Sample B', 'uploads/announcements/11_1.jpg', '[\"uploads/announcements/11_1.jpg\",\"uploads/announcements/11_2.jpg\",\"uploads/announcements/11_3.jpg\",\"uploads/announcements/11_4.jpg\",\"uploads/announcements/11_5.jpg\"]', 'Sample', '2025-08-15 11:54:58');
+(12, 'Sample Announcement', 'uploads/announcements/12_1.jpg', '[\"uploads/announcements/12_1.jpg\",\"uploads/announcements/12_2.jpg\",\"uploads/announcements/12_3.jpg\",\"uploads/announcements/12_4.jpg\",\"uploads/announcements/12_5.jpg\"]', 'awdawd', '2025-10-30 00:45:41');
 
 -- --------------------------------------------------------
 
@@ -83,75 +57,6 @@ CREATE TABLE `attendance` (
   `fullname` varchar(255) NOT NULL,
   `time_scanned` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cell_list`
---
-
-CREATE TABLE `cell_list` (
-  `id` int(30) NOT NULL,
-  `prison_id` int(30) NOT NULL,
-  `name` text NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cell_list`
---
-
-INSERT INTO `cell_list` (`id`, `prison_id`, `name`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 1, 'Block 1 Cell 1001', 1, 0, '2022-05-31 09:16:32', '2022-05-31 09:16:32'),
-(2, 1, 'Block 1 Cell 1002', 1, 0, '2022-05-31 09:17:07', '2022-05-31 09:17:07'),
-(3, 1, 'Block 1 Cell 1003', 1, 0, '2022-05-31 09:17:18', '2022-05-31 09:17:18'),
-(4, 1, 'Block 1 Cell 1004', 1, 0, '2022-05-31 09:17:25', '2022-05-31 09:17:25'),
-(5, 1, 'Block 2 Cell 1001', 1, 0, '2022-05-31 09:17:34', '2022-05-31 09:17:34'),
-(6, 1, 'Block 2 Cell 1002', 1, 0, '2022-05-31 09:17:43', '2022-05-31 09:17:43'),
-(7, 1, 'Block 2 Cell 1003', 1, 0, '2022-05-31 09:17:52', '2022-05-31 09:17:52'),
-(8, 1, 'Block 2 Cell 1004', 1, 0, '2022-05-31 09:17:58', '2022-05-31 09:17:58'),
-(9, 1, 'Block 3 Cell 1001', 1, 0, '2022-05-31 09:18:07', '2022-05-31 09:18:07'),
-(10, 1, 'Block 3 Cell 1002', 1, 0, '2022-05-31 09:18:16', '2022-05-31 09:18:16'),
-(11, 1, 'Block 3 Cell 1003', 1, 0, '2022-05-31 09:18:26', '2022-05-31 09:18:26'),
-(12, 2, 'Block 1 Cell 1001', 1, 0, '2022-05-31 09:18:36', '2022-05-31 09:18:36'),
-(13, 2, 'Block 1 Cell 1002', 1, 0, '2022-05-31 09:18:41', '2022-05-31 09:18:41'),
-(14, 2, 'Block 1 Cell 1003', 1, 0, '2022-05-31 09:18:49', '2022-05-31 09:18:49'),
-(15, 2, 'Block 1 Cell 1004', 1, 0, '2022-05-31 09:18:55', '2022-05-31 09:18:55'),
-(16, 2, 'test - updated', 0, 1, '2022-05-31 09:19:06', '2022-05-31 09:19:29');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `crime_list`
---
-
-CREATE TABLE `crime_list` (
-  `id` int(30) NOT NULL,
-  `name` text NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `crime_list`
---
-
-INSERT INTO `crime_list` (`id`, `name`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 'Robbery', 1, 0, '2022-05-31 09:25:05', '2022-05-31 09:25:05'),
-(2, 'Homicide', 1, 0, '2022-05-31 09:25:13', '2022-05-31 09:25:13'),
-(3, 'Murder', 1, 0, '2022-05-31 09:25:20', '2022-05-31 09:25:20'),
-(4, 'Attempted Murder', 1, 0, '2022-05-31 09:25:34', '2022-05-31 09:25:34'),
-(5, 'Child Abuse', 1, 0, '2022-05-31 09:26:14', '2022-05-31 09:26:14'),
-(6, 'Fraud', 1, 0, '2022-05-31 09:26:33', '2022-05-31 09:26:33'),
-(7, 'Rape', 1, 0, '2022-05-31 09:26:57', '2022-05-31 09:26:57'),
-(8, 'Sexual Assult', 1, 0, '2022-05-31 09:27:06', '2022-05-31 09:27:06'),
-(9, 'Terrorism', 1, 0, '2022-05-31 09:27:26', '2022-05-31 09:27:26'),
-(10, 'Stalking and Harassment', 1, 0, '2022-05-31 09:27:43', '2022-05-31 09:28:15');
 
 -- --------------------------------------------------------
 
@@ -185,6 +90,7 @@ CREATE TABLE `event_attendance` (
   `scanner_user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+<<<<<<< HEAD
 --
 -- Dumping data for table `event_attendance`
 --
@@ -201,6 +107,8 @@ INSERT INTO `event_attendance` (`id`, `event_id`, `user_id`, `qr_code`, `scan_ti
 (46, 26, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:46', 'present', 1),
 (47, 25, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:54', 'present', 1);
 
+=======
+>>>>>>> 7355b10
 -- --------------------------------------------------------
 
 --
@@ -222,115 +130,27 @@ CREATE TABLE `event_list` (
 --
 
 INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
+<<<<<<< HEAD
 (25, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/25_1757932272_0.png\"]', NULL, '2025-09-15 18:31:00'),
 (26, 'Sample B', 'Sample B', NULL, '[\"uploads\\/events\\/26_1757932295_0.jpg\"]', NULL, '2025-09-15 18:31:00'),
 (27, 'Sample C', 'Sample C', NULL, '[\"uploads\\/events\\/27_1757932313_0.png\"]', NULL, '2025-09-15 18:31:00');
+=======
+(31, 'Sample', 'Sample', NULL, '[\"uploads\\/events\\/31_1761756295_0.jpg\",\"uploads\\/events\\/31_1761756295_1.jpg\",\"uploads\\/events\\/31_1761756295_2.jpg\",\"uploads\\/events\\/31_1761756295_3.jpg\",\"uploads\\/events\\/31_1761756295_4.jpg\"]', NULL, '2025-10-31 14:44:00'),
+(32, 'awdqweqwe', 'ewqeq', NULL, '[\"uploads\\/events\\/32_1761756421_0.jpeg\"]', NULL, '2025-10-30 00:46:00');
+>>>>>>> 7355b10
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `inmate_crimes`
+-- Table structure for table `forum_messages`
 --
 
-CREATE TABLE `inmate_crimes` (
-  `inmate_id` int(30) NOT NULL,
-  `crime_id` int(30) NOT NULL
+CREATE TABLE `forum_messages` (
+  `id` int(11) NOT NULL,
+  `user_id` int(50) NOT NULL,
+  `message` text NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `inmate_crimes`
---
-
-INSERT INTO `inmate_crimes` (`inmate_id`, `crime_id`) VALUES
-(1, 6),
-(1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `inmate_list`
---
-
-CREATE TABLE `inmate_list` (
-  `id` int(30) NOT NULL,
-  `code` varchar(100) NOT NULL,
-  `firstname` text NOT NULL,
-  `middlename` text DEFAULT NULL,
-  `lastname` text NOT NULL,
-  `sex` varchar(100) NOT NULL,
-  `dob` date NOT NULL,
-  `address` text NOT NULL,
-  `marital_status` varchar(250) NOT NULL,
-  `eye_color` text NOT NULL,
-  `complexion` text NOT NULL,
-  `cell_id` int(11) NOT NULL,
-  `sentence` text NOT NULL,
-  `date_from` date NOT NULL,
-  `date_to` date DEFAULT NULL,
-  `emergency_name` text DEFAULT NULL,
-  `emergency_contact` text DEFAULT NULL,
-  `emergency_relation` text DEFAULT NULL,
-  `image_path` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `visiting_privilege` tinyint(1) NOT NULL DEFAULT 1,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `inmate_list`
---
-
-INSERT INTO `inmate_list` (`id`, `code`, `firstname`, `middlename`, `lastname`, `sex`, `dob`, `address`, `marital_status`, `eye_color`, `complexion`, `cell_id`, `sentence`, `date_from`, `date_to`, `emergency_name`, `emergency_contact`, `emergency_relation`, `image_path`, `status`, `visiting_privilege`, `date_created`, `date_updated`) VALUES
-(1, '6231415', 'John', 'D', 'Smith', 'Male', '1990-06-23', 'Sample Address only', 'Married', 'Brown', 'Fair', 1, '2 Year', '2022-05-31', '2024-05-31', 'Will Smith', '09654123987', 'Brother', 'uploads/inmates/1.png?v=1653966405', 1, 1, '2022-05-31 11:06:45', '2022-05-31 14:50:44');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `prison_list`
---
-
-CREATE TABLE `prison_list` (
-  `id` int(30) NOT NULL,
-  `name` text NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `delete_flag` tinyint(1) NOT NULL DEFAULT 0,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `prison_list`
---
-
-INSERT INTO `prison_list` (`id`, `name`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(1, 'Men&#039;s Prison', 1, 0, '2022-05-31 09:03:13', '2022-05-31 09:03:13'),
-(2, 'Women&#039;s Prison', 1, 0, '2022-05-31 09:03:23', '2022-05-31 09:03:23'),
-(3, 'Test - updated', 0, 1, '2022-05-31 09:03:31', '2022-05-31 09:03:45');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `record_list`
---
-
-CREATE TABLE `record_list` (
-  `id` int(30) NOT NULL,
-  `inmate_id` int(30) NOT NULL,
-  `action_id` int(30) NOT NULL,
-  `remarks` text NOT NULL,
-  `date` date NOT NULL,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `record_list`
---
-
-INSERT INTO `record_list` (`id`, `inmate_id`, `action_id`, `remarks`, `date`, `date_created`, `date_updated`) VALUES
-(1, 1, 3, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget ante et lacus mollis euismod ut pellentesque nisl. Mauris at elit at dui tempor hendrerit.', '2022-05-27', '2022-05-31 13:19:24', '2022-05-31 13:28:46'),
-(2, 1, 2, 'Fusce porta pharetra massa, id congue dolor suscipit vel. Praesent id interdum risus. Mauris scelerisque urna massa, eget fringilla mi condimentum vel.', '2022-05-31', '2022-05-31 13:26:22', '2022-05-31 13:26:22');
 
 -- --------------------------------------------------------
 
@@ -353,6 +173,7 @@ CREATE TABLE `security_questions` (
 
 CREATE TABLE `sk_officials` (
   `id` int(11) NOT NULL,
+<<<<<<< HEAD
   `user_id` int(11) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `position` enum('chairman','councilor') NOT NULL,
@@ -363,10 +184,18 @@ CREATE TABLE `sk_officials` (
   `date_of_birth` date NOT NULL,
   `sex` enum('Male','Female') NOT NULL,
   `contact` varchar(20) DEFAULT NULL,
+=======
+  `position` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `contact` varchar(20) NOT NULL,
+>>>>>>> 7355b10
   `email` varchar(100) DEFAULT NULL,
-  `zone` varchar(50) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `order_position` int(11) DEFAULT NULL,
+  `age` int(3) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `date_created` datetime NOT NULL DEFAULT current_timestamp(),
   `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -375,6 +204,7 @@ CREATE TABLE `sk_officials` (
 -- Dumping data for table `sk_officials`
 --
 
+<<<<<<< HEAD
 INSERT INTO `sk_officials` (`id`, `user_id`, `name`, `position`, `image_path`, `firstname`, `middlename`, `lastname`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `status`, `order_position`, `date_created`, `date_updated`) VALUES
 (1, NULL, '', 'chairman', '1754649960_s036012017.webp', 'Johnawd', 'A.', 'Dela Cruz', '1998-05-15', 'Male', '09123456789', 'john.delacruz@email.com', 'Zone 1', 0, 1, '2025-08-08 18:10:03', '2025-09-11 17:32:21'),
 (2, NULL, '', 'councilor', NULL, 'Maria', 'B.', 'Santos', '2000-03-20', 'Female', '09987654321', 'maria.santos@email.com', 'Zone 2', 0, 2, '2025-08-08 18:10:03', '2025-09-11 17:32:15'),
@@ -391,6 +221,16 @@ INSERT INTO `sk_officials` (`id`, `user_id`, `name`, `position`, `image_path`, `
 (13, 31, 'Lopeu Kold Suer', 'councilor', '1757587200_160107100400-monkey-selfie.jpg', 'Lopeu', 'Kold', 'Suer', '1996-05-05', 'Female', '099789654123', 'Lopeu@gmail.com', 'Zone 4', 1, 3, '2025-09-11 18:40:38', '2025-09-11 18:40:38'),
 (14, 28, 'Lincoln Gude Soper', 'councilor', '1757587260_160107100400-monkey-selfie.jpg', 'Lincoln', 'Gude', 'Soper', '2000-02-02', 'Male', '09123123123', 'jh@gmail.com', 'Zone 1', 1, 3, '2025-09-11 18:41:18', '2025-09-11 18:41:18'),
 (15, 32, 'Kikusu Kosp Posi', 'councilor', '1757908380_160107100400-monkey-selfie.jpg', 'Kikusu', 'Kosp', 'Posi', '2005-09-06', 'Female', '09897798789', 'John@gmail.com', 'Zone 2', 1, NULL, '2025-09-15 11:53:04', '2025-09-15 11:53:04');
+=======
+INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `image`, `start_date`, `image_path`, `status`, `date_created`, `date_updated`) VALUES
+(1, 'chairman', 'Chaer U kiwoe', '0917-123-4567', 'chairman@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/chairman_1759135217.jpg', NULL, '../../uploads/sk_officials/sk_official_68da3e082365b.jpg', 'active', '2025-09-26 04:15:44', '2025-10-29 23:49:41'),
+(2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/secretary_1759135974.jpg', NULL, '../../assets/images/sk_officials/secretary.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:52:54'),
+(3, 'treasurer', 'Pedro Garcia', '0919-345-6789', 'treasurer@sk.gov.ph', 24, 'Purok 3, Sitio Maligaya', NULL, '2024-01-15', '../../assets/images/sk_officials/treasurer.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(4, 'kagawad1', 'Anna Reyes', '0920-456-7890', 'anna@sk.gov.ph', 22, 'Phase 2, Block 1, Lot 10', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(5, 'kagawad2', 'Carlos Lopez', '0921-567-8901', 'carlos@sk.gov.ph', 26, 'Purok 1, Sitio Bagong Silang', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(6, 'kagawad3', 'Sofia Martinez', '0922-678-9012', 'sofia@sk.gov.ph', 21, 'Phase 3, Block 5, Lot 8', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
+(7, 'kagawad4', 'Miguel Torres', '0923-789-0123', 'miguel@sk.gov.ph', 27, 'Purok 2, Sitio San Roque', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24');
+>>>>>>> 7355b10
 
 -- --------------------------------------------------------
 
@@ -452,6 +292,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `qr_code`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
+<<<<<<< HEAD
 (1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male'),
 (28, 'Lincoln', 'Gude', 'Soper', 'sample A', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00028-SAMPLE A-887fcc39', NULL, 2, 1, '2025-08-08 19:20:58', '2025-08-10 19:23:44', 1, '2000-02-02', 25, 'Male'),
 (29, 'Kule', 'Lopus', 'Skuer', 'Sample B', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00029-SAMPLE B-365e407a', NULL, 2, 1, '2025-08-08 19:21:35', '2025-08-08 19:21:35', 2, '2001-01-05', 24, 'Female'),
@@ -485,16 +326,13 @@ CREATE TABLE `visit_list` (
 INSERT INTO `visit_list` (`id`, `inmate_id`, `fullname`, `contact`, `relation`, `date_created`, `date_updated`) VALUES
 (1, 1, 'Claire Blake', '09456213879', 'Fiance', '2022-05-31 14:43:13', '2022-05-31 14:43:13'),
 (2, 1, 'Will Smith', '09456123123', 'Father', '2022-05-31 14:51:11', '2022-05-31 14:51:11');
+=======
+(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male');
+>>>>>>> 7355b10
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `action_list`
---
-ALTER TABLE `action_list`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `announcement_list`
@@ -510,19 +348,6 @@ ALTER TABLE `attendance`
   ADD UNIQUE KEY `unique_attendance` (`event_id`,`user_id`),
   ADD KEY `event_id` (`event_id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `cell_list`
---
-ALTER TABLE `cell_list`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `prison_id` (`prison_id`);
-
---
--- Indexes for table `crime_list`
---
-ALTER TABLE `crime_list`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `events`
@@ -547,32 +372,11 @@ ALTER TABLE `event_list`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `inmate_crimes`
+-- Indexes for table `forum_messages`
 --
-ALTER TABLE `inmate_crimes`
-  ADD KEY `inmate_id` (`inmate_id`),
-  ADD KEY `crime_id` (`crime_id`);
-
---
--- Indexes for table `inmate_list`
---
-ALTER TABLE `inmate_list`
+ALTER TABLE `forum_messages`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `cell_id` (`cell_id`);
-
---
--- Indexes for table `prison_list`
---
-ALTER TABLE `prison_list`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `record_list`
---
-ALTER TABLE `record_list`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `inmate_id` (`inmate_id`),
-  ADD KEY `action_id` (`action_id`);
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `security_questions`
@@ -586,7 +390,11 @@ ALTER TABLE `security_questions`
 --
 ALTER TABLE `sk_officials`
   ADD PRIMARY KEY (`id`),
+<<<<<<< HEAD
   ADD KEY `fk_sk_officials_user` (`user_id`);
+=======
+  ADD UNIQUE KEY `unique_position` (`position`);
+>>>>>>> 7355b10
 
 --
 -- Indexes for table `system_info`
@@ -601,45 +409,20 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `visit_list`
---
-ALTER TABLE `visit_list`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `inmate_id` (`inmate_id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `action_list`
---
-ALTER TABLE `action_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cell_list`
---
-ALTER TABLE `cell_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `crime_list`
---
-ALTER TABLE `crime_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -651,31 +434,27 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `event_attendance`
 --
 ALTER TABLE `event_attendance`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+>>>>>>> 7355b10
 
 --
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+>>>>>>> 7355b10
 
 --
--- AUTO_INCREMENT for table `inmate_list`
+-- AUTO_INCREMENT for table `forum_messages`
 --
-ALTER TABLE `inmate_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `prison_list`
---
-ALTER TABLE `prison_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `record_list`
---
-ALTER TABLE `record_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `forum_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `security_questions`
@@ -687,7 +466,11 @@ ALTER TABLE `security_questions`
 -- AUTO_INCREMENT for table `sk_officials`
 --
 ALTER TABLE `sk_officials`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+>>>>>>> 7355b10
 
 --
 -- AUTO_INCREMENT for table `system_info`
@@ -699,6 +482,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
+<<<<<<< HEAD
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
@@ -706,16 +490,13 @@ ALTER TABLE `users`
 --
 ALTER TABLE `visit_list`
   MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+=======
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+>>>>>>> 7355b10
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `cell_list`
---
-ALTER TABLE `cell_list`
-  ADD CONSTRAINT `prison_id_fk_cl` FOREIGN KEY (`prison_id`) REFERENCES `cell_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `event_attendance`
@@ -726,30 +507,17 @@ ALTER TABLE `event_attendance`
   ADD CONSTRAINT `event_attendance_ibfk_3` FOREIGN KEY (`scanner_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `inmate_crimes`
+-- Constraints for table `forum_messages`
 --
-ALTER TABLE `inmate_crimes`
-  ADD CONSTRAINT `crime_id_fk_ic` FOREIGN KEY (`crime_id`) REFERENCES `crime_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `inmate_id_fk_ic` FOREIGN KEY (`inmate_id`) REFERENCES `inmate_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `inmate_list`
---
-ALTER TABLE `inmate_list`
-  ADD CONSTRAINT `cell_id_fk_il` FOREIGN KEY (`cell_id`) REFERENCES `cell_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-
---
--- Constraints for table `record_list`
---
-ALTER TABLE `record_list`
-  ADD CONSTRAINT `action_id_fk_rl` FOREIGN KEY (`action_id`) REFERENCES `action_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `inmate_id_fk_rl` FOREIGN KEY (`inmate_id`) REFERENCES `inmate_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `forum_messages`
+  ADD CONSTRAINT `forum_messages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `security_questions`
 --
 ALTER TABLE `security_questions`
   ADD CONSTRAINT `security_questions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+<<<<<<< HEAD
 
 --
 -- Constraints for table `sk_officials`
@@ -762,6 +530,8 @@ ALTER TABLE `sk_officials`
 --
 ALTER TABLE `visit_list`
   ADD CONSTRAINT `inmate_id_fk_vl` FOREIGN KEY (`inmate_id`) REFERENCES `inmate_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+=======
+>>>>>>> 7355b10
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

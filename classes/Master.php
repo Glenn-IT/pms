@@ -1255,344 +1255,240 @@ function get_most_attended_events() {
     return json_encode(['status' => 'success', 'data' => $events]);
 }
 
-	// SK Officials Functions
-	function save_official(){
-		// Check if user is admin
-		if($this->settings->userdata('type') != 1){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
-			return json_encode($resp);
-		}
-		
-		extract($_POST);
-		
-		// Check if user_id is provided
-		if(empty($user_id)){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Please select a user to assign as SK Official.";
-			return json_encode($resp);
-		}
-		
-		// Check if user exists and is active
-		$user_check = $this->conn->query("SELECT * FROM `users` WHERE `id` = '{$user_id}' AND `status` = 1");
-		if($user_check->num_rows == 0){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Selected user not found or inactive.";
-			return json_encode($resp);
-		}
-		$user_data = $user_check->fetch_assoc();
-		
-		// Check if user is already an SK official (unless editing the same record)
-		$existing_check = $this->conn->query("SELECT * FROM `sk_officials` WHERE `user_id` = '{$user_id}' AND `status` = 1 ".(!empty($id) ? " AND id != {$id} " : "")."");
-		if($existing_check->num_rows > 0){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "This user is already assigned as an SK Official.";
-			return json_encode($resp);
-		}
-		
-		// Check position limits: 1 Chairman, 1 Secretary, 1 Treasurer, max 7 Kagawads
-		if($position == 'chairman'){
-			$check_chairman = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'chairman' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
-			if($check_chairman > 0){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "There can only be one SK Chairman.";
-				return json_encode($resp);
-			}
-		} elseif($position == 'secretary'){
-			$check_secretary = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'secretary' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
-			if($check_secretary > 0){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "There can only be one SK Secretary.";
-				return json_encode($resp);
-			}
-		} elseif($position == 'treasurer'){
-			$check_treasurer = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'treasurer' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
-			if($check_treasurer > 0){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "There can only be one SK Treasurer.";
-				return json_encode($resp);
-			}
-		} elseif($position == 'kagawad'){
-			$check_kagawad = $this->conn->query("SELECT * FROM `sk_officials` WHERE `position` = 'kagawad' AND status = 1 ".(!empty($id) ? " AND id != {$id} " : "")." ")->num_rows;
-			if($check_kagawad >= 7){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "Maximum of 7 SK Kagawads allowed.";
-				return json_encode($resp);
-			}
-		}
-		
-		// Automatically populate user data
-		$firstname = $this->conn->real_escape_string($user_data['firstname']);
-		$middlename = $this->conn->real_escape_string($user_data['middlename']);
-		$lastname = $this->conn->real_escape_string($user_data['lastname']);
-		$full_name = trim($firstname . ' ' . $middlename . ' ' . $lastname);
-		$date_of_birth = $user_data['birthdate'];
-		$sex = $user_data['sex'];
-		$zone = 'Zone ' . $user_data['zone'];
-		
-		// Validate age (SK officials must be 18-30 years old)
-		$birth_date = new DateTime($date_of_birth);
-		$today = new DateTime();
-		$age = $today->diff($birth_date)->y;
-		if($age < 18 || $age > 30){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "SK Officials must be between 18-30 years old. Selected user is {$age} years old.";
-			return json_encode($resp);
-		}
-		
-		// Prepare data for insertion/update
-		$data = "`user_id` = '{$user_id}', 
-				 `name` = '{$full_name}',
-				 `firstname` = '{$firstname}',
-				 `middlename` = '{$middlename}',
-				 `lastname` = '{$lastname}',
-				 `position` = '{$position}',
-				 `date_of_birth` = '{$date_of_birth}',
-				 `sex` = '{$sex}',
-				 `zone` = '{$zone}',
-				 `status` = 1";
-		
-		// Add optional fields if provided
-		if(!empty($contact)){
-			$contact = $this->conn->real_escape_string($contact);
-			$data .= ", `contact` = '{$contact}'";
-		}
-		if(!empty($email)){
-			$email = $this->conn->real_escape_string($email);
-			$data .= ", `email` = '{$email}'";
-		}
-		
-		// Handle file upload
-		if(isset($_FILES['img']) && $_FILES['img']['tmp_name'] != ''){
-			$fname = strtotime(date('y-m-d H:i')).'_'.($_FILES['img']['name']);
-			$move = move_uploaded_file($_FILES['img']['tmp_name'],'../uploads/sk_officials/'. $fname);
-			if($move){
-				$data .= ", `image_path` = '{$fname}'";
-			}
-		}
-		
-		// Save to database
-		if(empty($id)){
-			$sql = "INSERT INTO `sk_officials` SET {$data}";
-		}else{
-			$sql = "UPDATE `sk_officials` SET {$data} WHERE id = '{$id}'";
-		}
-		
-		$save = $this->conn->query($sql);
-		if($save){
-			$resp['status'] = 'success';
-			if(empty($id))
-				$this->settings->set_flashdata('success',"New SK Official successfully assigned.");
-			else
-				$this->settings->set_flashdata('success',"SK Official successfully updated.");
-		}else{
-			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	
-	function delete_official(){
-		// Check if user is admin
-		if($this->settings->userdata('type') != 1){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
-			return json_encode($resp);
-		}
-		
-		extract($_POST);
-		$del = $this->conn->query("UPDATE `sk_officials` set `status` = 0 where id = '{$id}'");
-		if($del){
-			$resp['status'] = 'success';
-			$this->settings->set_flashdata('success',"SK Official successfully deleted.");
-		}else{
-			$resp['status'] = 'failed';
-			$resp['error'] = $this->conn->error;
-		}
-		return json_encode($resp);
-	}
-	
-	function assign_sk_official(){
-		// Clear any output that might interfere with JSON
-		if(ob_get_length()) ob_clean();
-		
-		$resp = array();
-		
-		try {
-			// Check if user is admin
-			if($this->settings->userdata('type') != 1){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "Access Denied. Only administrators can manage SK Officials.";
-				return json_encode($resp);
-			}
-			
-			extract($_POST);
-			$id = isset($id) ? $id : '';
-			$is_edit = !empty($id);
-			
-			// Validate required fields
-			if(empty($firstname) || empty($lastname) || empty($contact) || empty($zone) || empty($date_of_birth) || empty($sex) || empty($position)){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "Please fill in all required fields.";
-				return json_encode($resp);
-			}
-			
-			// Check position limits (exclude current record if editing)
-			$exclude_condition = $is_edit ? " AND id != '{$id}'" : "";
-			
-			if($position == 'chairman'){
-				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'chairman' AND status = 1{$exclude_condition}");
-				$count = $check->fetch_assoc()['count'];
-				if($count > 0){
-					$resp['status'] = 'failed';
-					$resp['msg'] = "There can only be one SK Chairman.";
-					return json_encode($resp);
-				}
-			} elseif($position == 'secretary'){
-				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'secretary' AND status = 1{$exclude_condition}");
-				$count = $check->fetch_assoc()['count'];
-				if($count > 0){
-					$resp['status'] = 'failed';
-					$resp['msg'] = "There can only be one SK Secretary.";
-					return json_encode($resp);
-				}
-			} elseif($position == 'treasurer'){
-				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'treasurer' AND status = 1{$exclude_condition}");
-				$count = $check->fetch_assoc()['count'];
-				if($count > 0){
-					$resp['status'] = 'failed';
-					$resp['msg'] = "There can only be one SK Treasurer.";
-					return json_encode($resp);
-				}
-			} elseif($position == 'kagawad'){
-				$check = $this->conn->query("SELECT COUNT(*) as count FROM `sk_officials` WHERE `position` = 'kagawad' AND status = 1{$exclude_condition}");
-				$count = $check->fetch_assoc()['count'];
-				if($count >= 7){
-					$resp['status'] = 'failed';
-					$resp['msg'] = "Maximum of 7 SK Kagawads allowed.";
-					return json_encode($resp);
-				}
-			}
-			
-			// Validate age (SK officials must be 18-30 years old)
-			$birth_date = new DateTime($date_of_birth);
-			$today = new DateTime();
-			$age = $today->diff($birth_date)->y;
-			if($age < 18 || $age > 30){
-				$resp['status'] = 'failed';
-				$resp['msg'] = "SK Officials must be between 18-30 years old. Age calculated: {$age} years old.";
-				return json_encode($resp);
-			}
-			
-			// Sanitize input data
-			$firstname = $this->conn->real_escape_string(trim($firstname));
-			$middlename = !empty($middlename) ? $this->conn->real_escape_string(trim($middlename)) : '';
-			$lastname = $this->conn->real_escape_string(trim($lastname));
-			$contact = $this->conn->real_escape_string(trim($contact));
-			$zone = $this->conn->real_escape_string(trim($zone));
-			$position = $this->conn->real_escape_string(trim($position));
-			
-			// Handle email
-			$email_sql = 'NULL';
-			if(!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)){
-				$email_sql = "'" . $this->conn->real_escape_string(trim($email)) . "'";
-			}
-			
-			$full_name = trim($firstname . ' ' . $middlename . ' ' . $lastname);
-			
-			// Handle file upload
-			$uploaded_filename = null;
-			if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '' && $_FILES['image']['error'] == 0){
-				$allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-				if(in_array($_FILES['image']['type'], $allowed_types)){
-					$fname = time().'_'.basename($_FILES['image']['name']);
-					$upload_path = '../uploads/sk_officials/' . $fname;
-					
-					// Create directory if it doesn't exist
-					if(!file_exists('../uploads/sk_officials/')){
-						mkdir('../uploads/sk_officials/', 0777, true);
-					}
-					
-					if(move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)){
-						$uploaded_filename = $fname;
-						
-						// Delete old image if editing
-						if($is_edit){
-							$old_image_query = $this->conn->query("SELECT image_path FROM `sk_officials` WHERE id = '{$id}'");
-							if($old_image_query && $old_image_query->num_rows > 0){
-								$old_image = $old_image_query->fetch_assoc()['image_path'];
-								if(!empty($old_image) && file_exists('../uploads/sk_officials/' . $old_image)){
-									unlink('../uploads/sk_officials/' . $old_image);
-								}
-							}
-						}
-					}
-				}
-			}
-			
-			// Build and execute SQL query
-			if($is_edit){
-				$image_part = $uploaded_filename ? ", `image_path` = '{$uploaded_filename}'" : '';
-				$sql = "UPDATE `sk_officials` SET 
-						`name` = '{$full_name}',
-						`firstname` = '{$firstname}',
-						`middlename` = '{$middlename}',
-						`lastname` = '{$lastname}',
-						`position` = '{$position}',
-						`date_of_birth` = '{$date_of_birth}',
-						`sex` = '{$sex}',
-						`contact` = '{$contact}',
-						`email` = {$email_sql},
-						`zone` = '{$zone}'
-						{$image_part}
-						WHERE id = '{$id}'";
-			} else {
-				$image_sql = $uploaded_filename ? "'{$uploaded_filename}'" : 'NULL';
-				$sql = "INSERT INTO `sk_officials` 
-						(`user_id`, `name`, `firstname`, `middlename`, `lastname`, `position`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `image_path`, `status`) 
-						VALUES 
-						(NULL, '{$full_name}', '{$firstname}', '{$middlename}', '{$lastname}', '{$position}', '{$date_of_birth}', '{$sex}', '{$contact}', {$email_sql}, '{$zone}', {$image_sql}, 1)";
-			}
-			
-			$save = $this->conn->query($sql);
-			
-			if($save){
-				$resp['status'] = 'success';
-				if($is_edit){
-					$resp['msg'] = "SK Official successfully updated.";
-					$this->settings->set_flashdata('success', "SK Official successfully updated.");
-				} else {
-					$resp['msg'] = "SK Official successfully assigned.";
-					$this->settings->set_flashdata('success', "SK Official successfully assigned.");
-				}
-			} else {
-				$resp['status'] = 'failed';
-				$resp['msg'] = "Database error: " . $this->conn->error;
-			}
-			
-		} catch (Exception $e) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Error: " . $e->getMessage();
-		}
-		
-		return json_encode($resp);
-	}
-	
-	private function update_position_enum(){
-		// Check if the position enum includes all needed positions
-		$result = $this->conn->query("SHOW COLUMNS FROM sk_officials LIKE 'position'");
-		if($result && $result->num_rows > 0){
-			$row = $result->fetch_assoc();
-			$type = $row['Type'];
-			
-			// If it doesn't include secretary, treasurer, kagawad, update it
-			if(strpos($type, 'secretary') === false || strpos($type, 'treasurer') === false || strpos($type, 'kagawad') === false){
-				$this->conn->query("ALTER TABLE `sk_officials` MODIFY `position` ENUM('chairman','secretary','treasurer','kagawad','councilor') NOT NULL");
-			}
-		}
-	}
-
 //End Event Code
+
+function get_user_statistics() {
+    $user_id = $this->settings->userdata('id');
+    
+    if(empty($user_id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'User not logged in']);
+    }
+    
+    $stats = [];
+    
+    // Get total events attended
+    $attended_qry = $this->conn->query("
+        SELECT COUNT(*) as total_attended 
+        FROM event_attendance 
+        WHERE user_id = '{$user_id}' AND status = 'present'
+    ");
+    $stats['total_attended'] = $attended_qry ? (int)$attended_qry->fetch_assoc()['total_attended'] : 0;
+    
+    // Get total events available
+    $total_events_qry = $this->conn->query("SELECT COUNT(*) as total FROM event_list");
+    $stats['total_events'] = $total_events_qry ? (int)$total_events_qry->fetch_assoc()['total'] : 0;
+    
+    // Calculate attendance rate
+    $stats['attendance_rate'] = $stats['total_events'] > 0 
+        ? round(($stats['total_attended'] / $stats['total_events']) * 100, 1) 
+        : 0;
+    
+    // Get recent attendance (last 5 events attended)
+    $recent_qry = $this->conn->query("
+        SELECT el.title, el.date_created, ea.scan_time 
+        FROM event_attendance ea 
+        JOIN event_list el ON ea.event_id = el.id 
+        WHERE ea.user_id = '{$user_id}' AND ea.status = 'present' 
+        ORDER BY ea.scan_time DESC 
+        LIMIT 5
+    ");
+    
+    $stats['recent_attendance'] = [];
+    if($recent_qry) {
+        while($row = $recent_qry->fetch_assoc()) {
+            $stats['recent_attendance'][] = [
+                'title' => $row['title'],
+                'event_date' => date("M j, Y", strtotime($row['date_created'])),
+                'scan_time' => date("M j, Y g:i A", strtotime($row['scan_time']))
+            ];
+        }
+    }
+    
+    // Get upcoming events (not yet attended)
+    $upcoming_qry = $this->conn->query("
+        SELECT el.id, el.title, el.date_created 
+        FROM event_list el 
+        WHERE el.id NOT IN (
+            SELECT event_id FROM event_attendance WHERE user_id = '{$user_id}'
+        )
+        ORDER BY el.date_created DESC 
+        LIMIT 5
+    ");
+    
+    $stats['upcoming_events'] = [];
+    if($upcoming_qry) {
+        while($row = $upcoming_qry->fetch_assoc()) {
+            $stats['upcoming_events'][] = [
+                'id' => $row['id'],
+                'title' => $row['title'],
+                'date' => date("M j, Y", strtotime($row['date_created']))
+            ];
+        }
+    }
+    
+    // Get user's zone/purok ranking
+    $user_zone = $this->settings->userdata('zone');
+    if($user_zone) {
+        $zone_rank_qry = $this->conn->query("
+            SELECT 
+                u.zone,
+                COUNT(ea.id) as attendance_count,
+                COUNT(DISTINCT ea.user_id) as unique_members
+            FROM event_attendance ea
+            JOIN users u ON ea.user_id = u.id
+            WHERE u.status = 1 AND u.type != 1 AND u.zone IS NOT NULL
+            GROUP BY u.zone
+            ORDER BY attendance_count DESC
+        ");
+        
+        $rank = 0;
+        $total_zones = 0;
+        if($zone_rank_qry) {
+            while($row = $zone_rank_qry->fetch_assoc()) {
+                $total_zones++;
+                if($row['zone'] == $user_zone) {
+                    $rank = $total_zones;
+                    $stats['zone_attendance'] = (int)$row['attendance_count'];
+                    $stats['zone_members'] = (int)$row['unique_members'];
+                }
+            }
+        }
+        $stats['zone_rank'] = $rank;
+        $stats['total_zones'] = $total_zones;
+    }
+    
+    return json_encode(['status' => 'success', 'data' => $stats]);
+}
+
+// Forum Functions
+function send_forum_message() {
+    extract($_POST);
+    
+    $user_id = $this->settings->userdata('id');
+    if(empty($user_id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'User not logged in']);
+    }
+    
+    if(empty($message)) {
+        return json_encode(['status' => 'failed', 'msg' => 'Message cannot be empty']);
+    }
+    
+    $message = $this->conn->real_escape_string(htmlspecialchars(trim($message)));
+    
+    $sql = "INSERT INTO forum_messages (user_id, message) VALUES ('{$user_id}', '{$message}')";
+    $save = $this->conn->query($sql);
+    
+    if($save) {
+        // Get the inserted message with user details
+        $message_id = $this->conn->insert_id;
+        $get_message = $this->conn->query("
+            SELECT fm.*, u.firstname, u.lastname, u.username, u.avatar 
+            FROM forum_messages fm 
+            JOIN users u ON fm.user_id = u.id 
+            WHERE fm.id = '{$message_id}'
+        ");
+        
+        if($get_message && $get_message->num_rows > 0) {
+            $msg_data = $get_message->fetch_assoc();
+            return json_encode([
+                'status' => 'success',
+                'msg' => 'Message sent successfully',
+                'data' => $msg_data
+            ]);
+        } else {
+            return json_encode(['status' => 'success', 'msg' => 'Message sent successfully']);
+        }
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+function get_forum_messages() {
+    $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 50;
+    $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+    
+    $messages = [];
+    $sql = "SELECT fm.*, u.firstname, u.lastname, u.username, u.avatar, u.zone 
+            FROM forum_messages fm 
+            JOIN users u ON fm.user_id = u.id 
+            ORDER BY fm.date_created DESC 
+            LIMIT {$limit} OFFSET {$offset}";
+    
+    $qry = $this->conn->query($sql);
+    
+    if($qry) {
+        while($row = $qry->fetch_assoc()) {
+            $row['date'] = date("M j, Y g:i A", strtotime($row['date_created']));
+            $row['time_ago'] = $this->time_ago($row['date_created']);
+            $messages[] = $row;
+        }
+        
+        // Get total count
+        $count_qry = $this->conn->query("SELECT COUNT(*) as total FROM forum_messages");
+        $total = $count_qry ? (int)$count_qry->fetch_assoc()['total'] : 0;
+        
+        return json_encode([
+            'status' => 'success',
+            'data' => $messages,
+            'total' => $total
+        ]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+function delete_forum_message() {
+    extract($_POST);
+    
+    $user_id = $this->settings->userdata('id');
+    $user_type = $this->settings->userdata('type');
+    
+    if(empty($id)) {
+        return json_encode(['status' => 'failed', 'msg' => 'Message ID is required']);
+    }
+    
+    // Check if user owns this message or is admin
+    $check = $this->conn->query("SELECT user_id FROM forum_messages WHERE id = '{$id}'");
+    if($check && $check->num_rows > 0) {
+        $msg = $check->fetch_assoc();
+        
+        // Allow deletion if user owns message or is admin (type = 1)
+        if($msg['user_id'] == $user_id || $user_type == 1) {
+            $del = $this->conn->query("DELETE FROM forum_messages WHERE id = '{$id}'");
+            
+            if($del) {
+                return json_encode(['status' => 'success', 'msg' => 'Message deleted successfully']);
+            } else {
+                return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+            }
+        } else {
+            return json_encode(['status' => 'failed', 'msg' => 'You can only delete your own messages']);
+        }
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => 'Message not found']);
+    }
+}
+
+function time_ago($datetime) {
+    $timestamp = strtotime($datetime);
+    $difference = time() - $timestamp;
+    
+    $periods = array("second", "minute", "hour", "day", "week", "month", "year");
+    $lengths = array("60", "60", "24", "7", "4.35", "12");
+    
+    for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
+        $difference /= $lengths[$j];
+    }
+    
+    $difference = round($difference);
+    
+    if($difference != 1) {
+        $periods[$j].= "s";
+    }
+    
+    return "$difference $periods[$j] ago";
+}
+
 }
 
 $Master = new Master();
@@ -1710,17 +1606,18 @@ switch ($action) {
 	case 'get_all_events_with_attendance':
 		echo $Master->get_all_events_with_attendance();
 	break;
-	case 'save_official':
-		echo $Master->save_official();
+	case 'get_user_statistics':
+		echo $Master->get_user_statistics();
 	break;
-	case 'assign_sk_official':
-		header('Content-Type: application/json');
-		echo $Master->assign_sk_official();
+	case 'send_forum_message':
+		echo $Master->send_forum_message();
 	break;
-	case 'delete_official':
-		echo $Master->delete_official();
+	case 'get_forum_messages':
+		echo $Master->get_forum_messages();
 	break;
-
+	case 'delete_forum_message':
+		echo $Master->delete_forum_message();
+	break;
 	
 		
 	default:

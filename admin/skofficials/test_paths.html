@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Path Test</title>
+  </head>
+  <body>
+    <h2>Testing Different Image Paths</h2>
+
+    <h3>1. Using ../../uploads/sk_officials/chairman_1759135217.jpg</h3>
+    <img
+      src="../../uploads/sk_officials/chairman_1759135217.jpg"
+      style="width: 100px; height: 100px; object-fit: cover"
+      onerror="this.nextSibling.style.display='block'"
+    />
+    <div style="display: none; color: red">
+      ❌ Failed to load: ../../uploads/sk_officials/chairman_1759135217.jpg
+    </div>
+
+    <h3>2. Using ../uploads/sk_officials/chairman_1759135217.jpg</h3>
+    <img
+      src="../uploads/sk_officials/chairman_1759135217.jpg"
+      style="width: 100px; height: 100px; object-fit: cover"
+      onerror="this.nextSibling.style.display='block'"
+    />
+    <div style="display: none; color: red">
+      ❌ Failed to load: ../uploads/sk_officials/chairman_1759135217.jpg
+    </div>
+
+    <h3>3. Using /pms/uploads/sk_officials/chairman_1759135217.jpg</h3>
+    <img
+      src="/pms/uploads/sk_officials/chairman_1759135217.jpg"
+      style="width: 100px; height: 100px; object-fit: cover"
+      onerror="this.nextSibling.style.display='block'"
+    />
+    <div style="display: none; color: red">
+      ❌ Failed to load: /pms/uploads/sk_officials/chairman_1759135217.jpg
+    </div>
+
+    <h3>4. Current Page Location</h3>
+    <p id="location"></p>
+
+    <h3>5. Resolved Paths</h3>
+    <div id="paths"></div>
+
+    <script>
+      document.getElementById("location").textContent =
+        "Current URL: " + window.location.href;
+
+      // Test path resolution
+      const paths = [
+        "../../uploads/sk_officials/chairman_1759135217.jpg",
+        "../uploads/sk_officials/chairman_1759135217.jpg",
+        "/pms/uploads/sk_officials/chairman_1759135217.jpg",
+        "uploads/sk_officials/chairman_1759135217.jpg",
+      ];
+
+      const pathsDiv = document.getElementById("paths");
+      paths.forEach((path) => {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${path}</strong> resolves to: <code>${
+          new URL(path, window.location.href).href
+        }</code>`;
+        pathsDiv.appendChild(div);
+      });
+
+      // Test image loading with JavaScript
+      setTimeout(() => {
+        const imgs = document.querySelectorAll("img");
+        imgs.forEach((img, index) => {
+          if (img.complete && img.naturalWidth > 0) {
+            const div = document.createElement("div");
+            div.style.color = "green";
+            div.textContent = "✅ Successfully loaded";
+            img.parentNode.insertBefore(div, img.nextSibling);
+          }
+        });
+      }, 2000);
+    </script>
+  </body>
+</html>

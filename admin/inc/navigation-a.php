@@ -69,8 +69,8 @@
                     </li> 
                     <?php endif; ?>
 
-                    <li class="nav-item dropdown">
-                      <a href="<?php echo base_url ?>admin/?page=skofficials/index" class="nav-link nav-skofficials_index">
+ <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=skofficials" class="nav-link nav-skofficials">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                           SK Officials
