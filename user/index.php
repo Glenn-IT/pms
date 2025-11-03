@@ -24,12 +24,20 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             box-sizing: border-box;
         }
         
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            max-width: 100%;
+            position: relative;
         }
         
         /* Header Navigation */
@@ -39,12 +47,17 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
         
         .header-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 1rem;
+            width: 100%;
+            overflow-x: hidden;
         }
         
         .navbar {
@@ -53,6 +66,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             align-items: center;
             padding: 1rem 0;
             flex-wrap: wrap;
+            width: 100%;
+            max-width: 100%;
         }
         
         .site-title {
@@ -62,6 +77,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             flex: 1;
             min-width: 200px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .site-title i {
@@ -74,6 +93,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             gap: 0.5rem;
             align-items: center;
             flex-wrap: wrap;
+            max-width: 100%;
         }
         
         .nav-menu li a {
@@ -85,6 +105,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             font-weight: 500;
             font-size: 0.95rem;
             display: block;
+            white-space: nowrap;
         }
         
         .nav-menu li a:hover {
@@ -102,6 +123,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             gap: 1rem;
             color: white;
             margin-left: 1rem;
+            flex-wrap: wrap;
         }
         
         .user-name {
@@ -109,6 +131,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
         
         .btn-logout-header {
@@ -121,6 +144,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             cursor: pointer;
             transition: all 0.3s;
             font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .btn-logout-header:hover {
@@ -150,11 +174,13 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 0 1rem;
             display: flex;
             justify-content: center;
+            overflow-x: hidden;
         }
         
         /* Main Panel */
         .main-panel {
             width: 100%;
+            max-width: 100%;
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
@@ -176,18 +202,22 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         .panel-body {
             padding: 2rem;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         /* Welcome Section */
         .welcome-section {
             text-align: center;
             margin-bottom: 2rem;
+            max-width: 100%;
         }
         
         .welcome-section h3 {
             color: #001f3f;
             font-size: clamp(1.25rem, 3vw, 1.75rem);
             margin-bottom: 0.5rem;
+            word-wrap: break-word;
         }
         
         .welcome-section p {
@@ -203,6 +233,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             color: white;
             margin-bottom: 2rem;
             box-shadow: 0 5px 15px rgba(0,31,63,0.3);
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         .user-info-card h4 {
@@ -211,11 +243,12 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            word-wrap: break-word;
         }
         
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
         }
         
@@ -224,6 +257,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 1rem;
             border-radius: 10px;
             backdrop-filter: blur(10px);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         
         .info-item strong {
@@ -236,14 +271,17 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         .info-item span {
             font-size: 1.1rem;
             font-weight: 600;
+            word-wrap: break-word;
+            display: block;
         }
         
         /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
+            max-width: 100%;
         }
         
         .feature-card {
@@ -254,6 +292,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             transition: all 0.3s;
             cursor: pointer;
             border: 2px solid transparent;
+            max-width: 100%;
         }
         
         .feature-card:hover {
@@ -287,17 +326,23 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             text-align: center;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             margin-top: auto;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
         }
         
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0 1rem;
+            overflow-x: hidden;
         }
         
         .footer-content p {
             color: #666;
             margin: 0.5rem 0;
             font-size: 0.95rem;
+            word-wrap: break-word;
         }
         
         .footer-content strong {
@@ -344,6 +389,12 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         /* Modal Styles */
         .modal-content {
             border: none;
+            max-width: 100%;
+        }
+        
+        .modal-body {
+            overflow-x: hidden;
+            max-width: 100%;
         }
         
         .modal .close {
@@ -368,8 +419,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         /* Events Modal Styles */
         .events-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
+            max-width: 100%;
+            width: 100%;
         }
         
         .event-card-modal {
@@ -379,6 +432,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
+            max-width: 100%;
         }
         
         .event-card-modal:hover {
@@ -395,6 +449,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         .event-body-modal {
             padding: 1.25rem;
+            word-wrap: break-word;
         }
         
         .event-title-modal {
@@ -441,6 +496,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             max-height: 70vh;
             overflow-y: auto;
             overflow-x: hidden;
+            max-width: 100%;
         }
         
         .event-details-content::-webkit-scrollbar {
@@ -464,6 +520,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         .event-details-img {
             width: 100%;
             max-height: 400px;
+            max-width: 100%;
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 1rem;
@@ -471,9 +528,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         .event-details-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 0.75rem;
             margin: 1rem 0;
+            max-width: 100%;
         }
         
         .event-details-gallery img {
@@ -492,8 +550,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         /* Announcements Modal Styles (same as events) */
         .announcements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
+            max-width: 100%;
+            width: 100%;
         }
         
         .announcement-card-modal {
@@ -503,6 +563,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
+            max-width: 100%;
         }
         
         .announcement-card-modal:hover {
@@ -519,6 +580,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         .announcement-body-modal {
             padding: 1.25rem;
+            word-wrap: break-word;
         }
         
         .announcement-title-modal {
@@ -557,6 +619,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             max-height: 70vh;
             overflow-y: auto;
             overflow-x: hidden;
+            max-width: 100%;
         }
         
         .announcement-details-content::-webkit-scrollbar {
@@ -580,6 +643,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         .announcement-details-img {
             width: 100%;
             max-height: 400px;
+            max-width: 100%;
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 1rem;
@@ -587,9 +651,10 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         .announcement-details-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 0.75rem;
             margin: 1rem 0;
+            max-width: 100%;
         }
         
         .announcement-details-gallery img {
@@ -692,6 +757,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 1rem;
             background: #f8f9fa;
             border-radius: 10px;
+            flex-wrap: wrap;
+            max-width: 100%;
         }
         
         .sort-label {
@@ -712,6 +779,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             cursor: pointer;
             transition: all 0.3s;
             min-width: 200px;
+            max-width: 100%;
         }
         
         .sort-select:hover {
@@ -753,6 +821,137 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             }
         }
         
+        /* Laptop Specific Responsive - 1024px to 1366px */
+        @media (min-width: 993px) and (max-width: 1366px) {
+            .header-container {
+                max-width: 100%;
+                padding: 0 1.5rem;
+            }
+            
+            .site-title {
+                font-size: 0.95rem;
+                min-width: 180px;
+            }
+            
+            .nav-menu {
+                gap: 0.25rem;
+            }
+            
+            .nav-menu li a {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .main-container {
+                max-width: 100%;
+                padding: 0 1.5rem;
+                margin: 1.5rem auto;
+            }
+            
+            .panel-body {
+                padding: 1.5rem;
+            }
+            
+            .user-info-card {
+                padding: 1.5rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 0.75rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+            
+            .events-grid,
+            .announcements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1rem;
+            }
+            
+            .sort-controls {
+                padding: 0.75rem;
+            }
+            
+            .sort-select {
+                min-width: 180px;
+            }
+        }
+        
+        /* Standard Laptop - 1024px */
+        @media (min-width: 993px) and (max-width: 1199px) {
+            .navbar {
+                padding: 0.75rem 0;
+            }
+            
+            .user-menu {
+                margin-left: 0.5rem;
+            }
+            
+            .user-name {
+                font-size: 0.85rem;
+            }
+            
+            .btn-logout-header {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .panel-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-card i {
+                font-size: 2.5rem;
+            }
+            
+            .feature-card h5 {
+                font-size: 1rem;
+            }
+            
+            .feature-card p {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Wide Laptop - 1200px to 1366px */
+        @media (min-width: 1200px) and (max-width: 1366px) {
+            .main-container {
+                max-width: 1200px;
+            }
+            
+            .header-container {
+                max-width: 1200px;
+            }
+        }
+        
+        /* Tablet Range */
+        @media (min-width: 769px) and (max-width: 992px) {
+            .navbar {
+                padding: 0.75rem 0;
+            }
+            
+            .site-title {
+                font-size: 0.9rem;
+            }
+            
+            .main-container {
+                padding: 0 1.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .events-grid,
+            .announcements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+        
         @media (max-width: 768px) {
             .site-title {
                 font-size: 0.85rem;
@@ -785,6 +984,12 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             
             .sort-select {
                 width: 100%;
+                min-width: auto;
+            }
+            
+            .events-grid,
+            .announcements-grid {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1747,6 +1952,60 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         $('#statisticsModalBody').html(html);
     }
+    
+    // Overflow Detection for Debugging
+    function checkForOverflow() {
+        const body = document.body;
+        const html = document.documentElement;
+        
+        const hasBodyOverflow = body.scrollWidth > window.innerWidth;
+        const hasHtmlOverflow = html.scrollWidth > window.innerWidth;
+        
+        if (hasBodyOverflow || hasHtmlOverflow) {
+            console.error('⚠️ HORIZONTAL OVERFLOW DETECTED!');
+            console.log('Body scrollWidth:', body.scrollWidth, 'Window width:', window.innerWidth);
+            console.log('HTML scrollWidth:', html.scrollWidth);
+            
+            // Find elements causing overflow
+            const allElements = document.querySelectorAll('*');
+            const overflowingElements = [];
+            
+            allElements.forEach(el => {
+                if (el.scrollWidth > window.innerWidth) {
+                    overflowingElements.push({
+                        element: el,
+                        tag: el.tagName,
+                        class: el.className,
+                        scrollWidth: el.scrollWidth
+                    });
+                }
+            });
+            
+            if (overflowingElements.length > 0) {
+                console.warn('Elements causing overflow:', overflowingElements);
+            }
+            
+            return true;
+        } else {
+            console.log('✅ No horizontal overflow detected - Width: ' + window.innerWidth + 'px');
+            return false;
+        }
+    }
+    
+    // Check on load
+    $(window).on('load', function() {
+        setTimeout(checkForOverflow, 500);
+    });
+    
+    // Check on resize
+    let resizeTimer;
+    $(window).on('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(checkForOverflow, 250);
+    });
+    
+    // Make available globally for manual testing
+    window.checkOverflow = checkForOverflow;
 </script>
 
 </body>
