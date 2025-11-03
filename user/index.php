@@ -24,6 +24,11 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             box-sizing: border-box;
         }
         
+        /* Prevent all elements from causing horizontal overflow */
+        *:not(html):not(body) {
+            max-width: 100%;
+        }
+        
         html {
             overflow-x: hidden;
             max-width: 100%;
@@ -35,9 +40,53 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            max-width: 100%;
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
             position: relative;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+        
+        /* Ensure all direct children of body respect width */
+        body > * {
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Force all containers to respect viewport width */
+        .container, .container-fluid, .row {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+        }
+        
+        /* Prevent negative margins from Bootstrap rows */
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        .row > * {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        
+        /* Bootstrap modal fixes */
+        .modal {
+            overflow-x: hidden !important;
+        }
+        
+        .modal-dialog {
+            max-width: calc(100vw - 2rem) !important;
+            margin: 1rem auto !important;
+        }
+        
+        .modal-xl {
+            max-width: calc(100vw - 2rem) !important;
+        }
+        
+        .modal-lg {
+            max-width: calc(100vw - 2rem) !important;
         }
         
         /* Header Navigation */
@@ -47,17 +96,23 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             position: sticky;
             top: 0;
             z-index: 1000;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+            left: 0 !important;
+            right: 0 !important;
         }
         
         .header-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 1rem;
-            width: 100%;
-            overflow-x: hidden;
+            width: 100% !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
         }
         
         .navbar {
@@ -68,6 +123,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             flex-wrap: wrap;
             width: 100%;
             max-width: 100%;
+            box-sizing: border-box;
+            margin: 0 !important;
         }
         
         .site-title {
@@ -174,7 +231,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             padding: 0 1rem;
             display: flex;
             justify-content: center;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
         }
         
         /* Main Panel */
@@ -326,27 +384,42 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             text-align: center;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             margin-top: auto;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
         }
         
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 1rem;
-            overflow-x: hidden;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
         }
         
         .footer-content p {
             color: #666;
-            margin: 0.5rem 0;
+            margin: 0.5rem auto;
             font-size: 0.95rem;
-            word-wrap: break-word;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            padding: 0 1rem;
+            width: calc(100% - 2rem) !important;
+            display: block;
         }
         
         .footer-content strong {
             color: #001f3f;
+            word-wrap: break-word !important;
         }
         
         /* Loader */
@@ -361,6 +434,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            max-width: 100vw;
         }
         
         .loader-holder {
@@ -1017,7 +1092,7 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         <nav class="navbar">
             <div class="site-title">
                 <i class="fas fa-users"></i>
-                YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN
+                YISMPC
             </div>
             
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
@@ -1965,24 +2040,48 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             console.error('⚠️ HORIZONTAL OVERFLOW DETECTED!');
             console.log('Body scrollWidth:', body.scrollWidth, 'Window width:', window.innerWidth);
             console.log('HTML scrollWidth:', html.scrollWidth);
+            console.log('Difference:', (body.scrollWidth - window.innerWidth) + 'px');
             
             // Find elements causing overflow
             const allElements = document.querySelectorAll('*');
             const overflowingElements = [];
             
             allElements.forEach(el => {
-                if (el.scrollWidth > window.innerWidth) {
+                const rect = el.getBoundingClientRect();
+                if (el.scrollWidth > window.innerWidth || rect.right > window.innerWidth || rect.left < 0) {
+                    const computed = window.getComputedStyle(el);
                     overflowingElements.push({
                         element: el,
                         tag: el.tagName,
                         class: el.className,
-                        scrollWidth: el.scrollWidth
+                        id: el.id,
+                        scrollWidth: el.scrollWidth,
+                        offsetWidth: el.offsetWidth,
+                        rectRight: Math.round(rect.right),
+                        rectLeft: Math.round(rect.left),
+                        windowWidth: window.innerWidth,
+                        overflow: computed.overflow,
+                        overflowX: computed.overflowX,
+                        position: computed.position,
+                        width: computed.width,
+                        maxWidth: computed.maxWidth
                     });
                 }
             });
             
             if (overflowingElements.length > 0) {
-                console.warn('Elements causing overflow:', overflowingElements);
+                console.warn('🔴 Elements causing overflow (' + overflowingElements.length + '):');
+                overflowingElements.forEach(el => {
+                    console.log('└─ ' + el.tag + (el.class ? '.' + el.class.split(' ')[0] : '') + 
+                               (el.id ? '#' + el.id : ''), el);
+                });
+                
+                // Highlight the problematic elements
+                overflowingElements.forEach(item => {
+                    if (item.element && item.element.style) {
+                        item.element.style.outline = '3px solid red';
+                    }
+                });
             }
             
             return true;
