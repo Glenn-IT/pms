@@ -16,66 +16,109 @@ require_once('../config.php');
     
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
-        body{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 1rem 0;
+            background: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            position: relative;
         }
         
-        .sk-header{
-            text-align: center;
+        /* Register Container */
+        .register-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 100%;
+        }
+        
+        .register-box {
+            width: 100%;
+            max-width: 650px;
+        }
+        
+        /* System Title Header */
+        .system-header {
+            background: linear-gradient(to right, #001f3f, #003d7a);
             color: white;
-            margin-bottom: 2rem;
-            padding: 1rem;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
         }
         
-        .sk-header h1{
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+        .system-header h1 {
+            color: white !important;
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            margin: 0;
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin: 0 0 0.5rem 0;
         }
         
-        .sk-header p{
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            opacity: 0.9;
-            margin: 0;
+        .system-header i {
+            margin-right: 0.5rem;
         }
         
-        .register-container{
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-        
-        .card{
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-            overflow: hidden;
+        /* Card matching user/index.php style */
+        .card {
             background: white;
-        }
-        
-        .card-header{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
             border: none;
-            padding: 1.75rem 2rem;
-            text-align: center;
         }
         
-        .card-header h2{
-            font-size: clamp(1.25rem, 4vw, 1.75rem);
+        .card-header {
+            background: linear-gradient(to right, #001f3f, #003d7a);
+            color: white;
+            padding: 1.5rem;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .card-header h4 {
             margin: 0;
-            font-weight: 600;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
         }
         
-        .card-body{
+        .card-body {
             padding: 2rem;
+        }
+        
+        /* Card Footer */
+        .card-footer {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            text-align: center;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .card-footer p {
+            color: #666;
+            margin: 0.25rem 0;
+            font-size: 0.85rem;
+        }
+        
+        .card-footer strong {
+            color: #001f3f;
         }
         
         .welcome-text{
@@ -108,8 +151,8 @@ require_once('../config.php');
         }
         
         .form-control:focus, .custom-select:focus{
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.15);
+            border-color: #001f3f;
+            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
         }
         
         .input-group-text{
@@ -122,14 +165,16 @@ require_once('../config.php');
             min-height: 48px;
             display: flex;
             align-items: center;
+            color: #001f3f;
         }
         
         .input-group-text:hover{
             background: #e9ecef;
+            color: #003d7a;
         }
         
         .btn-register{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to right, #001f3f, #003d7a);
             border: none;
             border-radius: 10px;
             padding: 0.875rem 2rem;
@@ -143,7 +188,8 @@ require_once('../config.php');
         
         .btn-register:hover{
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+            box-shadow: 0 5px 15px rgba(0, 31, 63, 0.3);
+            background: linear-gradient(to right, #003d7a, #001f3f);
             color: white;
         }
         
@@ -157,12 +203,13 @@ require_once('../config.php');
             width: 130px;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid #667eea;
+            border: 4px solid #001f3f;
             transition: all 0.3s;
         }
         
         img#cimg:hover{
             transform: scale(1.05);
+            border-color: #003d7a;
         }
         
         #password-requirements{
@@ -190,14 +237,14 @@ require_once('../config.php');
         }
         
         .login-link a{
-            color: #667eea;
+            color: #001f3f;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
         }
         
         .login-link a:hover{
-            color: #764ba2;
+            color: #003d7a;
             text-decoration: underline;
         }
         
@@ -210,7 +257,7 @@ require_once('../config.php');
         }
         
         .custom-file-label::after{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to right, #001f3f, #003d7a);
             color: white;
             border-radius: 0 8px 8px 0;
         }
@@ -238,7 +285,7 @@ require_once('../config.php');
         .loader-holder div {
             width: 18px;
             height: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to right, #001f3f, #003d7a);
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
         }
@@ -267,18 +314,34 @@ require_once('../config.php');
                 height: 110px;
                 width: 110px;
             }
+            
+            .system-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card-header h4 {
+                font-size: 1.2rem;
+            }
         }
         
         @media (max-width: 480px) {
             .register-container{
-                padding: 0 0.75rem;
+                padding: 1rem;
             }
             
-            .card-header{
+            .system-header {
                 padding: 1.5rem 1rem;
             }
             
+            .card-header{
+                padding: 1.25rem 1rem;
+            }
+            
             .card-body{
+                padding: 1.25rem 1rem;
+            }
+            
+            .card-footer {
                 padding: 1.25rem 1rem;
             }
             
@@ -296,20 +359,30 @@ require_once('../config.php');
 </head>
 <body>
 
-<div class="sk-header">
-    <h1><i class="fas fa-users"></i> <?php echo $_settings->info('name') ?></h1>
-    <p>Sangguniang Kabataan User Registration</p>
-</div>
-
 <div class="register-container">
-    <div class="card">
-        <div class="card-header">
-            <h2><i class="fas fa-user-plus"></i> Create Your Account</h2>
-        </div>
-        <div class="card-body">
-            <p class="welcome-text">Join the SK community by registering below</p>
+    <div class="register-box">
+        <div class="card">
+            <!-- System Header -->
+            <div class="system-header">
+                <h1>
+                    <i class="fas fa-users"></i>
+                    <b><?php echo $_settings->info('name') ?></b>
+                </h1>
+            </div>
+            
+            <!-- Registration Form Header -->
+            <div class="card-header">
+                <h4>
+                    <i class="fas fa-user-plus"></i>
+                    User Registration
+                </h4>
+            </div>
+            
+            <!-- Registration Form Body -->
+            <div class="card-body">
+                <p class="welcome-text">Join the SK community by registering below</p>
 
-            <div id="msg"></div>
+                <div id="msg"></div>
 
             <form action="" id="register-frm" enctype="multipart/form-data">
                 <div class="row">
@@ -457,6 +530,13 @@ require_once('../config.php');
                 </div>
             </form>
         </div>
+        
+        <!-- Card Footer -->
+        <div class="card-footer">
+            <p><strong>Youth Information System</strong> - Maguilling, Piat, Cagayan</p>
+            <p>&copy; <?php echo date('Y') ?> Sangguniang Kabataan. All Rights Reserved.</p>
+        </div>
+    </div>
     </div>
 </div>
 
