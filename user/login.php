@@ -17,19 +17,204 @@ require_once('../config.php');
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-    body{
-        background-image: url("<?php echo validate_image($_settings->info('cover')) ?>");
-        background-size:cover;
-        background-repeat:no-repeat;
-        backdrop-filter: contrast(1);
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    #page-title{
-        text-shadow: 6px 4px 7px black;
-        font-size: 3.5em;
-        color: #fff4f4 !important;
-        background: #8080801c;
+    
+    html {
+        overflow-x: hidden;
+        max-width: 100%;
     }
-    /* Loader styles */
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6f9;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+        position: relative;
+    }
+    
+    /* Login Container */
+    .login-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        max-width: 100%;
+    }
+    
+    .login-box {
+        width: 100%;
+        max-width: 500px;
+    }
+    
+    /* System Title Header */
+    .system-header {
+        background: linear-gradient(to right, #001f3f, #003d7a);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 3px solid rgba(255,255,255,0.3);
+    }
+    
+    .system-header h1 {
+        color: white !important;
+        font-size: clamp(1.5rem, 3.5vw, 2rem);
+        margin: 0;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .system-header i {
+        margin-right: 0.5rem;
+    }
+    
+    /* Card matching user/index.php style */
+    .card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        overflow: hidden;
+        border: none;
+    }
+    
+    .card-header {
+        background: linear-gradient(to right, #001f3f, #003d7a);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: 3px solid rgba(255,255,255,0.3);
+    }
+    
+    .card-header h4 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    
+    .card-body {
+        padding: 2rem;
+    }
+    
+    /* Card Footer */
+    .card-footer {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        text-align: center;
+        border-top: 2px solid #e0e0e0;
+    }
+    
+    .card-footer p {
+        color: #666;
+        margin: 0.25rem 0;
+        font-size: 0.85rem;
+    }
+    
+    .card-footer strong {
+        color: #001f3f;
+    }
+    
+    .login-box-msg {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #666;
+        font-size: 1rem;
+    }
+    
+    /* Form Controls */
+    .input-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: #001f3f;
+        box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.1);
+        outline: none;
+    }
+    
+    .input-group-text {
+        background: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        color: #001f3f;
+    }
+    
+    /* Button */
+    .btn-primary {
+        background: linear-gradient(to right, #001f3f, #003d7a);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 31, 63, 0.3);
+        background: linear-gradient(to right, #003d7a, #001f3f);
+    }
+    
+    .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    /* Links */
+    .card-body a {
+        color: #001f3f;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+    
+    .card-body a:hover {
+        color: #003d7a;
+        text-decoration: underline;
+    }
+    
+    /* Message Display */
+    #login-message {
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 500;
+        min-height: 20px;
+    }
+    
+    #login-message:not(:empty) {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+    }
+    
+    /* Toggle Password */
+    .toggle-password {
+        transition: color 0.3s;
+    }
+    
+    .toggle-password:hover {
+        color: #001f3f;
+    }
+    
+    /* Loader matching user/index.php */
     #preloader {
         position: fixed;
         top: 0;
@@ -37,74 +222,130 @@ require_once('../config.php');
         width: 100%;
         height: 100%;
         z-index: 9999;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.8);
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
+        max-width: 100vw;
     }
+    
     .loader-holder {
         display: flex;
-        gap: 10px;
+        gap: 12px;
     }
+    
     .loader-holder div {
-        width: 15px;
-        height: 15px;
-        background-color: #fff;
+        width: 18px;
+        height: 18px;
+        background: linear-gradient(to right, #001f3f, #003d7a);
         border-radius: 50%;
         animation: bounce 1.4s infinite ease-in-out both;
     }
+    
     .loader-holder div:nth-child(1) { animation-delay: -0.32s; }
     .loader-holder div:nth-child(2) { animation-delay: -0.16s; }
+    .loader-holder div:nth-child(3) { animation-delay: 0s; }
+    .loader-holder div:nth-child(4) { animation-delay: 0.16s; }
+    
     @keyframes bounce {
-        0%, 80%, 100% { transform: scale(0); }
-        40% { transform: scale(1); }
+        0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        #page-title {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .login-container {
+            padding: 1rem;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
     }
 </style>
 
-<h1 class="text-center text-white px-4 py-5" id="page-title"><b><?php echo $_settings->info('name') ?></b></h1>
-
-<div class="login-box">
-    <div class="card card-navy my-2">
-        <div class="card-body">
-            <p class="login-box-msg">Please enter your credentials</p>
+<!-- Login Container -->
+<div class="login-container">
+    <div class="login-box">
+        <div class="card">
+            <!-- System Header -->
+            <div class="system-header">
+                <h1>
+                    <i class="fas fa-users"></i>
+                    <b><?php echo $_settings->info('name') ?></b>
+                </h1>
+            </div>
             
-            <!-- Message display -->
-            <div id="login-message" class="text-center mb-3 text-danger"></div>
+            <!-- Login Form Header -->
+            <div class="card-header">
+                <h4>
+                    <i class="fas fa-sign-in-alt"></i>
+                    User Login
+                </h4>
+            </div>
             
-            <form id="login-frm" action="" method="post">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="username" autofocus placeholder="Username" id="username-input">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <span class="fas fa-user"></span>
+            <!-- Login Form Body -->
+            <div class="card-body">
+                <p class="login-box-msg">Please enter your credentials to access your account</p>
+                
+                <!-- Message display -->
+                <div id="login-message" class="text-center mb-3"></div>
+                
+                <form id="login-frm" action="" method="post">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="username" autofocus placeholder="Username" id="username-input">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" class="form-control" name="password" placeholder="Password" id="password-input">
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="bi bi-eye-slash toggle-password" data-target="password-input" style="cursor:pointer;"></i>
-                        </span>
+                    <div class="input-group">
+                        <input type="password" class="form-control" name="password" placeholder="Password" id="password-input">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="bi bi-eye-slash toggle-password" data-target="password-input" style="cursor:pointer;"></i>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                        <!-- Empty space -->
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary" id="login-button">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
                     </div>
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block" id="login-button">Sign In</button>
-                    </div>
-                </div>
-            </form>
+                </form>
 
-            <p class="mb-1 mt-3">
-                <a href="forgot_password/">I forgot my password</a>
-            </p>
+                <div class="text-center mt-3">
+                    <p class="mb-2">
+                        <a href="forgot_password/">
+                            <i class="fas fa-key"></i> I forgot my password
+                        </a>
+                    </p>
+                    
+                    <p class="mb-0">
+                        <a href="register.php">
+                            <i class="fas fa-user-plus"></i> Register a new account
+                        </a>
+                    </p>
+                </div>
+            </div>
             
-            <p class="mb-0">
-                <a href="register.php" class="text-center">Register a new account</a>
-            </p>
+            <!-- Card Footer -->
+            <div class="card-footer">
+                <p><strong>Youth Information System</strong> - Maguilling, Piat, Cagayan</p>
+                <p>&copy; <?php echo date('Y') ?> Sangguniang Kabataan. All Rights Reserved.</p>
+            </div>
         </div>
     </div>
 </div>

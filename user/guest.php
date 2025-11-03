@@ -7,12 +7,10 @@ require_once('../config.php');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title><?php echo $_settings->info('name') ?> - News & Updates</title>
+    <title><?php echo $_settings->info('name') ?> - Welcome</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="<?php echo base_url ?>plugins/fontawesome-free/css/all.min.css">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Theme style -->
+    <!-- AdminLTE -->
     <link rel="stylesheet" href="<?php echo base_url ?>dist/css/adminlte.min.css">
     
     <style>
@@ -22,93 +20,139 @@ require_once('../config.php');
             box-sizing: border-box;
         }
         
+        /* Prevent all elements from causing horizontal overflow */
+        *:not(html):not(body) {
+            max-width: 100%;
+        }
+        
+        html {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f4f6f9;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+            position: relative;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
         }
         
-        /* Header Navigation */
-        .main-header {
-            background: linear-gradient(to right, #001f3f, #003d7a);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            position: sticky;
+        /* Ensure all direct children of body respect width */
+        body > * {
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Force all containers to respect viewport width */
+        .container, .container-fluid, .row {
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+        }
+        
+        /* Prevent negative margins from Bootstrap rows */
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        
+        .row > * {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        
+        /* Bootstrap modal fixes */
+        .modal {
+            overflow-x: hidden !important;
+        }
+        
+        .modal-dialog {
+            max-width: calc(100vw - 2rem) !important;
+            margin: 1rem auto !important;
+        }
+        
+        .modal-xl {
+            max-width: calc(100vw - 2rem) !important;
+        }
+        
+        .modal-lg {
+            max-width: calc(100vw - 2rem) !important;
+        }
+        
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            width: 100% !important;
+            max-width: 100vw !important;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
             top: 0;
-            z-index: 1000;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            opacity: 0.5;
         }
         
-        .header-container {
-            max-width: 1400px;
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            width: 100%;
             margin: 0 auto;
             padding: 0 1rem;
         }
         
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .site-title {
-            color: white;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
+        .hero-banner h1 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            flex: 1;
-            min-width: 200px;
+            max-width: 100%;
+            word-wrap: break-word;
         }
         
-        .site-title i {
-            margin-right: 0.5rem;
-        }
-        
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 0.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .nav-menu li a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 0.95rem;
-            display: block;
-        }
-        
-        .nav-menu li a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-        
-        .nav-menu li a.active {
-            background: rgba(255,255,255,0.3);
+        .hero-banner p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 100%;
+            word-wrap: break-word;
         }
         
         .auth-buttons {
             display: flex;
-            gap: 0.75rem;
-            margin-left: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
         }
         
         .btn-login, .btn-register {
-            padding: 0.5rem 1.25rem;
+            padding: 0.75rem 2rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.9rem;
+            font-size: 1rem;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
         }
         
         .btn-login {
@@ -135,58 +179,7 @@ require_once('../config.php');
             border-color: #218838;
             transform: translateY(-2px);
             text-decoration: none;
-        }
-        
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: 2px solid white;
             color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-        
-        /* Hero Banner */
-        .hero-banner {
-            background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
-            color: white;
-            padding: 3rem 1rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
-            opacity: 0.3;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .hero-banner h1 {
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-        
-        .hero-banner p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            opacity: 0.9;
-            margin-bottom: 0;
         }
         
         /* Main Container */
@@ -196,53 +189,36 @@ require_once('../config.php');
             width: 100%;
             margin: 2rem auto;
             padding: 0 1rem;
+            overflow-x: hidden !important;
         }
         
-        /* Tab Navigation */
-        .tab-navigation {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            background: white;
-            border: 2px solid #001f3f;
+        /* Section Titles */
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
             color: #001f3f;
-            padding: 0.75rem 2rem;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         
-        .tab-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,31,63,0.3);
+        .section-title i {
+            color: #003d7a;
         }
         
-        .tab-btn.active {
-            background: linear-gradient(135deg, #001f3f 0%, #003d7a 100%);
-            color: white;
-        }
-        
-        .tab-btn i {
-            margin-right: 0.5rem;
-        }
-        
-        /* News Grid */
-        .news-grid {
+        /* Grid Layouts */
+        .events-grid, .announcements-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
+            width: 100%;
+            max-width: 100%;
         }
         
-        /* Article Card */
-        .article-card {
+        /* Card Styles */
+        .card {
             background: white;
             border-radius: 15px;
             overflow: hidden;
@@ -251,42 +227,38 @@ require_once('../config.php');
             cursor: pointer;
             display: flex;
             flex-direction: column;
+            max-width: 100%;
         }
         
-        .article-card:hover {
+        .card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .article-image {
+        .card-image {
             width: 100%;
-            height: 250px;
+            height: 200px;
             object-fit: cover;
-            background: #e9ecef;
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
         }
         
-        .article-body {
+        .card-body {
             padding: 1.5rem;
             flex: 1;
             display: flex;
             flex-direction: column;
         }
         
-        .article-meta {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .article-badge {
+        .card-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.35rem 0.85rem;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
+            margin-bottom: 1rem;
+            width: fit-content;
         }
         
         .badge-event {
@@ -299,27 +271,8 @@ require_once('../config.php');
             color: #388e3c;
         }
         
-        .badge-new {
-            background: #fff3e0;
-            color: #f57c00;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .article-date {
-            color: #666;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .article-title {
-            font-size: 1.3rem;
+        .card-title {
+            font-size: 1.25rem;
             font-weight: 700;
             color: #001f3f;
             margin-bottom: 0.75rem;
@@ -328,9 +281,11 @@ require_once('../config.php');
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            word-wrap: break-word;
+            max-width: 100%;
         }
         
-        .article-excerpt {
+        .card-description {
             color: #555;
             font-size: 0.95rem;
             line-height: 1.6;
@@ -340,122 +295,17 @@ require_once('../config.php');
             -webkit-box-orient: vertical;
             overflow: hidden;
             flex: 1;
+            word-wrap: break-word;
+            max-width: 100%;
         }
         
-        .article-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid #e9ecef;
-        }
-        
-        .read-more {
-            color: #007bff;
-            font-weight: 600;
-            text-decoration: none;
+        .card-date {
+            color: #999;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s;
-        }
-        
-        .read-more:hover {
-            color: #0056b3;
-            gap: 0.75rem;
-        }
-        
-        .article-stats {
-            display: flex;
-            gap: 1rem;
-            color: #999;
-            font-size: 0.85rem;
-        }
-        
-        .article-stats span {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        /* Article Detail Modal */
-        .modal-article-detail {
-            padding: 2rem;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-article-detail::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .modal-article-detail::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .modal-article-detail::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        
-        .modal-article-detail::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        .detail-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .detail-header {
-            margin-bottom: 1.5rem;
-        }
-        
-        .detail-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #001f3f;
-            margin-bottom: 1rem;
-        }
-        
-        .detail-meta {
-            display: flex;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .detail-content {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: #333;
-            margin-bottom: 1.5rem;
-        }
-        
-        .detail-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .detail-gallery img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .detail-gallery img:hover {
-            transform: scale(1.05);
+            margin-top: auto;
         }
         
         /* Empty State */
@@ -463,6 +313,7 @@ require_once('../config.php');
             text-align: center;
             padding: 4rem 2rem;
             color: #999;
+            grid-column: 1 / -1;
         }
         
         .empty-state i {
@@ -477,28 +328,33 @@ require_once('../config.php');
             color: #666;
         }
         
-        .empty-state p {
-            font-size: 1rem;
-        }
-        
         /* Footer */
-        .main-footer {
-            background: rgba(255,255,255,0.95);
+        .footer-section {
+            background: transparent;
             padding: 2rem 1rem;
             text-align: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            margin-top: auto;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
         }
         
         .footer-content {
             max-width: 1400px;
+            width: 100% !important;
             margin: 0 auto;
+            overflow-x: hidden !important;
         }
         
         .footer-content p {
             color: #666;
             margin: 0.5rem 0;
             font-size: 0.95rem;
+            max-width: calc(100% - 2rem) !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .footer-content strong {
@@ -542,50 +398,51 @@ require_once('../config.php');
             40% { transform: scale(1); opacity: 1; }
         }
         
+        /* Tablet Responsive (769px - 992px) */
+        @media (min-width: 769px) and (max-width: 992px) {
+            .events-grid, .announcements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+        
+        /* Laptop Small (993px - 1199px) */
+        @media (min-width: 993px) and (max-width: 1199px) {
+            .events-grid, .announcements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .main-container {
+                max-width: 95%;
+            }
+        }
+        
+        /* Laptop Wide (1200px - 1366px) */
+        @media (min-width: 1200px) and (max-width: 1366px) {
+            .events-grid, .announcements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .main-container {
+                max-width: 98%;
+            }
+        }
+        
         /* Mobile Responsive */
-        @media (max-width: 992px) {
-            .mobile-menu-toggle {
-                display: block;
+        @media (max-width: 768px) {
+            .hero-banner {
+                padding: 2rem 1rem;
             }
             
-            .nav-menu {
-                display: none;
-                width: 100%;
-                flex-direction: column;
-                margin-top: 1rem;
-            }
-            
-            .nav-menu.active {
-                display: flex;
-            }
-            
-            .nav-menu li a {
-                width: 100%;
-                text-align: center;
+            .events-grid, .announcements-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
             
             .auth-buttons {
                 width: 100%;
                 justify-content: center;
-                margin: 1rem 0 0 0;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .site-title {
-                font-size: 0.85rem;
-            }
-            
-            .hero-banner {
-                padding: 2rem 1rem;
-            }
-            
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .detail-title {
-                font-size: 1.5rem;
             }
         }
         
@@ -594,102 +451,87 @@ require_once('../config.php');
                 margin: 1rem auto;
             }
             
-            .tab-btn {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
+            .card-body {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Header -->
-<header class="main-header">
-    <div class="header-container">
-        <nav class="navbar">
-            <div class="site-title">
-                <i class="fas fa-users"></i>
-                YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN
-            </div>
-            
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="guest.php" class="active"><i class="fas fa-newspaper"></i> News & Updates</a></li>
-                <li><a href="about_us.php"><i class="fas fa-info-circle"></i> About Us</a></li>
-                <li><a href="developers.php"><i class="fas fa-code"></i> Developers</a></li>
-            </ul>
-            
-            <div class="auth-buttons">
-                <a href="login.php" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="register.php" class="btn-register">
-                    <i class="fas fa-user-plus"></i> Register
-                </a>
-            </div>
-        </nav>
-    </div>
-</header>
-
 <!-- Hero Banner -->
 <section class="hero-banner">
     <div class="hero-content">
-        <h1><i class="fas fa-newspaper"></i> Latest News & Updates</h1>
-        <p>Stay informed with the latest events, announcements, and activities from the SK of Maguilling</p>
+        <h1><i class="fas fa-handshake"></i> Welcome to YISMPC</h1>
+        <p>Stay connected with the latest events and announcements from the Sangguniang Kabataan of Maguilling, Piat, Cagayan</p>
+        
+        <div class="auth-buttons">
+            <a href="login.php" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="register.php" class="btn-register">
+                <i class="fas fa-user-plus"></i> Register
+            </a>
+        </div>
     </div>
 </section>
 
 <!-- Main Container -->
 <div class="main-container">
-    <!-- Tab Navigation -->
-    <div class="tab-navigation">
-        <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">
-            <i class="fas fa-th-large"></i> All Updates
-        </button>
-        <button class="tab-btn" data-tab="events" onclick="switchTab('events')">
-            <i class="fas fa-calendar-alt"></i> Events
-        </button>
-        <button class="tab-btn" data-tab="announcements" onclick="switchTab('announcements')">
-            <i class="fas fa-bullhorn"></i> Announcements
-        </button>
-    </div>
-    
-    <!-- News Grid -->
-    <div class="news-grid" id="newsGrid">
-        <div class="empty-state">
-            <i class="fas fa-spinner fa-spin"></i>
-            <h3>Loading...</h3>
-            <p>Please wait while we fetch the latest updates</p>
+    <!-- Events Section -->
+    <section>
+        <h2 class="section-title">
+            <i class="fas fa-calendar-alt"></i>
+            Upcoming Events
+        </h2>
+        <div class="events-grid" id="eventsGrid">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h3>Loading Events...</h3>
+                <p>Please wait while we fetch the latest events</p>
+            </div>
         </div>
-    </div>
+    </section>
+    
+    <!-- Announcements Section -->
+    <section>
+        <h2 class="section-title">
+            <i class="fas fa-bullhorn"></i>
+            Latest Announcements
+        </h2>
+        <div class="announcements-grid" id="announcementsGrid">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin"></i>
+                <h3>Loading Announcements...</h3>
+                <p>Please wait while we fetch the latest announcements</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer Section (Integrated in Main Container) -->
+    <section class="footer-section">
+        <div class="footer-content">
+            <p><strong>Youth Information System</strong> - Maguilling, Piat, Cagayan</p>
+            <p>&copy; <?php echo date('Y') ?> Sangguniang Kabataan. All Rights Reserved.</p>
+            <p style="font-size: 0.85rem; color: #999;">Developed for SK Community Management</p>
+        </div>
+    </section>
 </div>
 
-<!-- Footer -->
-<footer class="main-footer">
-    <div class="footer-content">
-        <p><strong>Youth Information System</strong> - Maguilling, Piat, Cagayan</p>
-        <p>&copy; <?php echo date('Y') ?> Sangguniang Kabataan. All Rights Reserved.</p>
-        <p style="font-size: 0.85rem; color: #999;">Developed for SK Community Management</p>
-    </div>
-</footer>
-
-<!-- Article Detail Modal -->
-<div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModalLabel" aria-hidden="true">
+<!-- Detail Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
             <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
-                <h5 class="modal-title" id="articleModalLabel">
-                    <i class="fas fa-newspaper"></i> Article Details
+                <h5 class="modal-title" id="detailModalTitle">
+                    <i class="fas fa-info-circle"></i> Details
                 </h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-0" id="articleModalBody">
-                <!-- Article details will load here -->
+            <div class="modal-body p-4" id="detailModalBody">
+                <!-- Content loads here -->
             </div>
         </div>
     </div>
@@ -701,18 +543,16 @@ require_once('../config.php');
 <script src="<?= base_url ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // Define base_url
     var _base_url_ = '<?php echo base_url ?>';
     
-    // Store all data
     let allEvents = [];
     let allAnnouncements = [];
-    let currentTab = 'all';
     
     // Loader functions
     window.start_loader = function(){
         $('body').append('<div id="preloader"><div class="loader-holder"><div></div><div></div><div></div><div></div></div></div>');
     }
+    
     window.end_loader = function(){
         $('#preloader').fadeOut('fast', function() {
             $(this).remove();
@@ -721,144 +561,150 @@ require_once('../config.php');
 
     $(document).ready(function(){
         end_loader();
-        loadAllContent();
+        loadEvents();
+        loadAnnouncements();
     });
     
-    function toggleMobileMenu(){
-        $('#navMenu').toggleClass('active');
-    }
-    
-    function loadAllContent() {
-        // Load both events and announcements
-        Promise.all([
-            $.ajax({
-                url: _base_url_ + 'classes/Master.php?f=get_all_events',
-                method: 'GET',
-                dataType: 'json'
-            }),
-            $.ajax({
-                url: _base_url_ + 'classes/Master.php?f=get_all_announcements',
-                method: 'GET',
-                dataType: 'json'
-            })
-        ]).then(([eventsResp, announcementsResp]) => {
-            allEvents = eventsResp.status === 'success' ? eventsResp.data : [];
-            allAnnouncements = announcementsResp.status === 'success' ? announcementsResp.data : [];
-            displayContent();
-        }).catch(error => {
-            console.error('Error loading content:', error);
-            $('#newsGrid').html(`
-                <div class="empty-state">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Error Loading Content</h3>
-                    <p>Failed to load news and updates. Please try again later.</p>
-                </div>
-            `);
+    // Load Events
+    function loadEvents() {
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_all_events',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    allEvents = resp.data;
+                    displayEvents();
+                } else {
+                    $('#eventsGrid').html(`
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h3>No Events Available</h3>
+                            <p>Check back later for upcoming events</p>
+                        </div>
+                    `);
+                }
+            },
+            error: function() {
+                $('#eventsGrid').html(`
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading Events</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `);
+            }
         });
     }
     
-    function switchTab(tab) {
-        currentTab = tab;
-        
-        // Update active tab button
-        $('.tab-btn').removeClass('active');
-        $(`.tab-btn[data-tab="${tab}"]`).addClass('active');
-        
-        displayContent();
+    // Load Announcements
+    function loadAnnouncements() {
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_all_announcements',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    allAnnouncements = resp.data;
+                    displayAnnouncements();
+                } else {
+                    $('#announcementsGrid').html(`
+                        <div class="empty-state">
+                            <i class="fas fa-bullhorn"></i>
+                            <h3>No Announcements Available</h3>
+                            <p>Check back later for new announcements</p>
+                        </div>
+                    `);
+                }
+            },
+            error: function() {
+                $('#announcementsGrid').html(`
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading Announcements</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `);
+            }
+        });
     }
     
-    function displayContent() {
-        let combinedData = [];
-        
-        // Filter based on current tab
-        if (currentTab === 'all') {
-            // Add events
-            allEvents.forEach(event => {
-                combinedData.push({...event, type: 'event'});
-            });
-            // Add announcements
-            allAnnouncements.forEach(announcement => {
-                combinedData.push({...announcement, type: 'announcement'});
-            });
-        } else if (currentTab === 'events') {
-            allEvents.forEach(event => {
-                combinedData.push({...event, type: 'event'});
-            });
-        } else if (currentTab === 'announcements') {
-            allAnnouncements.forEach(announcement => {
-                combinedData.push({...announcement, type: 'announcement'});
-            });
-        }
-        
-        // Sort by date (newest first)
-        combinedData.sort((a, b) => {
-            const dateA = new Date(a.date_created || a.date);
-            const dateB = new Date(b.date_created || b.date);
-            return dateB - dateA;
-        });
-        
-        if (combinedData.length === 0) {
-            $('#newsGrid').html(`
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <h3>No Content Available</h3>
-                    <p>There are no ${currentTab === 'all' ? 'updates' : currentTab} to display at the moment.</p>
-                </div>
-            `);
-            return;
-        }
-        
+    // Display Events
+    function displayEvents() {
         let html = '';
         
-        combinedData.forEach(item => {
-            const images = item.images || [];
-            const primaryImage = images[0] || item.image_path || _base_url_ + 'assets/images/placeholder.jpg';
+        allEvents.forEach(event => {
+            const images = event.images || [];
+            const primaryImage = images[0] || event.image_path || _base_url_ + 'assets/images/placeholder.jpg';
             
-            // Format date
-            const itemDate = new Date(item.date_created || item.date);
-            const formattedDate = itemDate.toLocaleDateString('en-US', { 
+            const eventDate = new Date(event.date_created || event.date);
+            const formattedDate = eventDate.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric'
             });
             
-            // Check if new (within last 7 days)
-            const today = new Date();
-            const daysDiff = Math.floor((today - itemDate) / (1000 * 60 * 60 * 24));
-            const isNew = daysDiff <= 7;
-            
-            // Get image count
-            const imageCount = images.length || (item.image_path ? 1 : 0);
-            
             html += `
-                <article class="article-card" onclick="showArticle(${item.id}, '${item.type}')">
-                    <img src="${_base_url_}${primaryImage}" class="article-image" alt="${item.title}">
-                    <div class="article-body">
-                        <div class="article-meta">
-                            <span class="article-badge ${item.type === 'event' ? 'badge-event' : 'badge-announcement'}">
-                                <i class="fas ${item.type === 'event' ? 'fa-calendar-alt' : 'fa-bullhorn'}"></i>
-                                ${item.type === 'event' ? 'Event' : 'Announcement'}
-                            </span>
-                            ${isNew ? '<span class="article-badge badge-new"><i class="fas fa-star"></i> New</span>' : ''}
-                        </div>
-                        <h3 class="article-title">${item.title}</h3>
-                        <p class="article-excerpt">${item.description}</p>
-                        <div class="article-footer">
-                            <span class="article-date">
-                                <i class="far fa-calendar"></i>
-                                ${formattedDate}
-                            </span>
-                            ${imageCount > 1 ? `<div class="article-stats"><span><i class="fas fa-images"></i> ${imageCount}</span></div>` : ''}
+                <div class="card" onclick="showDetail(${event.id}, 'event')">
+                    <img src="${_base_url_}${primaryImage}" class="card-image" alt="${event.title}">
+                    <div class="card-body">
+                        <span class="card-badge badge-event">
+                            <i class="fas fa-calendar-alt"></i>
+                            Event
+                        </span>
+                        <h3 class="card-title">${event.title}</h3>
+                        <p class="card-description">${event.description}</p>
+                        <div class="card-date">
+                            <i class="far fa-calendar"></i>
+                            ${formattedDate}
                         </div>
                     </div>
-                </article>
+                </div>
             `;
         });
         
-        $('#newsGrid').html(html);
+        $('#eventsGrid').html(html);
     }
     
-    function showArticle(id, type) {
+    // Display Announcements
+    function displayAnnouncements() {
+        let html = '';
+        
+        allAnnouncements.forEach(announcement => {
+            const images = announcement.images || [];
+            const primaryImage = images[0] || announcement.image_path || _base_url_ + 'assets/images/placeholder.jpg';
+            
+            const announcementDate = new Date(announcement.date_created || announcement.date);
+            const formattedDate = announcementDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            });
+            
+            html += `
+                <div class="card" onclick="showDetail(${announcement.id}, 'announcement')">
+                    <img src="${_base_url_}${primaryImage}" class="card-image" alt="${announcement.title}">
+                    <div class="card-body">
+                        <span class="card-badge badge-announcement">
+                            <i class="fas fa-bullhorn"></i>
+                            Announcement
+                        </span>
+                        <h3 class="card-title">${announcement.title}</h3>
+                        <p class="card-description">${announcement.description}</p>
+                        <div class="card-date">
+                            <i class="far fa-calendar"></i>
+                            ${formattedDate}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        $('#announcementsGrid').html(html);
+    }
+    
+    // Show Detail Modal
+    function showDetail(id, type) {
         const data = type === 'event' 
             ? allEvents.find(e => e.id == id) 
             : allAnnouncements.find(a => a.id == id);
@@ -868,7 +714,6 @@ require_once('../config.php');
         const images = data.images || [];
         const primaryImage = images[0] || data.image_path;
         
-        // Format date
         const itemDate = new Date(data.date_created || data.date);
         const formattedDate = itemDate.toLocaleDateString('en-US', { 
             year: 'numeric', 
@@ -878,35 +723,33 @@ require_once('../config.php');
             minute: '2-digit'
         });
         
-        let html = '<div class="modal-article-detail">';
+        let html = '<div style="max-width: 100%; overflow-x: hidden;">';
         
         // Main image
         if (primaryImage) {
-            html += `<img src="${_base_url_}${primaryImage}" class="detail-image" alt="${data.title}">`;
+            html += `<img src="${_base_url_}${primaryImage}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem;" alt="${data.title}">`;
         }
         
-        // Header
+        // Badge and Title
         html += `
-            <div class="detail-header">
-                <div class="mb-3">
-                    <span class="article-badge ${type === 'event' ? 'badge-event' : 'badge-announcement'}">
-                        <i class="fas ${type === 'event' ? 'fa-calendar-alt' : 'fa-bullhorn'}"></i>
-                        ${type === 'event' ? 'Event' : 'Announcement'}
-                    </span>
-                </div>
-                <h2 class="detail-title">${data.title}</h2>
-                <div class="detail-meta">
-                    <span><i class="far fa-calendar text-primary"></i> <strong>Published:</strong> ${formattedDate}</span>
-                    ${images.length > 1 ? `<span><i class="fas fa-images text-info"></i> <strong>${images.length}</strong> photos</span>` : ''}
-                </div>
+            <div style="margin-bottom: 1rem;">
+                <span class="card-badge ${type === 'event' ? 'badge-event' : 'badge-announcement'}">
+                    <i class="fas ${type === 'event' ? 'fa-calendar-alt' : 'fa-bullhorn'}"></i>
+                    ${type === 'event' ? 'Event' : 'Announcement'}
+                </span>
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; color: #001f3f; margin-bottom: 1rem;">${data.title}</h2>
+            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; flex-wrap: wrap;">
+                <span><i class="far fa-calendar text-primary"></i> <strong>Published:</strong> ${formattedDate}</span>
+                ${images.length > 1 ? `<span><i class="fas fa-images text-info"></i> <strong>${images.length}</strong> photos</span>` : ''}
             </div>
         `;
         
-        // Content
+        // Description
         html += `
-            <div class="detail-content">
+            <div style="margin-bottom: 1.5rem;">
                 <h5 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-align-left"></i> Description</h5>
-                <p style="white-space: pre-wrap;">${data.description}</p>
+                <p style="white-space: pre-wrap; line-height: 1.8; color: #333;">${data.description}</p>
             </div>
         `;
         
@@ -914,11 +757,11 @@ require_once('../config.php');
         if (images.length > 1) {
             html += `
                 <h5 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-images"></i> Photo Gallery (${images.length} photos)</h5>
-                <div class="detail-gallery">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
             `;
             
             images.forEach(img => {
-                html += `<img src="${_base_url_}${img}" alt="Gallery image" onclick="window.open('${_base_url_}${img}', '_blank')">`;
+                html += `<img src="${_base_url_}${img}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.3s;" onclick="window.open('${_base_url_}${img}', '_blank')" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Gallery image">`;
             });
             
             html += '</div>';
@@ -926,8 +769,9 @@ require_once('../config.php');
         
         html += '</div>';
         
-        $('#articleModalBody').html(html);
-        $('#articleModal').modal('show');
+        $('#detailModalTitle').html(`<i class="fas ${type === 'event' ? 'fa-calendar-alt' : 'fa-bullhorn'}"></i> ${type === 'event' ? 'Event' : 'Announcement'} Details`);
+        $('#detailModalBody').html(html);
+        $('#detailModal').modal('show');
     }
 </script>
 
