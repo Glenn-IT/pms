@@ -90,25 +90,6 @@ CREATE TABLE `event_attendance` (
   `scanner_user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
---
--- Dumping data for table `event_attendance`
---
-
-INSERT INTO `event_attendance` (`id`, `event_id`, `user_id`, `qr_code`, `scan_time`, `status`, `scanner_user_id`) VALUES
-(38, 27, 28, 'PMS-USER-00028-SAMPLE A-887fcc39', '2025-09-15 18:32:22', 'present', 1),
-(39, 27, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-09-15 18:32:26', 'present', 1),
-(40, 27, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-09-15 18:32:32', 'present', 1),
-(41, 26, 32, 'PMS-USER-00032-SAMPLE_E-d87f48da', '2025-09-15 18:32:55', 'present', 1),
-(42, 26, 33, 'PMS-USER-00033-SAMPLE_F-a9336fa1', '2025-09-15 18:33:00', 'present', 1),
-(43, 26, 30, 'PMS-USER-00030-SAMPLE C-f5622689', '2025-09-15 18:33:07', 'present', 1),
-(44, 26, 29, 'PMS-USER-00029-SAMPLE B-365e407a', '2025-09-15 18:33:10', 'present', 1),
-(45, 27, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:38', 'present', 1),
-(46, 26, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:46', 'present', 1),
-(47, 25, 39, 'PMS-USER-00039-CRISTEL-85843dfb', '2025-09-15 18:34:54', 'present', 1);
-
-=======
->>>>>>> 7355b10
 -- --------------------------------------------------------
 
 --
@@ -130,14 +111,8 @@ CREATE TABLE `event_list` (
 --
 
 INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
-<<<<<<< HEAD
-(25, 'Sample A', 'Sample', NULL, '[\"uploads\\/events\\/25_1757932272_0.png\"]', NULL, '2025-09-15 18:31:00'),
-(26, 'Sample B', 'Sample B', NULL, '[\"uploads\\/events\\/26_1757932295_0.jpg\"]', NULL, '2025-09-15 18:31:00'),
-(27, 'Sample C', 'Sample C', NULL, '[\"uploads\\/events\\/27_1757932313_0.png\"]', NULL, '2025-09-15 18:31:00');
-=======
 (31, 'Sample', 'Sample', NULL, '[\"uploads\\/events\\/31_1761756295_0.jpg\",\"uploads\\/events\\/31_1761756295_1.jpg\",\"uploads\\/events\\/31_1761756295_2.jpg\",\"uploads\\/events\\/31_1761756295_3.jpg\",\"uploads\\/events\\/31_1761756295_4.jpg\"]', NULL, '2025-10-31 14:44:00'),
 (32, 'awdqweqwe', 'ewqeq', NULL, '[\"uploads\\/events\\/32_1761756421_0.jpeg\"]', NULL, '2025-10-30 00:46:00');
->>>>>>> 7355b10
 
 -- --------------------------------------------------------
 
@@ -173,22 +148,9 @@ CREATE TABLE `security_questions` (
 
 CREATE TABLE `sk_officials` (
   `id` int(11) NOT NULL,
-<<<<<<< HEAD
-  `user_id` int(11) DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `position` enum('chairman','councilor') NOT NULL,
-  `image_path` varchar(255) DEFAULT NULL,
-  `firstname` varchar(100) NOT NULL,
-  `middlename` varchar(100) DEFAULT NULL,
-  `lastname` varchar(100) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `sex` enum('Male','Female') NOT NULL,
-  `contact` varchar(20) DEFAULT NULL,
-=======
   `position` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
   `contact` varchar(20) NOT NULL,
->>>>>>> 7355b10
   `email` varchar(100) DEFAULT NULL,
   `age` int(3) DEFAULT NULL,
   `address` text DEFAULT NULL,
@@ -204,24 +166,6 @@ CREATE TABLE `sk_officials` (
 -- Dumping data for table `sk_officials`
 --
 
-<<<<<<< HEAD
-INSERT INTO `sk_officials` (`id`, `user_id`, `name`, `position`, `image_path`, `firstname`, `middlename`, `lastname`, `date_of_birth`, `sex`, `contact`, `email`, `zone`, `status`, `order_position`, `date_created`, `date_updated`) VALUES
-(1, NULL, '', 'chairman', '1754649960_s036012017.webp', 'Johnawd', 'A.', 'Dela Cruz', '1998-05-15', 'Male', '09123456789', 'john.delacruz@email.com', 'Zone 1', 0, 1, '2025-08-08 18:10:03', '2025-09-11 17:32:21'),
-(2, NULL, '', 'councilor', NULL, 'Maria', 'B.', 'Santos', '2000-03-20', 'Female', '09987654321', 'maria.santos@email.com', 'Zone 2', 0, 2, '2025-08-08 18:10:03', '2025-09-11 17:32:15'),
-(3, NULL, '', 'councilor', NULL, 'Jose', 'C.', 'Garcia', '1999-07-10', 'Male', '09111222333', 'jose.garcia@email.com', 'Zone 3', 0, 3, '2025-08-08 18:10:03', '2025-09-11 17:32:13'),
-(4, NULL, '', 'councilor', NULL, 'Ana', 'D.', 'Rodriguez', '2001-01-25', 'Female', '09444555666', 'ana.rodriguez@email.com', 'Zone 4', 0, 4, '2025-08-08 18:10:03', '2025-09-11 17:32:11'),
-(5, NULL, '', 'councilor', NULL, 'Miguel', 'E.', 'Lopez', '1997-11-30', 'Male', '09777888999', 'miguel.lopez@email.com', 'Zone 5', 0, 5, '2025-08-08 18:10:03', '2025-09-11 17:32:07'),
-(6, NULL, '', 'councilor', NULL, 'Carmen', 'F.', 'Martinez', '2000-09-12', 'Female', '09123987456', 'carmen.martinez@email.com', 'Zone 6', 0, 6, '2025-08-08 18:10:03', '2025-09-11 17:32:01'),
-(7, NULL, '', 'councilor', NULL, 'Pedro', 'G.', 'Gonzalez', '1998-12-05', 'Male', '09654321987', 'pedro.gonzalez@email.com', 'Zone 7', 0, 7, '2025-08-08 18:10:03', '2025-09-11 17:31:59'),
-(8, NULL, '', 'councilor', NULL, 'Rosa', 'H.', 'Hernandez', '1999-04-18', 'Female', '09321654987', 'rosa.hernandez@email.com', 'Zone 8', 0, 8, '2025-08-08 18:10:03', '2025-09-11 17:32:04'),
-(9, NULL, '', 'chairman', '1754650080_s036012017.webp', 'Zues', 'Col', 'Cong', '2000-08-08', 'Male', '0998798778', 'awd@gmail.com', 'Zone 1', 0, NULL, '2025-08-08 18:48:10', '2025-09-11 17:32:26'),
-(10, NULL, '', 'councilor', '1754650080_s036012017.webp', 'Bread', 'Tug', 'Opes', '2000-06-20', 'Female', '09987987987', 'Wd@gmail.com', 'Zone 6', 0, NULL, '2025-08-08 18:48:54', '2025-09-11 17:32:18'),
-(11, 29, 'Kule Lopus Skuer', 'chairman', '1757585040_160107100400-monkey-selfie.jpg', 'Kule', 'Lopus', 'Skuer', '2001-01-05', 'Female', '09798798798', NULL, 'Zone 2', 1, NULL, '2025-09-11 18:04:46', '2025-09-11 18:04:46'),
-(12, 30, 'Kuuso Jute Slop', 'councilor', '1757587020_160107100400-monkey-selfie.jpg', 'Kuuso', 'Jute', 'Slop', '2003-03-02', 'Male', '09789879878', 'john@gmail.com', 'Zone 3', 1, 3, '2025-09-11 18:37:46', '2025-09-11 18:44:13'),
-(13, 31, 'Lopeu Kold Suer', 'councilor', '1757587200_160107100400-monkey-selfie.jpg', 'Lopeu', 'Kold', 'Suer', '1996-05-05', 'Female', '099789654123', 'Lopeu@gmail.com', 'Zone 4', 1, 3, '2025-09-11 18:40:38', '2025-09-11 18:40:38'),
-(14, 28, 'Lincoln Gude Soper', 'councilor', '1757587260_160107100400-monkey-selfie.jpg', 'Lincoln', 'Gude', 'Soper', '2000-02-02', 'Male', '09123123123', 'jh@gmail.com', 'Zone 1', 1, 3, '2025-09-11 18:41:18', '2025-09-11 18:41:18'),
-(15, 32, 'Kikusu Kosp Posi', 'councilor', '1757908380_160107100400-monkey-selfie.jpg', 'Kikusu', 'Kosp', 'Posi', '2005-09-06', 'Female', '09897798789', 'John@gmail.com', 'Zone 2', 1, NULL, '2025-09-15 11:53:04', '2025-09-15 11:53:04');
-=======
 INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`, `address`, `image`, `start_date`, `image_path`, `status`, `date_created`, `date_updated`) VALUES
 (1, 'chairman', 'Chaer U kiwoe', '0917-123-4567', 'chairman@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/chairman_1759135217.jpg', NULL, '../../uploads/sk_officials/sk_official_68da3e082365b.jpg', 'active', '2025-09-26 04:15:44', '2025-10-29 23:49:41'),
 (2, 'secretary', 'Maria Santos', '0918-234-5678', 'secretary@sk.gov.ph', NULL, NULL, 'uploads/sk_officials/secretary_1759135974.jpg', NULL, '../../assets/images/sk_officials/secretary.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 16:52:54'),
@@ -230,7 +174,6 @@ INSERT INTO `sk_officials` (`id`, `position`, `name`, `contact`, `email`, `age`,
 (5, 'kagawad2', 'Carlos Lopez', '0921-567-8901', 'carlos@sk.gov.ph', 26, 'Purok 1, Sitio Bagong Silang', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
 (6, 'kagawad3', 'Sofia Martinez', '0922-678-9012', 'sofia@sk.gov.ph', 21, 'Phase 3, Block 5, Lot 8', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24'),
 (7, 'kagawad4', 'Miguel Torres', '0923-789-0123', 'miguel@sk.gov.ph', 27, 'Purok 2, Sitio San Roque', NULL, '2024-01-15', '../../assets/images/sk_officials/kagawad.svg', 'active', '2025-09-26 04:15:44', '2025-09-29 15:50:24');
->>>>>>> 7355b10
 
 -- --------------------------------------------------------
 
@@ -292,43 +235,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `qr_code`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
-<<<<<<< HEAD
-(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male'),
-(28, 'Lincoln', 'Gude', 'Soper', 'sample A', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00028-SAMPLE A-887fcc39', NULL, 2, 1, '2025-08-08 19:20:58', '2025-08-10 19:23:44', 1, '2000-02-02', 25, 'Male'),
-(29, 'Kule', 'Lopus', 'Skuer', 'Sample B', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00029-SAMPLE B-365e407a', NULL, 2, 1, '2025-08-08 19:21:35', '2025-08-08 19:21:35', 2, '2001-01-05', 24, 'Female'),
-(30, 'Kuuso', 'Jute', 'Slop', 'Sample C', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00030-SAMPLE C-f5622689', NULL, 2, 1, '2025-08-08 19:22:17', '2025-08-08 19:22:17', 3, '2003-03-02', 22, 'Male'),
-(31, 'Lopeu', 'Kold', 'Suer', 'Sample D', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00031-SAMPLE_D-14423dce', NULL, 2, 1, '2025-08-08 19:23:06', '2025-08-31 11:06:00', 4, '1996-05-05', 29, 'Female'),
-(32, 'Kikusu', 'Kosp', 'Posi', 'Sample E', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'sample', NULL, 'PMS-USER-00032-SAMPLE_E-d87f48da', NULL, 2, 1, '2025-08-08 19:37:54', '2025-09-11 10:16:08', 2, '2005-09-06', 19, 'Female'),
-(33, 'Kkols', 'Iolw', 'Loper', 'Sample F', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00033-SAMPLE_F-a9336fa1', NULL, 2, 1, '2025-08-08 22:37:37', '2025-08-08 22:37:37', 5, '2008-05-30', 17, 'Female'),
-(34, 'Slowp', 'U', 'Soper', 'Sample X', '86c8148718b55269a336f9e2c57b4117', 'pet', 'sample', NULL, 'PMS-USER-00034-SAMPLE_X-7288e467', NULL, 2, 0, '2025-08-10 19:44:07', '2025-09-12 11:36:49', 1, '1994-08-11', 30, 'Male'),
-(39, 'Cristel', 'Ldiwk', 'Pulig', 'Cristel', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample12345', 'uploads/avatars/39.png?v=1757931504', 'PMS-USER-00039-CRISTEL-85843dfb', NULL, 2, 1, '2025-09-12 11:53:58', '2025-09-15 18:18:24', 6, '2001-01-01', 24, 'Female');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `visit_list`
---
-
-CREATE TABLE `visit_list` (
-  `id` int(30) NOT NULL,
-  `inmate_id` int(30) NOT NULL,
-  `fullname` text NOT NULL,
-  `contact` text NOT NULL,
-  `relation` text NOT NULL,
-  `date_created` datetime NOT NULL DEFAULT current_timestamp(),
-  `date_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `visit_list`
---
-
-INSERT INTO `visit_list` (`id`, `inmate_id`, `fullname`, `contact`, `relation`, `date_created`, `date_updated`) VALUES
-(1, 1, 'Claire Blake', '09456213879', 'Fiance', '2022-05-31 14:43:13', '2022-05-31 14:43:13'),
-(2, 1, 'Will Smith', '09456123123', 'Father', '2022-05-31 14:51:11', '2022-05-31 14:51:11');
-=======
 (1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male');
->>>>>>> 7355b10
 
 --
 -- Indexes for dumped tables
@@ -390,11 +297,7 @@ ALTER TABLE `security_questions`
 --
 ALTER TABLE `sk_officials`
   ADD PRIMARY KEY (`id`),
-<<<<<<< HEAD
-  ADD KEY `fk_sk_officials_user` (`user_id`);
-=======
   ADD UNIQUE KEY `unique_position` (`position`);
->>>>>>> 7355b10
 
 --
 -- Indexes for table `system_info`
@@ -434,21 +337,13 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `event_attendance`
 --
 ALTER TABLE `event_attendance`
-<<<<<<< HEAD
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
-=======
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
->>>>>>> 7355b10
 
 --
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-<<<<<<< HEAD
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
-=======
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
->>>>>>> 7355b10
 
 --
 -- AUTO_INCREMENT for table `forum_messages`
@@ -466,11 +361,7 @@ ALTER TABLE `security_questions`
 -- AUTO_INCREMENT for table `sk_officials`
 --
 ALTER TABLE `sk_officials`
-<<<<<<< HEAD
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-=======
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
->>>>>>> 7355b10
 
 --
 -- AUTO_INCREMENT for table `system_info`
@@ -482,17 +373,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-<<<<<<< HEAD
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
-
---
--- AUTO_INCREMENT for table `visit_list`
---
-ALTER TABLE `visit_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-=======
   MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
->>>>>>> 7355b10
 
 --
 -- Constraints for dumped tables
@@ -517,21 +398,6 @@ ALTER TABLE `forum_messages`
 --
 ALTER TABLE `security_questions`
   ADD CONSTRAINT `security_questions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-<<<<<<< HEAD
-
---
--- Constraints for table `sk_officials`
---
-ALTER TABLE `sk_officials`
-  ADD CONSTRAINT `fk_sk_officials_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `visit_list`
---
-ALTER TABLE `visit_list`
-  ADD CONSTRAINT `inmate_id_fk_vl` FOREIGN KEY (`inmate_id`) REFERENCES `inmate_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-=======
->>>>>>> 7355b10
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

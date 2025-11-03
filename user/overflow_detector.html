@@ -1,0 +1,58 @@
+<!-- Add this script before the closing </body> tag to detect overflow -->
+<script>
+    // Overflow Detection Script
+    function checkForOverflow() {
+        const body = document.body;
+        const html = document.documentElement;
+        
+        const hasBodyOverflow = body.scrollWidth > window.innerWidth;
+        const hasHtmlOverflow = html.scrollWidth > window.innerWidth;
+        
+        if (hasBodyOverflow || hasHtmlOverflow) {
+            console.error('⚠️ HORIZONTAL OVERFLOW DETECTED!');
+            console.log('Body scrollWidth:', body.scrollWidth, 'Window width:', window.innerWidth);
+            console.log('HTML scrollWidth:', html.scrollWidth);
+            
+            // Find elements causing overflow
+            const allElements = document.querySelectorAll('*');
+            const overflowingElements = [];
+            
+            allElements.forEach(el => {
+                if (el.scrollWidth > window.innerWidth) {
+                    overflowingElements.push({
+                        element: el,
+                        tag: el.tagName,
+                        class: el.className,
+                        scrollWidth: el.scrollWidth
+                    });
+                }
+            });
+            
+            if (overflowingElements.length > 0) {
+                console.warn('Elements causing overflow:', overflowingElements);
+            }
+            
+            return true;
+        } else {
+            console.log('✅ No horizontal overflow detected');
+            return false;
+        }
+    }
+    
+    // Check on load
+    window.addEventListener('load', function() {
+        setTimeout(checkForOverflow, 500);
+    });
+    
+    // Check on resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(checkForOverflow, 250);
+    });
+    
+    // Manual check function
+    window.checkOverflow = checkForOverflow;
+    
+    console.log('💡 Overflow detection active. Type checkOverflow() to manually check.');
+</script>

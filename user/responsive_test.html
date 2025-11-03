@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Responsive Test Page - User Portal</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* Test Banner */
+        .test-banner {
+            background: #ff6b6b;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .test-banner .screen-info {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0 0.5rem;
+        }
+        
+        body {
+            padding-top: 60px; /* Space for test banner */
+        }
+        
+        /* Header Navigation */
+        .main-header {
+            background: linear-gradient(to right, #001f3f, #003d7a);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 60px; /* Below test banner */
+            z-index: 1000;
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .site-title {
+            color: white;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            flex: 1;
+            min-width: 200px;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .site-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: block;
+        }
+        
+        .nav-menu li a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-menu li a.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            margin-left: 1rem;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-logout-header {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .btn-logout-header:hover {
+            background: white;
+            color: #001f3f;
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        
+        /* Main Panel */
+        .main-panel {
+            width: 100%;
+            max-width: 100%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            background: linear-gradient(to right, #001f3f, #003d7a);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .panel-header h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .panel-body {
+            padding: 2rem;
+        }
+        
+        /* Test Sections */
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .test-section h3 {
+            color: #001f3f;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #007bff;
+        }
+        
+        .overflow-test {
+            background: #fff3cd;
+            border: 2px dashed #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .overflow-indicator {
+            position: absolute;
+            right: -2px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #dc3545;
+            display: none;
+        }
+        
+        .overflow-test.has-overflow .overflow-indicator {
+            display: block;
+        }
+        
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        
+        .info-item {
+            background: linear-gradient(to right, #001f3f, #003d7a);
+            padding: 1rem;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+        
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,123,255,0.2);
+            border-color: #007bff;
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        .main-footer {
+            background: rgba(255,255,255,0.95);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            overflow-x: hidden;
+        }
+        
+        .footer-content p {
+            color: #666;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+        
+        .footer-content strong {
+            color: #001f3f;
+        }
+        
+        /* Breakpoint Indicators */
+        .breakpoint-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #001f3f;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 9998;
+            font-weight: bold;
+        }
+        
+        /* Modal Grid Test */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .event-card-modal {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .event-card-modal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .event-img-modal {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .event-body-modal {
+            padding: 1.25rem;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .nav-menu li a {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .user-menu {
+                width: 100%;
+                justify-content: center;
+                margin: 1rem 0 0 0;
+            }
+        }
+        
+        /* Laptop Specific Responsive - 1024px to 1366px */
+        @media (min-width: 993px) and (max-width: 1366px) {
+            .header-container {
+                max-width: 100%;
+                padding: 0 1.5rem;
+            }
+            
+            .site-title {
+                font-size: 0.95rem;
+                min-width: 180px;
+            }
+            
+            .nav-menu {
+                gap: 0.25rem;
+            }
+            
+            .nav-menu li a {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
+            
+            .main-container {
+                max-width: 100%;
+                padding: 0 1.5rem;
+                margin: 1.5rem auto;
+            }
+            
+            .panel-body {
+                padding: 1.5rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 0.75rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+            
+            .events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 1rem;
+            }
+        }
+        
+        /* Standard Laptop - 1024px */
+        @media (min-width: 993px) and (max-width: 1199px) {
+            .navbar {
+                padding: 0.75rem 0;
+            }
+            
+            .user-menu {
+                margin-left: 0.5rem;
+            }
+            
+            .user-name {
+                font-size: 0.85rem;
+            }
+            
+            .btn-logout-header {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .panel-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-card i {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Wide Laptop - 1200px to 1366px */
+        @media (min-width: 1200px) and (max-width: 1366px) {
+            .main-container {
+                max-width: 1200px;
+            }
+            
+            .header-container {
+                max-width: 1200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .site-title {
+                font-size: 0.85rem;
+            }
+            
+            .panel-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            .panel-body {
+                padding: 1.5rem 1rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-container {
+                margin: 1rem auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Test Banner -->
+<div class="test-banner">
+    🧪 RESPONSIVE TEST PAGE 🧪
+    <span class="screen-info">
+        <span id="screenWidth"></span> x <span id="screenHeight"></span>px
+    </span>
+    <span class="screen-info" id="breakpoint">Loading...</span>
+</div>
+
+<!-- Header -->
+<header class="main-header">
+    <div class="header-container">
+        <nav class="navbar">
+            <div class="site-title">
+                <i class="fas fa-users"></i>
+                YOUTH INFORMATION SYSTEM OF MAGUILLING, PIAT, CAGAYAN
+            </div>
+            
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-user-tie"></i> SK Officials</a></li>
+                <li><a href="#"><i class="fas fa-comments"></i> Forum</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> About Us</a></li>
+                <li><a href="#"><i class="fas fa-code"></i> Developers</a></li>
+            </ul>
+            
+            <div class="user-menu">
+                <span class="user-name">
+                    <i class="fas fa-user-circle"></i>
+                    Test User
+                </span>
+                <button class="btn-logout-header">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<!-- Main Container -->
+<div class="main-container">
+    <!-- Main Panel -->
+    <main class="main-panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-vial"></i> Responsive Test Dashboard</h2>
+        </div>
+        
+        <div class="panel-body">
+            <!-- Test Section 1: Header Test -->
+            <div class="test-section">
+                <h3><i class="fas fa-header"></i> Header Responsiveness Test</h3>
+                <div class="overflow-test" id="headerTest">
+                    <p><strong>✓ Site Title:</strong> Should truncate with ellipsis on overflow</p>
+                    <p><strong>✓ Navigation:</strong> Should collapse to hamburger menu below 993px</p>
+                    <p><strong>✓ User Menu:</strong> Should adjust spacing on laptop screens</p>
+                    <p><strong>✓ Container:</strong> Should not cause horizontal scroll</p>
+                    <div class="overflow-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- Test Section 2: Grid Systems -->
+            <div class="test-section">
+                <h3><i class="fas fa-th"></i> Grid Systems Test</h3>
+                
+                <h5 class="mt-3">Info Grid (4 columns on desktop)</h5>
+                <div class="overflow-test" id="infoGridTest">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Item 1</strong>
+                            <p>Min 180px</p>
+                        </div>
+                        <div class="info-item">
+                            <strong>Item 2</strong>
+                            <p>Min 180px</p>
+                        </div>
+                        <div class="info-item">
+                            <strong>Item 3</strong>
+                            <p>Min 180px</p>
+                        </div>
+                        <div class="info-item">
+                            <strong>Item 4</strong>
+                            <p>Min 180px</p>
+                        </div>
+                    </div>
+                    <div class="overflow-indicator"></div>
+                </div>
+                
+                <h5 class="mt-4">Features Grid (3 columns on desktop)</h5>
+                <div class="overflow-test" id="featuresGridTest">
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-calendar-alt"></i>
+                            <h5>Events</h5>
+                            <p>Min 220px width</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-bullhorn"></i>
+                            <h5>Announcements</h5>
+                            <p>Min 220px width</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-chart-bar"></i>
+                            <h5>Statistics</h5>
+                            <p>Min 220px width</p>
+                        </div>
+                    </div>
+                    <div class="overflow-indicator"></div>
+                </div>
+                
+                <h5 class="mt-4">Events Grid (Modal content)</h5>
+                <div class="overflow-test" id="eventsGridTest">
+                    <div class="events-grid">
+                        <div class="event-card-modal">
+                            <div class="event-img-modal">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="event-body-modal">
+                                <strong>Event Card 1</strong>
+                                <p>Min 280px</p>
+                            </div>
+                        </div>
+                        <div class="event-card-modal">
+                            <div class="event-img-modal">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="event-body-modal">
+                                <strong>Event Card 2</strong>
+                                <p>Min 280px</p>
+                            </div>
+                        </div>
+                        <div class="event-card-modal">
+                            <div class="event-img-modal">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="event-body-modal">
+                                <strong>Event Card 3</strong>
+                                <p>Min 280px</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- Test Section 3: Content Overflow -->
+            <div class="test-section">
+                <h3><i class="fas fa-expand-arrows-alt"></i> Content Overflow Test</h3>
+                <div class="overflow-test" id="contentTest">
+                    <p><strong>Long Text Test:</strong></p>
+                    <p>This is a very long text that should wrap properly and not cause horizontal overflow on any screen size including laptops at 1024px, 1280px, 1366px, 1440px, and larger screens. The text should break properly and maintain readability across all devices.</p>
+                    <div class="overflow-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- Test Section 4: Footer Test -->
+            <div class="test-section">
+                <h3><i class="fas fa-shoe-prints"></i> Footer Responsiveness Test</h3>
+                <div class="overflow-test" id="footerTest">
+                    <p><strong>✓ Footer Content:</strong> Should have proper padding and word-wrap</p>
+                    <p><strong>✓ Footer Container:</strong> Should not overflow horizontally</p>
+                    <p><strong>✓ Footer Text:</strong> Should break words if necessary</p>
+                    <div class="overflow-indicator"></div>
+                </div>
+            </div>
+            
+            <!-- Responsive Breakpoints Guide -->
+            <div class="test-section">
+                <h3><i class="fas fa-mobile-alt"></i> Responsive Breakpoints Guide</h3>
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Breakpoint</th>
+                            <th>Screen Width</th>
+                            <th>Key Changes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mobile</strong></td>
+                            <td>&lt; 768px</td>
+                            <td>Single column, mobile menu, adjusted padding</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tablet</strong></td>
+                            <td>768px - 992px</td>
+                            <td>2 columns, mobile menu, medium padding</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td><strong>Laptop (Small)</strong></td>
+                            <td>993px - 1199px</td>
+                            <td>Compact nav, smaller fonts, 2-3 columns</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td><strong>Laptop (Wide)</strong></td>
+                            <td>1200px - 1366px</td>
+                            <td>Optimized spacing, 3-4 columns</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desktop</strong></td>
+                            <td>&gt; 1366px</td>
+                            <td>Full layout, max-width 1400px</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Instructions -->
+            <div class="alert alert-info">
+                <h4><i class="fas fa-info-circle"></i> Testing Instructions</h4>
+                <ol>
+                    <li><strong>Resize your browser</strong> to different widths (1024px, 1280px, 1366px, 1440px)</li>
+                    <li><strong>Check for red indicators</strong> on the right side of test sections (indicates overflow)</li>
+                    <li><strong>Verify the breakpoint indicator</strong> at the bottom-right shows correct breakpoint</li>
+                    <li><strong>Test the mobile menu</strong> by resizing below 993px</li>
+                    <li><strong>Scroll horizontally</strong> - there should be NO horizontal scrollbar</li>
+                    <li><strong>Check footer</strong> - text should wrap properly and not overflow</li>
+                </ol>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="main-footer">
+    <div class="footer-content">
+        <p><strong>Youth Information System</strong> - Maguilling, Piat, Cagayan</p>
+        <p>&copy; 2025 Sangguniang Kabataan. All Rights Reserved.</p>
+        <p style="font-size: 0.85rem; color: #999;">Developed for SK Community Management - Responsive Test Page</p>
+        <p style="font-size: 0.85rem; color: #999;">This is a very long footer text to test word wrapping and overflow prevention on smaller laptop screens like 1024x768 resolution</p>
+    </div>
+</footer>
+
+<!-- Breakpoint Indicator -->
+<div class="breakpoint-indicator" id="breakpointIndicator">
+    <div id="currentBreakpoint">Desktop</div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleMobileMenu(){
+        $('#navMenu').toggleClass('active');
+    }
+    
+    function updateScreenInfo() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        $('#screenWidth').text(width);
+        $('#screenHeight').text(height);
+        
+        let breakpoint = '';
+        let breakpointColor = '';
+        
+        if (width < 768) {
+            breakpoint = '📱 Mobile';
+            breakpointColor = '#ff6b6b';
+        } else if (width < 993) {
+            breakpoint = '📱 Tablet';
+            breakpointColor = '#ffa94d';
+        } else if (width < 1200) {
+            breakpoint = '💻 Laptop (Small 1024px)';
+            breakpointColor = '#51cf66';
+        } else if (width < 1367) {
+            breakpoint = '💻 Laptop (Wide 1366px)';
+            breakpointColor = '#339af0';
+        } else {
+            breakpoint = '🖥️ Desktop';
+            breakpointColor = '#845ef7';
+        }
+        
+        $('#breakpoint').text(breakpoint);
+        $('#currentBreakpoint').text(breakpoint);
+        $('#breakpointIndicator').css('background', breakpointColor);
+    }
+    
+    function checkOverflow(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            const hasOverflow = element.scrollWidth > element.clientWidth;
+            if (hasOverflow) {
+                element.classList.add('has-overflow');
+                console.warn(`Overflow detected in: ${elementId}`);
+            } else {
+                element.classList.remove('has-overflow');
+            }
+        }
+    }
+    
+    function checkAllOverflows() {
+        const testElements = [
+            'headerTest',
+            'infoGridTest',
+            'featuresGridTest',
+            'eventsGridTest',
+            'contentTest',
+            'footerTest'
+        ];
+        
+        testElements.forEach(id => checkOverflow(id));
+        
+        // Check body overflow
+        const bodyHasOverflow = document.body.scrollWidth > window.innerWidth;
+        if (bodyHasOverflow) {
+            console.error('⚠️ HORIZONTAL OVERFLOW DETECTED ON BODY!');
+            $('.test-banner').css('background', '#dc3545').text('⚠️ HORIZONTAL OVERFLOW DETECTED!');
+        } else {
+            console.log('✓ No horizontal overflow detected');
+            $('.test-banner').css('background', '#28a745');
+        }
+    }
+    
+    // Update on load and resize
+    $(document).ready(function() {
+        updateScreenInfo();
+        checkAllOverflows();
+    });
+    
+    $(window).on('resize', function() {
+        updateScreenInfo();
+        setTimeout(checkAllOverflows, 100);
+    });
+    
+    // Check overflow every 2 seconds
+    setInterval(checkAllOverflows, 2000);
+</script>
+
+</body>
+</html>
