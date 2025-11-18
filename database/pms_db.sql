@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2025 at 06:05 PM
+-- Generation Time: Nov 03, 2025 at 05:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,13 +35,6 @@ CREATE TABLE `announcement_list` (
   `description` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `announcement_list`
---
-
-INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `images`, `description`, `date_created`) VALUES
-(12, 'Sample Announcement', 'uploads/announcements/12_1.jpg', '[\"uploads/announcements/12_1.jpg\",\"uploads/announcements/12_2.jpg\",\"uploads/announcements/12_3.jpg\",\"uploads/announcements/12_4.jpg\",\"uploads/announcements/12_5.jpg\"]', 'awdawd', '2025-10-30 00:45:41');
 
 -- --------------------------------------------------------
 
@@ -105,14 +98,6 @@ CREATE TABLE `event_list` (
   `images` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `event_list`
---
-
-INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
-(31, 'Sample', 'Sample', NULL, '[\"uploads\\/events\\/31_1761756295_0.jpg\",\"uploads\\/events\\/31_1761756295_1.jpg\",\"uploads\\/events\\/31_1761756295_2.jpg\",\"uploads\\/events\\/31_1761756295_3.jpg\",\"uploads\\/events\\/31_1761756295_4.jpg\"]', NULL, '2025-10-31 14:44:00'),
-(32, 'awdqweqwe', 'ewqeq', NULL, '[\"uploads\\/events\\/32_1761756421_0.jpeg\"]', NULL, '2025-10-30 00:46:00');
 
 -- --------------------------------------------------------
 
@@ -349,7 +334,7 @@ ALTER TABLE `event_list`
 -- AUTO_INCREMENT for table `forum_messages`
 --
 ALTER TABLE `forum_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `security_questions`
@@ -373,7 +358,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- Constraints for dumped tables
