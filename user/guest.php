@@ -478,32 +478,17 @@ require_once('../config.php');
 
 <!-- Main Container -->
 <div class="main-container">
-    <!-- Events Section -->
+    <!-- What's the Latest Section -->
     <section>
         <h2 class="section-title">
-            <i class="fas fa-calendar-alt"></i>
-            Upcoming Events
+            <i class="fas fa-newspaper"></i>
+            What's the latest?
         </h2>
-        <div class="events-grid" id="eventsGrid">
+        <div class="events-grid" id="latestGrid">
             <div class="empty-state">
                 <i class="fas fa-spinner fa-spin"></i>
-                <h3>Loading Events...</h3>
-                <p>Please wait while we fetch the latest events</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Announcements Section -->
-    <section>
-        <h2 class="section-title">
-            <i class="fas fa-bullhorn"></i>
-            Latest Announcements
-        </h2>
-        <div class="announcements-grid" id="announcementsGrid">
-            <div class="empty-state">
-                <i class="fas fa-spinner fa-spin"></i>
-                <h3>Loading Announcements...</h3>
-                <p>Please wait while we fetch the latest announcements</p>
+                <h3>Loading Latest Updates...</h3>
+                <p>Please wait while we fetch the latest events and announcements</p>
             </div>
         </div>
     </section>
@@ -561,99 +546,111 @@ require_once('../config.php');
 
     $(document).ready(function(){
         end_loader();
-        loadEvents();
-        loadAnnouncements();
+        loadLatestUpdates();
     });
     
-    // Load Events
-    function loadEvents() {
+    // Load Latest Updates (Events and Announcements combined)
+    function loadLatestUpdates() {
+        let eventsLoaded = false;
+        let announcementsLoaded = false;
+        let eventsData = [];
+        let announcementsData = [];
+        
+        // Load Events
         $.ajax({
             url: _base_url_ + 'classes/Master.php?f=get_all_events',
             method: 'GET',
             dataType: 'json',
             success: function(resp) {
                 if (resp.status === 'success' && resp.data.length > 0) {
-                    allEvents = resp.data;
-                    displayEvents();
-                } else {
-                    $('#eventsGrid').html(`
-                        <div class="empty-state">
-                            <i class="fas fa-calendar-times"></i>
-                            <h3>No Events Available</h3>
-                            <p>Check back later for upcoming events</p>
-                        </div>
-                    `);
+                    eventsData = resp.data.map(item => ({...item, type: 'event'}));
                 }
+                eventsLoaded = true;
+                checkAndDisplay();
             },
             error: function() {
-                $('#eventsGrid').html(`
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Error Loading Events</h3>
-                        <p>Please try again later</p>
-                    </div>
-                `);
+                eventsLoaded = true;
+                checkAndDisplay();
             }
         });
-    }
-    
-    // Load Announcements
-    function loadAnnouncements() {
+        
+        // Load Announcements
         $.ajax({
             url: _base_url_ + 'classes/Master.php?f=get_all_announcements',
             method: 'GET',
             dataType: 'json',
             success: function(resp) {
                 if (resp.status === 'success' && resp.data.length > 0) {
-                    allAnnouncements = resp.data;
-                    displayAnnouncements();
+                    announcementsData = resp.data.map(item => ({...item, type: 'announcement'}));
+                }
+                announcementsLoaded = true;
+                checkAndDisplay();
+            },
+            error: function() {
+                announcementsLoaded = true;
+                checkAndDisplay();
+            }
+        });
+        
+        function checkAndDisplay() {
+            if (eventsLoaded && announcementsLoaded) {
+                // Combine both arrays
+                allEvents = eventsData;
+                allAnnouncements = announcementsData;
+                const combinedItems = [...eventsData, ...announcementsData];
+                
+                if (combinedItems.length > 0) {
+                    // Sort by date_created in descending order (newest first)
+                    combinedItems.sort((a, b) => {
+                        const dateA = new Date(a.date_created || a.date);
+                        const dateB = new Date(b.date_created || b.date);
+                        return dateB - dateA; // Descending order
+                    });
+                    
+                    displayLatestUpdates(combinedItems);
                 } else {
-                    $('#announcementsGrid').html(`
+                    $('#latestGrid').html(`
                         <div class="empty-state">
-                            <i class="fas fa-bullhorn"></i>
-                            <h3>No Announcements Available</h3>
-                            <p>Check back later for new announcements</p>
+                            <i class="fas fa-inbox"></i>
+                            <h3>No Updates Available</h3>
+                            <p>Check back later for new events and announcements</p>
                         </div>
                     `);
                 }
-            },
-            error: function() {
-                $('#announcementsGrid').html(`
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Error Loading Announcements</h3>
-                        <p>Please try again later</p>
-                    </div>
-                `);
             }
-        });
+        }
     }
     
-    // Display Events
-    function displayEvents() {
+    // Display Latest Updates
+    function displayLatestUpdates(items) {
         let html = '';
         
-        allEvents.forEach(event => {
-            const images = event.images || [];
-            const primaryImage = images[0] || event.image_path || _base_url_ + 'assets/images/placeholder.jpg';
+        items.forEach(item => {
+            const images = item.images || [];
+            const primaryImage = images[0] || item.image_path || _base_url_ + 'assets/images/placeholder.jpg';
             
-            const eventDate = new Date(event.date_created || event.date);
-            const formattedDate = eventDate.toLocaleDateString('en-US', { 
+            const itemDate = new Date(item.date_created || item.date);
+            const formattedDate = itemDate.toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
                 day: 'numeric'
             });
             
+            const isEvent = item.type === 'event';
+            const badgeClass = isEvent ? 'badge-event' : 'badge-announcement';
+            const badgeIcon = isEvent ? 'fa-calendar-alt' : 'fa-bullhorn';
+            const badgeText = isEvent ? 'Event' : 'Announcement';
+            
             html += `
-                <div class="card" onclick="showDetail(${event.id}, 'event')">
-                    <img src="${_base_url_}${primaryImage}" class="card-image" alt="${event.title}">
+                <div class="card" onclick="showDetail(${item.id}, '${item.type}')">
+                    <img src="${_base_url_}${primaryImage}" class="card-image" alt="${item.title}">
                     <div class="card-body">
-                        <span class="card-badge badge-event">
-                            <i class="fas fa-calendar-alt"></i>
-                            Event
+                        <span class="card-badge ${badgeClass}">
+                            <i class="fas ${badgeIcon}"></i>
+                            ${badgeText}
                         </span>
-                        <h3 class="card-title">${event.title}</h3>
-                        <p class="card-description">${event.description}</p>
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-description">${item.description}</p>
                         <div class="card-date">
                             <i class="far fa-calendar"></i>
                             ${formattedDate}
@@ -663,44 +660,7 @@ require_once('../config.php');
             `;
         });
         
-        $('#eventsGrid').html(html);
-    }
-    
-    // Display Announcements
-    function displayAnnouncements() {
-        let html = '';
-        
-        allAnnouncements.forEach(announcement => {
-            const images = announcement.images || [];
-            const primaryImage = images[0] || announcement.image_path || _base_url_ + 'assets/images/placeholder.jpg';
-            
-            const announcementDate = new Date(announcement.date_created || announcement.date);
-            const formattedDate = announcementDate.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric'
-            });
-            
-            html += `
-                <div class="card" onclick="showDetail(${announcement.id}, 'announcement')">
-                    <img src="${_base_url_}${primaryImage}" class="card-image" alt="${announcement.title}">
-                    <div class="card-body">
-                        <span class="card-badge badge-announcement">
-                            <i class="fas fa-bullhorn"></i>
-                            Announcement
-                        </span>
-                        <h3 class="card-title">${announcement.title}</h3>
-                        <p class="card-description">${announcement.description}</p>
-                        <div class="card-date">
-                            <i class="far fa-calendar"></i>
-                            ${formattedDate}
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        $('#announcementsGrid').html(html);
+        $('#latestGrid').html(html);
     }
     
     // Show Detail Modal
