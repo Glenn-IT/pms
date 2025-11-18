@@ -462,7 +462,7 @@ require_once('../config.php');
 <!-- Hero Banner -->
 <section class="hero-banner">
     <div class="hero-content">
-        <h1><i class="fas fa-handshake"></i> Welcome to YISMPC</h1>
+        <h1><i class="fas fa-handshake"></i> Welcome to YOUTH INFORMATION SYSTEM OF BARANGAY MAGUILLING, PIAT, CAGAYAN</h1>
         <p>Stay connected with the latest events and announcements from the Sangguniang Kabataan of Maguilling, Piat, Cagayan</p>
         
         <div class="auth-buttons">
