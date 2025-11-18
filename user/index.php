@@ -342,7 +342,301 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             max-width: 100%;
         }
         
-        .feature-card {
+        /* Banner Slideshow Styles */
+        .banner-section {
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+        
+        .banner-slideshow {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .main-banner-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .main-banner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .banner-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .banner-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            color: white;
+            padding: 2rem 2rem 1.5rem;
+            transform: translateY(0);
+            transition: transform 0.3s;
+        }
+        
+        .banner-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .banner-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #001f3f;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .banner-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .banner-nav.prev {
+            left: 1rem;
+        }
+        
+        .banner-nav.next {
+            right: 1rem;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            overflow-x: auto;
+            background: #f8f9fa;
+            scrollbar-width: thin;
+            scrollbar-color: #001f3f #e9ecef;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-thumb {
+            background: #001f3f;
+            border-radius: 4px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-thumb:hover {
+            background: #003d7a;
+        }
+        
+        .banner-thumbnail {
+            flex: 0 0 150px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .banner-thumbnail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .banner-thumbnail.active {
+            border-color: #001f3f;
+            box-shadow: 0 0 0 2px white, 0 0 0 5px #001f3f;
+        }
+        
+        .banner-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-thumbnail-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,31,63,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .banner-thumbnail:hover .banner-thumbnail-overlay {
+            opacity: 1;
+        }
+        
+        .banner-thumbnail.active .banner-thumbnail-overlay {
+            opacity: 0;
+        }
+        
+        .banner-thumbnail-text {
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
+        /* Latest Updates Grid */
+        .events-grid-latest {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .latest-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+        }
+        
+        .latest-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .latest-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+        
+        .latest-card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .latest-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+        
+        .badge-event {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-announcement {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .latest-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #001f3f;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+        
+        .latest-card-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+            word-wrap: break-word;
+            max-width: 100%;
+        }
+        
+        .latest-card-date {
+            color: #999;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        
+        /* Feature Card */
             background: #f8f9fa;
             border-radius: 12px;
             padding: 1.5rem;
@@ -1032,6 +1326,66 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 font-size: 0.85rem;
             }
             
+            .search-filter-bar {
+                padding: 1rem !important;
+            }
+            
+            .search-filter-bar > div {
+                flex-direction: column;
+            }
+            
+            .search-filter-bar input,
+            .search-filter-bar select,
+            .search-filter-bar button {
+                width: 100% !important;
+                min-width: auto !important;
+            }
+            
+            .main-banner-container {
+                height: 300px;
+            }
+            
+            .banner-info {
+                padding: 1rem;
+            }
+            
+            .banner-info h3 {
+                font-size: 1.1rem;
+            }
+            
+            .banner-info p {
+                font-size: 0.85rem;
+            }
+            
+            .banner-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .banner-nav.prev {
+                left: 0.5rem;
+            }
+            
+            .banner-nav.next {
+                right: 0.5rem;
+            }
+            
+            .thumbnail-container {
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .banner-thumbnail {
+                flex: 0 0 100px;
+                height: 70px;
+            }
+            
+            .events-grid-latest {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
             .panel-header {
                 padding: 1rem 1.5rem;
             }
@@ -1071,6 +1425,15 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         @media (max-width: 480px) {
             .main-container {
                 margin: 1rem auto;
+            }
+            
+            .main-banner-container {
+                height: 250px;
+            }
+            
+            .banner-thumbnail {
+                flex: 0 0 80px;
+                height: 60px;
             }
             
             .user-name {
@@ -1163,26 +1526,66 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
                 </div>
             </div>
             
-            <!-- Features Grid -->
-            <div class="features-grid">
-                <div class="feature-card" onclick="showEvents()">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h5>Events</h5>
-                    <p>View upcoming SK events and activities</p>
+            <!-- Banner Slideshow Section -->
+            <section class="banner-section" id="bannerSection" style="display: none; margin-bottom: 3rem;">
+                <div class="banner-slideshow">
+                    <div class="main-banner-container">
+                        <div class="main-banner" id="mainBanner">
+                            <!-- Main banner image will load here -->
+                        </div>
+                        <button class="banner-nav prev" onclick="changeBanner(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="banner-nav next" onclick="changeBanner(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="thumbnail-container" id="thumbnailContainer">
+                        <!-- Thumbnails will load here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- What's the Latest Section -->
+            <section style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.75rem; font-weight: 700; color: #001f3f; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-newspaper" style="color: #003d7a;"></i>
+                    What's the latest?
+                </h3>
+                
+                <!-- Search and Filter Bar -->
+                <div class="search-filter-bar" style="margin-bottom: 2rem; background: #f8f9fa; padding: 1.5rem; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <div style="position: relative;">
+                                <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                                <input type="text" id="searchInputUser" placeholder="Search by title or description..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; background: white; transition: all 0.3s;" onfocus="this.style.borderColor='#001f3f'" onblur="this.style.borderColor='#e0e0e0'">
+                            </div>
+                        </div>
+                        <div style="min-width: 200px;">
+                            <select id="filterTypeUser" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; font-weight: 600; color: #001f3f; background: white; cursor: pointer; transition: all 0.3s;" onfocus="this.style.borderColor='#001f3f'" onblur="this.style.borderColor='#e0e0e0'">
+                                <option value="all">All Updates</option>
+                                <option value="event">Events Only</option>
+                                <option value="announcement">Announcements Only</option>
+                            </select>
+                        </div>
+                        <button onclick="clearSearchUser()" style="padding: 0.75rem 1.5rem; background: white; border: 2px solid #e0e0e0; border-radius: 10px; font-weight: 600; color: #666; cursor: pointer; transition: all 0.3s; white-space: nowrap;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='white'">
+                            <i class="fas fa-redo"></i> Clear
+                        </button>
+                    </div>
+                    <div id="searchResultsUser" style="margin-top: 1rem; font-size: 0.9rem; color: #666; display: none;">
+                        <i class="fas fa-info-circle"></i> <span id="searchResultsTextUser"></span>
+                    </div>
                 </div>
                 
-                <div class="feature-card" onclick="showAnnouncements()">
-                    <i class="fas fa-bullhorn"></i>
-                    <h5>Announcements</h5>
-                    <p>Stay updated with latest announcements</p>
+                <div class="events-grid-latest" id="latestGrid">
+                    <div style="text-align: center; padding: 3rem 1rem; color: #999; grid-column: 1 / -1;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #666;">Loading Latest Updates...</h4>
+                        <p>Please wait while we fetch the latest events and announcements</p>
+                    </div>
                 </div>
-                
-                <div class="feature-card" onclick="showStatistics()">
-                    <i class="fas fa-chart-bar"></i>
-                    <h5>Statistics</h5>
-                    <p>View your attendance and participation</p>
-                </div>
-            </div>
+            </section>
         </div>
     </main>
 </div>
@@ -1322,6 +1725,25 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     </div>
 </div>
 
+<!-- Latest Item Detail Modal (For both Events and Announcements) -->
+<div class="modal fade" id="latestDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header" style="background: linear-gradient(to right, #001f3f, #003d7a); color: white; border: none;">
+                <h5 class="modal-title" id="latestDetailModalTitle">
+                    <i class="fas fa-info-circle"></i> Details
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4" id="latestDetailModalBody">
+                <!-- Content loads here -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- jQuery -->
 <script src="<?= base_url ?>plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap -->
@@ -1339,6 +1761,15 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     var allEvents = [];
     var allAnnouncements = [];
     
+    // Banner slideshow variables
+    var bannerData = [];
+    var currentBannerIndex = 0;
+    var bannerInterval = null;
+    
+    // Latest updates combined
+    var latestEvents = [];
+    var latestAnnouncements = [];
+    
     // Loader functions
     window.start_loader = function(){
         $('body').append('<div id="preloader"><div class="loader-holder"><div></div><div></div><div></div><div></div></div></div>');
@@ -1351,7 +1782,247 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
 
     $(document).ready(function(){
         end_loader();
+        loadBanners();
+        loadLatestUpdates();
     });
+    
+    // Load Active Banners
+    function loadBanners() {
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_active_banners',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    bannerData = resp.data;
+                    displayBanners();
+                    startBannerAutoplay();
+                }
+            },
+            error: function(err) {
+                console.log('Error loading banners:', err);
+            }
+        });
+    }
+    
+    // Display Banners
+    function displayBanners() {
+        if (bannerData.length === 0) return;
+        
+        $('#bannerSection').show();
+        
+        let mainHtml = '';
+        let thumbHtml = '';
+        
+        bannerData.forEach((banner, index) => {
+            const imagePath = banner.image_path ? _base_url_ + banner.image_path : _base_url_ + 'assets/images/placeholder.jpg';
+            const isActive = index === 0 ? 'active' : '';
+            
+            // Main banner slide
+            mainHtml += `
+                <div class="banner-slide ${isActive}" data-index="${index}">
+                    <img src="${imagePath}" alt="${banner.title}">
+                    <div class="banner-info">
+                        <h3>${banner.title}</h3>
+                        ${banner.description ? `<p>${banner.description}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Thumbnail
+            thumbHtml += `
+                <div class="banner-thumbnail ${isActive}" onclick="selectBanner(${index})">
+                    <img src="${imagePath}" alt="${banner.title}">
+                    <div class="banner-thumbnail-overlay">
+                        <div class="banner-thumbnail-text">${banner.title}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        $('#mainBanner').html(mainHtml);
+        $('#thumbnailContainer').html(thumbHtml);
+    }
+    
+    // Change Banner
+    window.changeBanner = function(direction) {
+        if (bannerData.length === 0) return;
+        
+        stopBannerAutoplay();
+        
+        currentBannerIndex += direction;
+        
+        if (currentBannerIndex < 0) {
+            currentBannerIndex = bannerData.length - 1;
+        } else if (currentBannerIndex >= bannerData.length) {
+            currentBannerIndex = 0;
+        }
+        
+        updateBannerDisplay();
+        setTimeout(startBannerAutoplay, 5000);
+    }
+    
+    // Select Banner by Index
+    window.selectBanner = function(index) {
+        if (bannerData.length === 0) return;
+        
+        stopBannerAutoplay();
+        currentBannerIndex = index;
+        updateBannerDisplay();
+        setTimeout(startBannerAutoplay, 5000);
+    }
+    
+    // Update Banner Display
+    function updateBannerDisplay() {
+        $('.banner-slide').removeClass('active');
+        $(`.banner-slide[data-index="${currentBannerIndex}"]`).addClass('active');
+        
+        $('.banner-thumbnail').removeClass('active');
+        $('.banner-thumbnail').eq(currentBannerIndex).addClass('active');
+        
+        const thumbnail = $('.banner-thumbnail').eq(currentBannerIndex)[0];
+        if (thumbnail) {
+            thumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }
+    
+    // Start Banner Autoplay
+    function startBannerAutoplay() {
+        stopBannerAutoplay();
+        
+        if (bannerData.length <= 1) return;
+        
+        bannerInterval = setInterval(function() {
+            currentBannerIndex++;
+            if (currentBannerIndex >= bannerData.length) {
+                currentBannerIndex = 0;
+            }
+            updateBannerDisplay();
+        }, 5000);
+    }
+    
+    // Stop Banner Autoplay
+    function stopBannerAutoplay() {
+        if (bannerInterval) {
+            clearInterval(bannerInterval);
+            bannerInterval = null;
+        }
+    }
+    
+    // Load Latest Updates
+    function loadLatestUpdates() {
+        let eventsLoaded = false;
+        let announcementsLoaded = false;
+        let eventsData = [];
+        let announcementsData = [];
+        
+        // Load Events
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_all_events',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    eventsData = resp.data.map(item => ({...item, type: 'event'}));
+                }
+                eventsLoaded = true;
+                checkAndDisplay();
+            },
+            error: function() {
+                eventsLoaded = true;
+                checkAndDisplay();
+            }
+        });
+        
+        // Load Announcements
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_all_announcements',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    announcementsData = resp.data.map(item => ({...item, type: 'announcement'}));
+                }
+                announcementsLoaded = true;
+                checkAndDisplay();
+            },
+            error: function() {
+                announcementsLoaded = true;
+                checkAndDisplay();
+            }
+        });
+        
+        function checkAndDisplay() {
+            if (eventsLoaded && announcementsLoaded) {
+                latestEvents = eventsData;
+                latestAnnouncements = announcementsData;
+                const combinedItems = [...eventsData, ...announcementsData];
+                
+                if (combinedItems.length > 0) {
+                    combinedItems.sort((a, b) => {
+                        const dateA = new Date(a.date_created || a.date);
+                        const dateB = new Date(b.date_created || b.date);
+                        return dateB - dateA;
+                    });
+                    
+                    // Store for search/filter
+                    allLatestItems = combinedItems;
+                    
+                    displayLatestUpdates(combinedItems);
+                } else {
+                    $('#latestGrid').html(`
+                        <div style="text-align: center; padding: 3rem 1rem; color: #999; grid-column: 1 / -1;">
+                            <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #666;">No Updates Available</h4>
+                            <p>Check back later for new events and announcements</p>
+                        </div>
+                    `);
+                }
+            }
+        }
+    }
+    
+    // Display Latest Updates
+    function displayLatestUpdates(items) {
+        let html = '';
+        
+        items.forEach(item => {
+            const images = item.images || [];
+            const primaryImage = images[0] || item.image_path || _base_url_ + 'assets/images/placeholder.jpg';
+            
+            const itemDate = new Date(item.date_created || item.date);
+            const formattedDate = itemDate.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            });
+            
+            const isEvent = item.type === 'event';
+            const badgeClass = isEvent ? 'badge-event' : 'badge-announcement';
+            const badgeIcon = isEvent ? 'fa-calendar-alt' : 'fa-bullhorn';
+            const badgeText = isEvent ? 'Event' : 'Announcement';
+            
+            html += `
+                <div class="latest-card" onclick="${isEvent ? 'showEventDetails(' + item.id + ')' : 'showAnnouncementDetails(' + item.id + ')'}">
+                    <img src="${_base_url_}${primaryImage}" class="latest-card-image" alt="${item.title}">
+                    <div class="latest-card-body">
+                        <span class="latest-card-badge ${badgeClass}">
+                            <i class="fas ${badgeIcon}"></i>
+                            ${badgeText}
+                        </span>
+                        <h3 class="latest-card-title">${item.title}</h3>
+                        <p class="latest-card-description">${item.description}</p>
+                        <div class="latest-card-date">
+                            <i class="far fa-calendar"></i>
+                            ${formattedDate}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        $('#latestGrid').html(html);
+    }
 
     function logout(){
         if(confirm('Are you sure you want to logout?')){
@@ -1566,35 +2237,36 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     }
     
     function showEventDetails(eventId){
-        // Close events modal and open details modal
-        $('#eventsModal').modal('hide');
-        $('#eventDetailsModal').modal('show');
-        $('#eventDetailsBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+        // Use the latest detail modal
+        $('#latestDetailModal').modal('show');
+        $('#latestDetailModalBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
         
-        // Load event details
-        $.ajax({
-            url: '<?= base_url ?>classes/Master.php?f=get_all_events',
-            method: 'GET',
-            dataType: 'json',
-            success: function(resp){
-                if(resp.status === 'success'){
-                    const event = resp.data.find(e => e.id == eventId);
-                    if(event){
-                        displayEventDetails(event);
-                    } else {
-                        $('#eventDetailsBody').html('<div class="alert alert-danger">Event not found</div>');
+        // Find event in latestEvents
+        const event = latestEvents.find(e => e.id == eventId);
+        
+        if (event) {
+            displayItemDetails(event, 'event');
+        } else {
+            // Fallback to AJAX if not in cache
+            $.ajax({
+                url: _base_url_ + 'classes/Master.php?f=get_all_events',
+                method: 'GET',
+                dataType: 'json',
+                success: function(resp){
+                    if(resp.status === 'success'){
+                        const foundEvent = resp.data.find(e => e.id == eventId);
+                        if(foundEvent){
+                            displayItemDetails(foundEvent, 'event');
+                        } else {
+                            $('#latestDetailModalBody').html('<div class="alert alert-danger">Event not found</div>');
+                        }
                     }
+                },
+                error: function(){
+                    $('#latestDetailModalBody').html('<div class="alert alert-danger">Failed to load event details</div>');
                 }
-            },
-            error: function(){
-                $('#eventDetailsBody').html('<div class="alert alert-danger">Failed to load event details</div>');
-            }
-        });
-        
-        // When details modal is hidden, show events modal again
-        $('#eventDetailsModal').off('hidden.bs.modal').on('hidden.bs.modal', function() {
-            $('#eventsModal').modal('show');
-        });
+            });
+        }
     }
     
     function displayEventDetails(event){
@@ -1765,44 +2437,45 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     }
     
     function showAnnouncementDetails(announcementId){
-        // Close announcements modal and open details modal
-        $('#announcementsModal').modal('hide');
-        $('#announcementDetailsModal').modal('show');
-        $('#announcementDetailsBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
+        // Use the latest detail modal
+        $('#latestDetailModal').modal('show');
+        $('#latestDetailModalBody').html('<div class="text-center py-3"><i class="fas fa-spinner fa-spin fa-2x text-primary"></i></div>');
         
-        // Load announcement details
-        $.ajax({
-            url: '<?= base_url ?>classes/Master.php?f=get_all_announcements',
-            method: 'GET',
-            dataType: 'json',
-            success: function(resp){
-                if(resp.status === 'success'){
-                    const announcement = resp.data.find(a => a.id == announcementId);
-                    if(announcement){
-                        displayAnnouncementDetails(announcement);
-                    } else {
-                        $('#announcementDetailsBody').html('<div class="alert alert-danger">Announcement not found</div>');
+        // Find announcement in latestAnnouncements
+        const announcement = latestAnnouncements.find(a => a.id == announcementId);
+        
+        if (announcement) {
+            displayItemDetails(announcement, 'announcement');
+        } else {
+            // Fallback to AJAX if not in cache
+            $.ajax({
+                url: _base_url_ + 'classes/Master.php?f=get_all_announcements',
+                method: 'GET',
+                dataType: 'json',
+                success: function(resp){
+                    if(resp.status === 'success'){
+                        const foundAnnouncement = resp.data.find(a => a.id == announcementId);
+                        if(foundAnnouncement){
+                            displayItemDetails(foundAnnouncement, 'announcement');
+                        } else {
+                            $('#latestDetailModalBody').html('<div class="alert alert-danger">Announcement not found</div>');
+                        }
                     }
+                },
+                error: function(){
+                    $('#latestDetailModalBody').html('<div class="alert alert-danger">Failed to load announcement details</div>');
                 }
-            },
-            error: function(){
-                $('#announcementDetailsBody').html('<div class="alert alert-danger">Failed to load announcement details</div>');
-            }
-        });
-        
-        // When details modal is hidden, show announcements modal again
-        $('#announcementDetailsModal').off('hidden.bs.modal').on('hidden.bs.modal', function() {
-            $('#announcementsModal').modal('show');
-        });
+            });
+        }
     }
     
-    function displayAnnouncementDetails(announcement){
-        const images = announcement.images || [];
-        const primaryImage = images[0] || announcement.image_path;
+    // Display item details (unified function for events and announcements)
+    function displayItemDetails(item, type) {
+        const images = item.images || [];
+        const primaryImage = images[0] || item.image_path;
         
-        // Format date
-        const announcementDate = new Date(announcement.date_created || announcement.date);
-        const formattedDate = announcementDate.toLocaleDateString('en-US', { 
+        const itemDate = new Date(item.date_created || item.date);
+        const formattedDate = itemDate.toLocaleDateString('en-US', { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric',
@@ -1810,34 +2483,49 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
             minute: '2-digit'
         });
         
-        let html = '<div class="announcement-details-content">';
+        const isEvent = type === 'event';
+        const icon = isEvent ? 'fa-calendar-alt' : 'fa-bullhorn';
+        const color = isEvent ? 'primary' : 'success';
+        
+        let html = '<div style="max-width: 100%; overflow-x: hidden;">';
         
         // Main image
-        if(primaryImage){
-            html += `<img src="<?= base_url ?>${primaryImage}" class="announcement-details-img" alt="${announcement.title}">`;
+        if (primaryImage) {
+            html += `<img src="${_base_url_}${primaryImage}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem;" alt="${item.title}">`;
         }
         
-        // Announcement info
+        // Badge and Title
         html += `
-            <h4 style="color: #001f3f; margin-bottom: 1rem;">${announcement.title}</h4>
-            <p style="color: #666; margin-bottom: 1rem;">
-                <i class="fas fa-calendar-alt text-success"></i> <strong>Posted:</strong> ${formattedDate}
-            </p>
-            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <h6 style="color: #001f3f; margin-bottom: 0.5rem;"><i class="fas fa-info-circle"></i> Description</h6>
-                <p style="color: #333; margin: 0; white-space: pre-wrap;">${announcement.description}</p>
+            <div style="margin-bottom: 1rem;">
+                <span class="latest-card-badge ${isEvent ? 'badge-event' : 'badge-announcement'}">
+                    <i class="fas ${icon}"></i>
+                    ${isEvent ? 'Event' : 'Announcement'}
+                </span>
+            </div>
+            <h2 style="font-size: 1.75rem; font-weight: 700; color: #001f3f; margin-bottom: 1rem;">${item.title}</h2>
+            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; flex-wrap: wrap;">
+                <span><i class="far fa-calendar text-${color}"></i> <strong>Published:</strong> ${formattedDate}</span>
+                ${images.length > 1 ? `<span><i class="fas fa-images text-info"></i> <strong>${images.length}</strong> photos</span>` : ''}
             </div>
         `;
         
-        // Image gallery
-        if(images.length > 1){
+        // Description
+        html += `
+            <div style="margin-bottom: 1.5rem;">
+                <h5 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-align-left"></i> Description</h5>
+                <p style="white-space: pre-wrap; line-height: 1.8; color: #333;">${item.description}</p>
+            </div>
+        `;
+        
+        // Gallery
+        if (images.length > 1) {
             html += `
-                <h6 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-images"></i> Gallery (${images.length} photos)</h6>
-                <div class="announcement-details-gallery">
+                <h5 style="color: #001f3f; margin-bottom: 1rem;"><i class="fas fa-images"></i> Photo Gallery (${images.length} photos)</h5>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
             `;
             
             images.forEach(img => {
-                html += `<img src="<?= base_url ?>${img}" alt="Announcement photo" onclick="window.open('<?= base_url ?>${img}', '_blank')">`;
+                html += `<img src="${_base_url_}${img}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: transform 0.3s;" onclick="window.open('${_base_url_}${img}', '_blank')" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Gallery image">`;
             });
             
             html += '</div>';
@@ -1845,7 +2533,8 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
         
         html += '</div>';
         
-        $('#announcementDetailsBody').html(html);
+        $('#latestDetailModalTitle').html(`<i class="fas ${icon}"></i> ${isEvent ? 'Event' : 'Announcement'} Details`);
+        $('#latestDetailModalBody').html(html);
     }
     
     function showStatistics(){
@@ -2105,6 +2794,61 @@ if($_settings->userdata('id') <= 0 || $_settings->userdata('type') != 2){
     
     // Make available globally for manual testing
     window.checkOverflow = checkForOverflow;
+    
+    // Search and Filter Functionality for Latest Updates
+    let allLatestItems = [];
+    
+    // Search and Filter
+    function searchAndFilterUser() {
+        const searchTerm = $('#searchInputUser').val().toLowerCase();
+        const filterType = $('#filterTypeUser').val();
+        
+        let filteredItems = allLatestItems;
+        
+        // Filter by type
+        if (filterType !== 'all') {
+            filteredItems = filteredItems.filter(item => item.type === filterType);
+        }
+        
+        // Filter by search term
+        if (searchTerm) {
+            filteredItems = filteredItems.filter(item => {
+                return item.title.toLowerCase().includes(searchTerm) || 
+                       item.description.toLowerCase().includes(searchTerm);
+            });
+        }
+        
+        // Display results
+        if (filteredItems.length > 0) {
+            displayLatestUpdates(filteredItems);
+            $('#searchResultsUser').show();
+            $('#searchResultsTextUser').text(`Showing ${filteredItems.length} result${filteredItems.length !== 1 ? 's' : ''}`);
+        } else {
+            $('#latestGrid').html(`
+                <div style="text-align: center; padding: 3rem 1rem; color: #999; grid-column: 1 / -1;">
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <h4 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #666;">No Results Found</h4>
+                    <p>Try adjusting your search or filter criteria</p>
+                </div>
+            `);
+            $('#searchResultsUser').show();
+            $('#searchResultsTextUser').text('No results found');
+        }
+    }
+    
+    // Clear Search
+    window.clearSearchUser = function() {
+        $('#searchInputUser').val('');
+        $('#filterTypeUser').val('all');
+        $('#searchResultsUser').hide();
+        if (allLatestItems.length > 0) {
+            displayLatestUpdates(allLatestItems);
+        }
+    }
+    
+    // Attach event listeners
+    $('#searchInputUser').on('input', searchAndFilterUser);
+    $('#filterTypeUser').on('change', searchAndFilterUser);
 </script>
 
 </body>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2025 at 05:01 PM
+-- Generation Time: Nov 18, 2025 at 06:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,6 +36,13 @@ CREATE TABLE `announcement_list` (
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `announcement_list`
+--
+
+INSERT INTO `announcement_list` (`id`, `title`, `image_path`, `images`, `description`, `date_created`) VALUES
+(13, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin dapibus in mauris ac dapibus. Nam vel augue dictum, varius dolor ut, lobortis velit. Nam at enim non diam placerat dignissim.', 'uploads/announcements/13_1.png', '[\"uploads/announcements/13_1.png\"]', 'Donec ac metus in diam bibendum scelerisque. Fusce erat odio, maximus vitae vulputate et, venenatis et ex. Nunc tempor, justo non lacinia auctor, nulla ex placerat tortor, et ullamcorper ex eros non turpis. Sed vel fringilla quam. Aliquam porttitor, velit eu varius ullamcorper, nisi mauris auctor velit, ac auctor felis urna sit amet sapien. Nunc nec lacinia mauris. Donec faucibus odio ut sapien pellentesque, vel vehicula felis tristique. Ut non sodales orci, sit amet accumsan ex. Vestibulum volutpat hendrerit leo, vel convallis mi ornare laoreet. ', '2025-11-19 00:33:08');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +57,33 @@ CREATE TABLE `attendance` (
   `fullname` varchar(255) NOT NULL,
   `time_scanned` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `banner_list`
+--
+
+CREATE TABLE `banner_list` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT 1 COMMENT '1=Active, 0=Inactive',
+  `date_created` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `banner_list`
+--
+
+INSERT INTO `banner_list` (`id`, `title`, `description`, `image_path`, `status`, `date_created`) VALUES
+(1, 'Sample', NULL, 'uploads/banners/1_1763484668.jpg', 0, '2025-11-19 00:51:08'),
+(2, 'sampe', NULL, 'uploads/banners/2_1763485057.png', 1, '2025-11-19 00:57:37'),
+(3, 'weqe', NULL, 'uploads/banners/3_1763485066.png', 1, '2025-11-19 00:57:46'),
+(4, 'qwesda', NULL, 'uploads/banners/4_1763485074.png', 1, '2025-11-19 00:57:54'),
+(5, 'qweasd', NULL, 'uploads/banners/5_1763485082.png', 1, '2025-11-19 00:58:02'),
+(6, 'asdwqe', NULL, 'uploads/banners/6_1763485090.png', 1, '2025-11-19 00:58:10');
 
 -- --------------------------------------------------------
 
@@ -98,6 +132,13 @@ CREATE TABLE `event_list` (
   `images` text DEFAULT NULL,
   `date_created` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_list`
+--
+
+INSERT INTO `event_list` (`id`, `title`, `description`, `image_path`, `image_paths`, `images`, `date_created`) VALUES
+(33, 'Phasellus suscipit felis ut elit scelerisque dapibus. Aliquam convallis tristique neque quis dictum. Nulla a elit dui. In id elementum nunc. Nulla et nulla bibendum', 'Nullam rutrum faucibus tempor. Maecenas vulputate posuere condimentum. Donec vel velit eget enim hendrerit vehicula vitae egestas nisl. Proin eleifend imperdiet purus, non semper libero lobortis id. Quisque accumsan aliquet justo, sollicitudin dapibus libero. Aenean at nulla hendrerit, blandit enim nec, tempus mauris. Nunc risus orci, vulputate sit amet dui ut, blandit consequat diam.', NULL, '[\"uploads\\/events\\/33_1763483643_0.png\"]', NULL, '2025-11-20 08:33:00');
 
 -- --------------------------------------------------------
 
@@ -220,7 +261,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `middlename`, `lastname`, `username`, `password`, `security_question`, `security_answer`, `avatar`, `qr_code`, `last_login`, `type`, `status`, `date_added`, `date_updated`, `zone`, `birthdate`, `age`, `sex`) VALUES
-(1, 'Donny', '', 'Pangilinan', 'admin', '7488e331b8b64e5794da3fa4eb10ad5d', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-08-08 15:14:26', 0, NULL, 0, 'Male');
+(1, 'Donny', '', 'Pangilinan', 'admin', '86c8148718b55269a336f9e2c57b4117', 'pet', 'admin', 'uploads/avatars/1.png?v=1649834664', 'PMS-USER-00001-ADMIN-6ab0e8d0', NULL, 1, 1, '2021-01-20 14:02:37', '2025-11-19 00:31:40', 0, NULL, 0, 'Male'),
+(49, 'Glenard', 'U', 'Pagurayan', 'Glenn', '6abfd646c3d31cde591bf4eb4fddc296', 'pet', 'Sample12345', NULL, 'PMS-USER-00049-GLENN-b7178cb4', NULL, 2, 1, '2025-11-19 00:59:25', '2025-11-19 00:59:25', 6, '2000-08-23', 25, 'Male');
 
 --
 -- Indexes for dumped tables
@@ -240,6 +282,14 @@ ALTER TABLE `attendance`
   ADD UNIQUE KEY `unique_attendance` (`event_id`,`user_id`),
   ADD KEY `event_id` (`event_id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `banner_list`
+--
+ALTER TABLE `banner_list`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_date_created` (`date_created`);
 
 --
 -- Indexes for table `events`
@@ -304,13 +354,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `announcement_list`
 --
 ALTER TABLE `announcement_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `banner_list`
+--
+ALTER TABLE `banner_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `events`
@@ -328,7 +384,7 @@ ALTER TABLE `event_attendance`
 -- AUTO_INCREMENT for table `event_list`
 --
 ALTER TABLE `event_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `forum_messages`
@@ -358,7 +414,7 @@ ALTER TABLE `system_info`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- Constraints for dumped tables

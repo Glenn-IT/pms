@@ -629,6 +629,21 @@ require_once('../config.php');
                 padding: 2rem 1rem;
             }
             
+            .search-filter-bar {
+                padding: 1rem !important;
+            }
+            
+            .search-filter-bar > div {
+                flex-direction: column;
+            }
+            
+            .search-filter-bar input,
+            .search-filter-bar select,
+            .search-filter-bar button {
+                width: 100% !important;
+                min-width: auto !important;
+            }
+            
             .main-banner-container {
                 height: 300px;
             }
@@ -747,6 +762,32 @@ require_once('../config.php');
             <i class="fas fa-newspaper"></i>
             What's the latest?
         </h2>
+        
+        <!-- Search and Filter Bar -->
+        <div class="search-filter-bar" style="margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 3px 15px rgba(0,0,0,0.1);">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 250px;">
+                    <div style="position: relative;">
+                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                        <input type="text" id="searchInput" placeholder="Search by title or description..." style="width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; transition: all 0.3s;" onfocus="this.style.borderColor='#001f3f'" onblur="this.style.borderColor='#e0e0e0'">
+                    </div>
+                </div>
+                <div style="min-width: 200px;">
+                    <select id="filterType" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 0.95rem; font-weight: 600; color: #001f3f; background: white; cursor: pointer; transition: all 0.3s;" onfocus="this.style.borderColor='#001f3f'" onblur="this.style.borderColor='#e0e0e0'">
+                        <option value="all">All Updates</option>
+                        <option value="event">Events Only</option>
+                        <option value="announcement">Announcements Only</option>
+                    </select>
+                </div>
+                <button onclick="clearSearch()" style="padding: 0.75rem 1.5rem; background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 10px; font-weight: 600; color: #666; cursor: pointer; transition: all 0.3s; white-space: nowrap;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                    <i class="fas fa-redo"></i> Clear
+                </button>
+            </div>
+            <div id="searchResults" style="margin-top: 1rem; font-size: 0.9rem; color: #666; display: none;">
+                <i class="fas fa-info-circle"></i> <span id="searchResultsText"></span>
+            </div>
+        </div>
+        
         <div class="events-grid" id="latestGrid">
             <div class="empty-state">
                 <i class="fas fa-spinner fa-spin"></i>
@@ -1003,6 +1044,9 @@ require_once('../config.php');
                         return dateB - dateA; // Descending order
                     });
                     
+                    // Store for search/filter
+                    allLatestItems = combinedItems;
+                    
                     displayLatestUpdates(combinedItems);
                 } else {
                     $('#latestGrid').html(`
@@ -1129,6 +1173,74 @@ require_once('../config.php');
         $('#detailModalBody').html(html);
         $('#detailModal').modal('show');
     }
+    
+    // Search and Filter Functionality
+    let allLatestItems = [];
+    
+    // Store all items globally when loaded
+    function storeAllItems() {
+        allLatestItems = [...allEvents, ...allAnnouncements];
+        allLatestItems.sort((a, b) => {
+            const dateA = new Date(a.date_created || a.date);
+            const dateB = new Date(b.date_created || b.date);
+            return dateB - dateA;
+        });
+    }
+    
+    // Search and Filter
+    function searchAndFilter() {
+        const searchTerm = $('#searchInput').val().toLowerCase();
+        const filterType = $('#filterType').val();
+        
+        let filteredItems = allLatestItems;
+        
+        // Filter by type
+        if (filterType !== 'all') {
+            filteredItems = filteredItems.filter(item => item.type === filterType);
+        }
+        
+        // Filter by search term
+        if (searchTerm) {
+            filteredItems = filteredItems.filter(item => {
+                return item.title.toLowerCase().includes(searchTerm) || 
+                       item.description.toLowerCase().includes(searchTerm);
+            });
+        }
+        
+        // Display results
+        if (filteredItems.length > 0) {
+            displayLatestUpdates(filteredItems);
+            $('#searchResults').show();
+            $('#searchResultsText').text(`Showing ${filteredItems.length} result${filteredItems.length !== 1 ? 's' : ''}`);
+        } else {
+            $('#latestGrid').html(`
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3>No Results Found</h3>
+                    <p>Try adjusting your search or filter criteria</p>
+                </div>
+            `);
+            $('#searchResults').show();
+            $('#searchResultsText').text('No results found');
+        }
+    }
+    
+    // Clear Search
+    function clearSearch() {
+        $('#searchInput').val('');
+        $('#filterType').val('all');
+        $('#searchResults').hide();
+        displayLatestUpdates(allLatestItems);
+    }
+    
+    // Attach event listeners
+    $(document).ready(function() {
+        // Update storeAllItems after loading
+        const originalCheckAndDisplay = window.checkAndDisplay;
+        
+        $('#searchInput').on('input', searchAndFilter);
+        $('#filterType').on('change', searchAndFilter);
+    });
 </script>
 
 </body>
