@@ -192,6 +192,200 @@ require_once('../config.php');
             overflow-x: hidden !important;
         }
         
+        /* Banner Slideshow Styles */
+        .banner-section {
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+        
+        .banner-slideshow {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .main-banner-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .main-banner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .banner-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .banner-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+        
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            color: white;
+            padding: 2rem 2rem 1.5rem;
+            transform: translateY(0);
+            transition: transform 0.3s;
+        }
+        
+        .banner-info h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .banner-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .banner-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #001f3f;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .banner-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .banner-nav.prev {
+            left: 1rem;
+        }
+        
+        .banner-nav.next {
+            right: 1rem;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            overflow-x: auto;
+            background: #f8f9fa;
+            scrollbar-width: thin;
+            scrollbar-color: #001f3f #e9ecef;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-track {
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-thumb {
+            background: #001f3f;
+            border-radius: 4px;
+        }
+        
+        .thumbnail-container::-webkit-scrollbar-thumb:hover {
+            background: #003d7a;
+        }
+        
+        .banner-thumbnail {
+            flex: 0 0 150px;
+            height: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        
+        .banner-thumbnail:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .banner-thumbnail.active {
+            border-color: #001f3f;
+            box-shadow: 0 0 0 2px white, 0 0 0 5px #001f3f;
+        }
+        
+        .banner-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-thumbnail-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,31,63,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .banner-thumbnail:hover .banner-thumbnail-overlay {
+            opacity: 1;
+        }
+        
+        .banner-thumbnail.active .banner-thumbnail-overlay {
+            opacity: 0;
+        }
+        
+        .banner-thumbnail-text {
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 0.5rem;
+        }
+        
         /* Section Titles */
         .section-title {
             font-size: clamp(1.5rem, 3vw, 2rem);
@@ -435,6 +629,46 @@ require_once('../config.php');
                 padding: 2rem 1rem;
             }
             
+            .main-banner-container {
+                height: 300px;
+            }
+            
+            .banner-info {
+                padding: 1rem;
+            }
+            
+            .banner-info h3 {
+                font-size: 1.1rem;
+            }
+            
+            .banner-info p {
+                font-size: 0.85rem;
+            }
+            
+            .banner-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .banner-nav.prev {
+                left: 0.5rem;
+            }
+            
+            .banner-nav.next {
+                right: 0.5rem;
+            }
+            
+            .thumbnail-container {
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .banner-thumbnail {
+                flex: 0 0 100px;
+                height: 70px;
+            }
+            
             .events-grid, .announcements-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -449,6 +683,15 @@ require_once('../config.php');
         @media (max-width: 480px) {
             .main-container {
                 margin: 1rem auto;
+            }
+            
+            .main-banner-container {
+                height: 250px;
+            }
+            
+            .banner-thumbnail {
+                flex: 0 0 80px;
+                height: 60px;
             }
             
             .card-body {
@@ -478,6 +721,26 @@ require_once('../config.php');
 
 <!-- Main Container -->
 <div class="main-container">
+    <!-- Banner Slideshow Section -->
+    <section class="banner-section" id="bannerSection" style="display: none;">
+        <div class="banner-slideshow">
+            <div class="main-banner-container">
+                <div class="main-banner" id="mainBanner">
+                    <!-- Main banner image will load here -->
+                </div>
+                <button class="banner-nav prev" onclick="changeBanner(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="banner-nav next" onclick="changeBanner(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="thumbnail-container" id="thumbnailContainer">
+                <!-- Thumbnails will load here -->
+            </div>
+        </div>
+    </section>
+
     <!-- What's the Latest Section -->
     <section>
         <h2 class="section-title">
@@ -532,6 +795,9 @@ require_once('../config.php');
     
     let allEvents = [];
     let allAnnouncements = [];
+    let bannerData = [];
+    let currentBannerIndex = 0;
+    let bannerInterval = null;
     
     // Loader functions
     window.start_loader = function(){
@@ -546,8 +812,138 @@ require_once('../config.php');
 
     $(document).ready(function(){
         end_loader();
+        loadBanners();
         loadLatestUpdates();
     });
+    
+    // Load Active Banners
+    function loadBanners() {
+        $.ajax({
+            url: _base_url_ + 'classes/Master.php?f=get_active_banners',
+            method: 'GET',
+            dataType: 'json',
+            success: function(resp) {
+                if (resp.status === 'success' && resp.data.length > 0) {
+                    bannerData = resp.data;
+                    displayBanners();
+                    startBannerAutoplay();
+                }
+            },
+            error: function(err) {
+                console.log('Error loading banners:', err);
+            }
+        });
+    }
+    
+    // Display Banners
+    function displayBanners() {
+        if (bannerData.length === 0) return;
+        
+        $('#bannerSection').show();
+        
+        let mainHtml = '';
+        let thumbHtml = '';
+        
+        bannerData.forEach((banner, index) => {
+            const imagePath = banner.image_path ? _base_url_ + banner.image_path : _base_url_ + 'assets/images/placeholder.jpg';
+            const isActive = index === 0 ? 'active' : '';
+            
+            // Main banner slide
+            mainHtml += `
+                <div class="banner-slide ${isActive}" data-index="${index}">
+                    <img src="${imagePath}" alt="${banner.title}">
+                    <div class="banner-info">
+                        <h3>${banner.title}</h3>
+                        ${banner.description ? `<p>${banner.description}</p>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Thumbnail
+            thumbHtml += `
+                <div class="banner-thumbnail ${isActive}" onclick="selectBanner(${index})">
+                    <img src="${imagePath}" alt="${banner.title}">
+                    <div class="banner-thumbnail-overlay">
+                        <div class="banner-thumbnail-text">${banner.title}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        $('#mainBanner').html(mainHtml);
+        $('#thumbnailContainer').html(thumbHtml);
+    }
+    
+    // Change Banner
+    window.changeBanner = function(direction) {
+        if (bannerData.length === 0) return;
+        
+        // Stop autoplay when user manually navigates
+        stopBannerAutoplay();
+        
+        currentBannerIndex += direction;
+        
+        if (currentBannerIndex < 0) {
+            currentBannerIndex = bannerData.length - 1;
+        } else if (currentBannerIndex >= bannerData.length) {
+            currentBannerIndex = 0;
+        }
+        
+        updateBannerDisplay();
+        
+        // Restart autoplay after 5 seconds
+        setTimeout(startBannerAutoplay, 5000);
+    }
+    
+    // Select Banner by Index
+    window.selectBanner = function(index) {
+        if (bannerData.length === 0) return;
+        
+        stopBannerAutoplay();
+        currentBannerIndex = index;
+        updateBannerDisplay();
+        setTimeout(startBannerAutoplay, 5000);
+    }
+    
+    // Update Banner Display
+    function updateBannerDisplay() {
+        // Update main slides
+        $('.banner-slide').removeClass('active');
+        $(`.banner-slide[data-index="${currentBannerIndex}"]`).addClass('active');
+        
+        // Update thumbnails
+        $('.banner-thumbnail').removeClass('active');
+        $('.banner-thumbnail').eq(currentBannerIndex).addClass('active');
+        
+        // Scroll thumbnail into view
+        const thumbnail = $('.banner-thumbnail').eq(currentBannerIndex)[0];
+        if (thumbnail) {
+            thumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+    }
+    
+    // Start Banner Autoplay
+    function startBannerAutoplay() {
+        stopBannerAutoplay(); // Clear any existing interval
+        
+        if (bannerData.length <= 1) return;
+        
+        bannerInterval = setInterval(function() {
+            currentBannerIndex++;
+            if (currentBannerIndex >= bannerData.length) {
+                currentBannerIndex = 0;
+            }
+            updateBannerDisplay();
+        }, 5000); // Change banner every 5 seconds
+    }
+    
+    // Stop Banner Autoplay
+    function stopBannerAutoplay() {
+        if (bannerInterval) {
+            clearInterval(bannerInterval);
+            bannerInterval = null;
+        }
+    }
     
     // Load Latest Updates (Events and Announcements combined)
     function loadLatestUpdates() {

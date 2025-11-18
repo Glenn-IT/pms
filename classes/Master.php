@@ -1257,6 +1257,145 @@ function get_most_attended_events() {
 
 //End Event Code
 
+//Start Banner Code
+function save_banner() {
+    extract($_POST);
+    $data = "";
+
+    $title = $this->conn->real_escape_string(htmlspecialchars($title));
+    $description = isset($description) ? $this->conn->real_escape_string(htmlspecialchars($description)) : '';
+    $status = isset($status) ? (int)$status : 1;
+
+    if(!empty($title))
+        $data .= " `title`='{$title}' ";
+    if(!empty($description))
+        $data .= ", `description`='{$description}' ";
+    $data .= ", `status`='{$status}' ";
+
+    if(!empty($id)){
+        $sql = "UPDATE `banner_list` SET {$data} WHERE id = '{$id}'";
+    } else {
+        $sql = "INSERT INTO `banner_list` SET {$data}";
+    }
+
+    $save = $this->conn->query($sql);
+    if($this->capture_err())
+        return $this->capture_err();
+
+    if($save){
+        $bid = !empty($id) ? $id : $this->conn->insert_id;
+        $resp['bid'] = $bid;
+        $resp['status'] = 'success';
+
+        // Handle image upload
+        if(isset($_FILES['image']) && !empty($_FILES['image']['tmp_name'])){
+            $dir = "uploads/banners/";
+            if(!is_dir(base_app . $dir)) mkdir(base_app . $dir, 0777, true);
+            
+            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+            
+            if(in_array(strtolower($ext), $allowedTypes)){
+                // Delete old image if updating
+                if(!empty($id)){
+                    $old_img = $this->conn->query("SELECT image_path FROM banner_list WHERE id = '{$id}'");
+                    if($old_img && $old_img->num_rows > 0){
+                        $old_data = $old_img->fetch_assoc();
+                        if(!empty($old_data['image_path']) && is_file(base_app . $old_data['image_path'])){
+                            unlink(base_app . $old_data['image_path']);
+                        }
+                    }
+                }
+                
+                $filename = $bid . '_' . time() . '.' . $ext;
+                $filepath = $dir . $filename;
+                
+                if(move_uploaded_file($_FILES['image']['tmp_name'], base_app . $filepath)){
+                    $this->conn->query("UPDATE banner_list SET image_path = '{$filepath}' WHERE id = '{$bid}'");
+                }
+            }
+        }
+
+        $resp['msg'] = "Banner successfully saved.";
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = $this->conn->error . " [{$sql}]";
+    }
+
+    return json_encode($resp);
+}
+
+function get_all_banners(){
+    $banners = [];
+    $qry = $this->conn->query("SELECT * FROM banner_list ORDER BY date_created DESC");
+    if($qry){
+        while($row = $qry->fetch_assoc()){
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            $banners[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $banners]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+
+function delete_banner() {
+    extract($_POST);
+
+    $get = $this->conn->query("SELECT * FROM banner_list WHERE id = '{$id}'");
+    if($get->num_rows > 0){
+        $banner = $get->fetch_assoc();
+        
+        // Delete image file
+        if(!empty($banner['image_path']) && is_file(base_app . $banner['image_path'])){
+            unlink(base_app . $banner['image_path']);
+        }
+    }
+
+    $del = $this->conn->query("DELETE FROM `banner_list` WHERE id = '{$id}'");
+    if($del){
+        $resp['status'] = 'success';
+        $this->settings->set_flashdata('success', "Banner successfully deleted.");
+    } else {
+        $resp['status'] = 'failed';
+        $resp['error'] = $this->conn->error;
+    }
+
+    return json_encode($resp);
+}
+
+function toggle_banner_status() {
+    extract($_POST);
+    
+    $status = isset($status) ? (int)$status : 0;
+    $update = $this->conn->query("UPDATE banner_list SET status = '{$status}' WHERE id = '{$id}'");
+    
+    if($update){
+        $resp['status'] = 'success';
+        $resp['msg'] = "Banner status updated successfully.";
+    } else {
+        $resp['status'] = 'failed';
+        $resp['msg'] = $this->conn->error;
+    }
+    
+    return json_encode($resp);
+}
+
+function get_active_banners(){
+    $banners = [];
+    $qry = $this->conn->query("SELECT * FROM banner_list WHERE status = 1 ORDER BY date_created DESC");
+    if($qry){
+        while($row = $qry->fetch_assoc()){
+            $row['date'] = date("F j, Y - g:i A", strtotime($row['date_created']));
+            $banners[] = $row;
+        }
+        return json_encode(['status' => 'success', 'data' => $banners]);
+    } else {
+        return json_encode(['status' => 'failed', 'msg' => $this->conn->error]);
+    }
+}
+//End Banner Code
+
 function get_user_statistics() {
     $user_id = $this->settings->userdata('id');
     
@@ -1617,6 +1756,21 @@ switch ($action) {
 	break;
 	case 'delete_forum_message':
 		echo $Master->delete_forum_message();
+	break;
+	case 'save_banner':
+		echo $Master->save_banner();
+	break;
+	case 'get_all_banners':
+		echo $Master->get_all_banners();
+	break;
+	case 'delete_banner':
+		echo $Master->delete_banner();
+	break;
+	case 'toggle_banner_status':
+		echo $Master->toggle_banner_status();
+	break;
+	case 'get_active_banners':
+		echo $Master->get_active_banners();
 	break;
 	
 		

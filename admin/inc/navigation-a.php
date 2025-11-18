@@ -56,6 +56,15 @@
                         </p>
                       </a>
                     </li> 
+                    <!--Banner-->
+                    <li class="nav-item dropdown">
+                      <a href="<?php echo base_url ?>admin/?page=banner/index" class="nav-link nav-banner_index">
+                        <i class="nav-icon fas fa-image"></i>
+                        <p>
+                          Banner
+                        </p>
+                      </a>
+                    </li> 
 
                     <?php if($_settings->userdata('type') != 1): ?>
                     <li class="nav-item dropdown">
