@@ -20,7 +20,7 @@ session_start();
 $_SESSION['userdata'] = array('type' => 1);
 
 // Test the function directly
-$url = 'http://localhost/pms/classes/Master.php?f=assign_sk_official';
+$url = 'http://localhost/YISMPC/classes/Master.php?f=assign_sk_official';
 
 $postdata = http_build_query($_POST);
 
